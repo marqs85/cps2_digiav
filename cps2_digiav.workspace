@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="cps2_digiav" Database="">
+  <Project Name="cps2_digiav_sw_bsp" Path="cps2_digiav_sw_bsp.project" Active="No"/>
+  <Project Name="cps2_digiav_sw" Path="software/cps2_digiav_sw.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Environment/>
+      <Project Name="cps2_digiav_sw_bsp" ConfigName="Debug"/>
+      <Project Name="cps2_digiav_sw" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="no">
+      <Environment/>
+      <Project Name="cps2_digiav_sw_bsp" ConfigName="Release"/>
+      <Project Name="cps2_digiav_sw" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
