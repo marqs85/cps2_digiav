@@ -189,7 +189,7 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../sys_controller_bsp/
 
 # List of application specific include directories, library directories and library names
-APP_INCLUDE_DIRS := it6613
+APP_INCLUDE_DIRS := ./ it6613
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 

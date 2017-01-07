@@ -1,5 +1,6 @@
 //#include "terasic_includes.h"
 //#include "mcu.h"
+#include <unistd.h>
 #include "it6613_sys.h"
 #include "hdmitx.h"
 #include "HDMI_TX.h"
@@ -79,7 +80,7 @@ bool HDMITX_HPD(void){
 
 void HDMITX_SetAVIInfoFrame(alt_u8 VIC, alt_u8 OutputColorMode, bool b16x9, bool ITU709)
 {
-    AVI_InfoFrame AviInfo;
+     AVI_InfoFrame AviInfo;
     alt_u8 pixelrep = 0;
     
     OS_PRINTF("HDMITX_SetAVIInfoFrame, VIC=%d, ColorMode=%d, Aspect-Ratio=%s, ITU709=%s\n",
@@ -311,7 +312,6 @@ bool HDMITX_DevLoopProc()
     return HPDChange;
 }
 
-
 void HDMITX_SetAudioInfoFrame(BYTE bAudioDwSampling)
 {
     Audio_InfoFrame AudioInfo;
@@ -330,4 +330,3 @@ void HDMITX_SetAudioInfoFrame(BYTE bAudioDwSampling)
 
     EnableAudioInfoFrame(TRUE, (BYTE *) &AudioInfo);
 }
-

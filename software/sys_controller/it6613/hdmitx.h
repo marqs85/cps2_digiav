@@ -52,8 +52,7 @@
 //#define NULL 0
 
 typedef unsigned char bool;
-#define OS_PRINTF printf
-#define ErrorF printf
+#include "sysconfig.h"
 
 // Hardwired to CPU reset
 #define HDMITX_Reset(x)
@@ -77,6 +76,8 @@ HDCP_ResumeAuthentication()
 	return;
 }
 #endif
+
+void DelayMS(unsigned int ms);
 
 //#include "edid.h"
 // #include "dss_sha.h"

@@ -474,12 +474,12 @@ BOOL EnableAudioOutput(ULONG VideoPixelClock,BYTE bAudioSampleFreq,BYTE ChannelN
         HDMITX_WriteI2C_Byte(REGPktAudCTS0,0x50) ;
         HDMITX_WriteI2C_Byte(REGPktAudCTS1,0x73) ;
         HDMITX_WriteI2C_Byte(REGPktAudCTS2,0x00) ;
-
+        
         HDMITX_WriteI2C_Byte(REGPktAudN0,0) ;
         HDMITX_WriteI2C_Byte(REGPktAudN1,0x18) ;
         HDMITX_WriteI2C_Byte(REGPktAudN2,0) ;
         Switch_HDMITX_Bank(0) ;
-
+    
         HDMITX_WriteI2C_Byte(0xC5, 2) ; // D[1] = 0, HW auto count CTS
     }
     else
@@ -523,7 +523,7 @@ BOOL EnableAudioOutput(ULONG VideoPixelClock,BYTE bAudioSampleFreq,BYTE ChannelN
     return TRUE ;
 }
 
-BOOL EnableAudioOutputShort4OSSC(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudioSwapLR)
+BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudioSwapLR)
 {
     // set NTSC
     // TODO: proper calculation of N-factor (???)
@@ -1288,7 +1288,7 @@ SetInputMode(BYTE InputMode,BYTE bInputSignalType)
 static void
 SetCSCScale(BYTE bInputMode,BYTE bOutputMode)
 {
-    BYTE ucData,csc ;
+    BYTE ucData,csc=0 ;
     BYTE filter = 0 ; // filter is for Video CTRL DN_FREE_GO,EN_DITHER,and ENUDFILT
 
 

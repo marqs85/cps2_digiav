@@ -3,12 +3,12 @@
   <Project Name="cps2_digiav_sw_bsp" Path="cps2_digiav_sw_bsp.project" Active="No"/>
   <Project Name="cps2_digiav_sw" Path="software/cps2_digiav_sw.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Environment/>
       <Project Name="cps2_digiav_sw_bsp" ConfigName="Debug"/>
       <Project Name="cps2_digiav_sw" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="no">
+    <WorkspaceConfiguration Name="Release" Selected="yes">
       <Environment/>
       <Project Name="cps2_digiav_sw_bsp" ConfigName="Release"/>
       <Project Name="cps2_digiav_sw" ConfigName="Release"/>

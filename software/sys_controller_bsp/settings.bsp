@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Dec 18, 2016 12:36:00 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1482057360250</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Jan 1, 2017 5:10:59 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1483283459159</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>./</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../sys.sopcinfo</SopcDesignFile>
@@ -50,7 +50,7 @@
                 <SettingName>hal.enable_instruction_related_exceptions_api</SettingName>
                 <Identifier>ALT_INCLUDE_INSTRUCTION_RELATED_EXCEPTION_API</Identifier>
                 <Type>BooleanDefineOnly</Type>
-                <Value>true</Value>
+                <Value>false</Value>
                 <DefaultValue>false</DefaultValue>
                 <DestinationFile>system_h_define</DestinationFile>
                 <Description>Enables API for registering handlers to service instruction-related exceptions. Enabling this setting increases the size of the exception entry code.</Description>
@@ -806,7 +806,7 @@
                 <SettingName>hal.enable_lightweight_device_driver_api</SettingName>
                 <Identifier>ALT_USE_DIRECT_DRIVERS</Identifier>
                 <Type>Boolean</Type>
-                <Value>0</Value>
+                <Value>1</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>public_mk_define</DestinationFile>
                 <Description>Enables lightweight device driver API. This reduces code and data footprint by removing the HAL layer that maps device names (e.g. /dev/uart0) to file descriptors. Instead, driver routines are called directly. The open(), close(), and lseek() routines will always fail if called. The read(), write(), fstat(), ioctl(), and isatty() routines only work for the stdio devices. If true, adds -DALT_USE_DIRECT_DRIVERS to ALT_CPPFLAGS in public.mk.</Description>

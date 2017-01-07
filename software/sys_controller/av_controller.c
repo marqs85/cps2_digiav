@@ -23,6 +23,7 @@
 #include "string.h"
 #include "altera_avalon_pio_regs.h"
 #include "i2c_opencores.h"
+#include "sysconfig.h"
 
 #include "it6613.h"
 #include "hdmitx.h"
@@ -75,7 +76,7 @@ void SetupAudio(alt_u8 bAudioEn)
 
     if (bAudioEn) {
         alt_u32 pclk = 25000000;
-        EnableAudioOutputShort4OSSC(pclk, 0, 0);
+        EnableAudioOutputHDMI(pclk, 0, 0);
         //if (tc.tx_mode == TX_HDMI) {
             HDMITX_SetAudioInfoFrame(0);
             printf("enable infoframe\n");
@@ -106,7 +107,7 @@ int main()
 
 	while(1) {
 
-		usleep(200000);
+		usleep(WAITLOOP_SLEEP_US);
         lines = IORD_ALTERA_AVALON_PIO_DATA(PIO_0_BASE);
 
 
@@ -117,8 +118,8 @@ int main()
         ncts |= read_it2(0x35) >> 4;
         ncts |= read_it2(0x36) << 4;
         ncts |= read_it2(0x37) << 12;
-        //printf("NCTS: %u\n", ncts);
-        //printf("lines: %u\n", lines);
+        printf("NCTS: %u\n", ncts);
+        printf("lines: %u\n", lines);
 	}
 
 	return 0;

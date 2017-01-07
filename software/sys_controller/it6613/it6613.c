@@ -8,9 +8,9 @@ volatile alt_u8 cur_bank;
 
 inline void select_bank_it(alt_u8 bank) {
 	cur_bank = bank;
-	I2C_start(I2C_OPENCORES_0_BASE, IT_BASE, 0);
-	I2C_write(I2C_OPENCORES_0_BASE, IT_CURBANK, 0);
-	I2C_write(I2C_OPENCORES_0_BASE, cur_bank, 1);
+	I2C_start(I2CA_BASE, IT_BASE, 0);
+	I2C_write(I2CA_BASE, IT_CURBANK, 0);
+	I2C_write(I2CA_BASE, cur_bank, 1);
 }
 
 inline alt_u32 read_it(alt_u32 regaddr) {
@@ -19,10 +19,10 @@ inline alt_u32 read_it(alt_u32 regaddr) {
 	else if ((regaddr <= 0xFF) && (cur_bank == 1))
 		select_bank_it(0);
 
-	I2C_start(I2C_OPENCORES_0_BASE, IT_BASE, 0);
-	I2C_write(I2C_OPENCORES_0_BASE, (regaddr & 0xFF), 0);
-	I2C_start(I2C_OPENCORES_0_BASE, IT_BASE, 1);
-	return I2C_read(I2C_OPENCORES_0_BASE,1);
+	I2C_start(I2CA_BASE, IT_BASE, 0);
+	I2C_write(I2CA_BASE, (regaddr & 0xFF), 1);
+	I2C_start(I2CA_BASE, IT_BASE, 1);
+	return I2C_read(I2CA_BASE,1);
 }
 
 inline void write_it(alt_u32 regaddr, alt_u8 data) {
@@ -31,9 +31,9 @@ inline void write_it(alt_u32 regaddr, alt_u8 data) {
 	else if ((regaddr <= 0xFF) && (cur_bank == 1))
 		select_bank_it(0);
 
-	I2C_start(I2C_OPENCORES_0_BASE, IT_BASE, 0);
-	I2C_write(I2C_OPENCORES_0_BASE, (regaddr & 0xFF), 0);
-	I2C_write(I2C_OPENCORES_0_BASE, data, 1);
+	I2C_start(I2CA_BASE, IT_BASE, 0);
+	I2C_write(I2CA_BASE, (regaddr & 0xFF), 0);
+	I2C_write(I2CA_BASE, data, 1);
 }
 
 /*inline void reset_it() {
@@ -54,7 +54,7 @@ int init_it() {
 	vendor_id = read_it(IT_VENDORID);
 	device_id = read_it(IT_DEVICEID);
 
-	printf("VEN: 0x%.2X, DEV: 0x%.2X\n", vendor_id, device_id);
+	printf("VEN: 0x%.2lX, DEV: 0x%.2lX\n", vendor_id, device_id);
 
 	if (!((vendor_id == IT6613_VENDORID) && (device_id == IT6613_DEVICEID)))
 		return -1;

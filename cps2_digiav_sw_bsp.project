@@ -99,6 +99,7 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
+        <Target Name="bsp-editor">nios2-bsp-editor</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
         <BuildCommand>nios2-bsp-generate-files --bsp-dir ./ --settings settings.bsp</BuildCommand>
