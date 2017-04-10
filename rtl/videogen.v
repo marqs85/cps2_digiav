@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2017  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2_digiav project.
 //

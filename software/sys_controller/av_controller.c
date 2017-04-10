@@ -66,6 +66,8 @@ inline void TX_enable(alt_u8 mode) {
 
     // start TX
     SetAVMute(FALSE);
+
+    HDMITX_SetPixelRepetition(1, 0);
 }
 
 void SetupAudio(alt_u8 bAudioEn)

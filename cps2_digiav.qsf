@@ -139,7 +139,6 @@ set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
 set_global_assignment -name SDC_FILE cps2_digiav.sdc
 set_global_assignment -name QIP_FILE rtl/linebuf.qip
-set_global_assignment -name QIP_FILE rtl/pll_3x.qip
 set_global_assignment -name VERILOG_FILE rtl/timescale.v
 set_global_assignment -name QSYS_FILE sys.qsys
 set_global_assignment -name VERILOG_FILE rtl/scanconverter.v
