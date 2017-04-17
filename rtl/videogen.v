@@ -34,8 +34,8 @@ module videogen (
 
 //Parameters for 640x480@60Hz (800px x 524lines, pclk 25MHz -> 59.637Hz)
 
-parameter   H_SYNCLEN       =   62;
-parameter   H_BACKPORCH     =   86;
+parameter   H_SYNCLEN       =   96;
+parameter   H_BACKPORCH     =   48;
 parameter   H_ACTIVE        =   640;
 /*parameter   H_SYNCLEN       =   12;
 parameter   H_BACKPORCH     =   12;

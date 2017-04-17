@@ -154,7 +154,7 @@ function [7:0] apply_mask;
     input [10:0] vstart;
     input [10:0] vend;
     begin
-        if (enable & ((hoffset < hstart) | (hoffset >= hend) | (voffset < vstart) | (voffset >= vend)))
+        if (enable & (/*(hoffset < hstart) | (hoffset >= hend) | */(voffset < vstart) | (voffset >= vend)))
             apply_mask = 8'h00;
         else
             apply_mask = data;
@@ -176,7 +176,7 @@ begin
         HSYNC_act = HSYNC_1x;
         VSYNC_act = VSYNC_1x;
         linebuf_rdclock = pclk_ext;
-        linebuf_hoffset = h_ext+100;
+        linebuf_hoffset = ((6*{2'b00, h_ext})/5)+24;
         pclk_act = pclk_ext;
         slid_act = {1'b0, vcnt_1x[0]};
         hcnt_act = hcnt_1x;
@@ -235,7 +235,6 @@ pll_2x pll_linedouble (
     .locked ( pclk_2x_lock )
 );
 
-//TODO: add secondary buffers for interlaced signals with alternative field order
 linebuf	linebuf_rgb (
     .data ( {R_1x, G_1x, B_1x, F_1x} ), //or *_in?
     .rdaddress ( linebuf_hoffset + (~line_idx << 11) ),
@@ -333,11 +332,11 @@ begin
                 V_MASK <= 0;*/
                 H_ACTIVE <= 960;
                 H_BACKPORCH <= 20;
-                H_LINEMULT <= `LINEMULT_5x;
+                H_LINEMULT <= `LINEMULT_DISABLE;
                 H_SYNCLEN <= 20;
                 V_SYNCLEN <= 3;
                 H_MASK <= 0;
-                V_ACTIVE <= 216;
+                V_ACTIVE <= /*216*/224;
                 V_BACKPORCH <= 16+12;
                 V_MISMODE <= 0;
                 V_SCANLINES <= 0;

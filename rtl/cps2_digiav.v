@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-//`define VGAMODE
+`define VGAMODE
 //`define TESTPATTERN
 
 module cps2_digiav(
