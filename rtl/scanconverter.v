@@ -65,13 +65,13 @@ wire [1:0] slid_act;
 wire pclk_2x_lock;
 
 wire HSYNC_act, VSYNC_act;
-reg HSYNC_1x, HSYNC_2x, HSYNC_5x, HSYNC_pp1;
-reg VSYNC_1x, VSYNC_2x, VSYNC_5x, VSYNC_pp1;
+reg HSYNC_1x, HSYNC_2x, HSYNC_5x, HSYNC_pp1, HSYNC_pp2;
+reg VSYNC_1x, VSYNC_2x, VSYNC_5x, VSYNC_pp1, VSYNC_pp2;
 
 reg [11:0] HSYNC_start;
 
 wire DE_act;
-reg DE_pp1;
+reg DE_pp1, DE_pp2;
 
 wire [11:0] linebuf_hoffset; //Offset for line (max. 2047 pixels), MSB indicates which line is read/written
 wire [11:0] hcnt_act;
@@ -112,7 +112,7 @@ reg [5:0] H_MASK;
 
 //8 bits per component -> 16.7M colors
 reg [3:0] R_1x, G_1x, B_1x, F_1x, R_2x, G_2x, B_2x, F_2x, R_5x, G_5x, B_5x, F_5x;
-reg [7:0] R_pp1, G_pp1, B_pp1;
+reg [7:0] R_pp1, G_pp1, B_pp1, R_pp2, G_pp2, B_pp2;
 wire [3:0] R_lbuf, G_lbuf, B_lbuf, F_lbuf;
 wire [3:0] R_act, G_act, B_act, F_act;
 
@@ -161,6 +161,16 @@ function [7:0] apply_mask;
     end
     endfunction
 
+//Fade
+function [7:0] apply_fade;
+    input [3:0] data;
+    input [3:0] fade;
+    begin
+        //apply_fade = {data, data} >> (3'h7-fade[3:1]);
+        apply_fade = {4'h0, data} * ({4'h0, fade} + 8'h2);
+    end
+    endfunction
+
 
 //Mux for active data selection
 //
@@ -172,6 +182,7 @@ begin
         R_act = R_lbuf;
         G_act = G_lbuf;
         B_act = B_lbuf;
+        F_act = F_lbuf;
         DE_act = DE_1x;
         HSYNC_act = HSYNC_1x;
         VSYNC_act = VSYNC_1x;
@@ -186,6 +197,7 @@ begin
         R_act = R_2x;
         G_act = G_2x;
         B_act = B_2x;
+        F_act = F_2x;
         DE_act = DE_2x;
         HSYNC_act = HSYNC_2x;
         VSYNC_act = VSYNC_2x;
@@ -200,6 +212,7 @@ begin
         R_act = R_5x;
         G_act = G_5x;
         B_act = B_5x;
+        F_act = F_5x;
         DE_act = DE_5x;
         HSYNC_act = HSYNC_5x;
         VSYNC_act = VSYNC_5x;
@@ -214,6 +227,7 @@ begin
         R_act = 0;
         G_act = 0;
         B_act = 0;
+        F_act = 0;
         DE_act = 0;
         HSYNC_act = 0;
         VSYNC_act = VSYNC_1x;
@@ -236,7 +250,7 @@ pll_2x pll_linedouble (
 );
 
 linebuf	linebuf_rgb (
-    .data ( {R_1x, G_1x, B_1x, F_1x} ), //or *_in?
+    .data ( {R_1x, G_1x, B_1x, F_1x} ),
     .rdaddress ( linebuf_hoffset + (~line_idx << 11) ),
     .rdclock ( linebuf_rdclock ),
     .wraddress ( hcnt_1x + (line_idx << 11) ),
@@ -253,19 +267,26 @@ begin
         end
     else*/
         begin
-            R_pp1 <= apply_mask(1, {R_act, 4'h0}, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
-            G_pp1 <= apply_mask(1, {G_act, 4'h0}, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
-            B_pp1 <= apply_mask(1, {B_act, 4'h0}, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
+            R_pp1 <= apply_fade(R_act, F_act);
+            G_pp1 <= apply_fade(G_act, F_act);
+            B_pp1 <= apply_fade(B_act, F_act);
             HSYNC_pp1 <= HSYNC_act;
             VSYNC_pp1 <= VSYNC_act;
             DE_pp1 <= DE_act;
             
-            R_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, R_pp1, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            G_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, G_pp1, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            B_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, B_pp1, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            HSYNC_out <= HSYNC_pp1;
-            VSYNC_out <= VSYNC_pp1;
-            DE_out <= DE_pp1;
+            R_pp2 <= apply_mask(1, R_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
+            G_pp2 <= apply_mask(1, G_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
+            B_pp2 <= apply_mask(1, B_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
+            HSYNC_pp2 <= HSYNC_pp1;
+            VSYNC_pp2 <= VSYNC_pp1;
+            DE_pp2 <= DE_pp1;
+            
+            R_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, R_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
+            G_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, G_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
+            B_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, B_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
+            HSYNC_out <= HSYNC_pp2;
+            VSYNC_out <= VSYNC_pp2;
+            DE_out <= DE_pp2;
         end
 end
 
@@ -446,6 +467,7 @@ begin
             R_5x <= R_lbuf;
             G_5x <= G_lbuf;
             B_5x <= B_lbuf;
+            F_5x <= F_lbuf;
             HSYNC_5x <= ~(hcnt_5x < H_SYNCLEN);
             VSYNC_5x <= ~(vcnt_5x_ref < V_SYNCLEN);
             DE_5x <= ((hcnt_5x >= H_SYNCLEN+H_BACKPORCH) & (hcnt_5x < H_SYNCLEN+H_BACKPORCH + H_ACTIVE)) & ((vcnt_5x_ref >= V_SYNCLEN+V_BACKPORCH) & (vcnt_5x_ref < V_SYNCLEN+V_BACKPORCH + V_ACTIVE));

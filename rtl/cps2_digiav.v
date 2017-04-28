@@ -83,6 +83,7 @@ begin
             R_in_L <= 4'h0;
             G_in_L <= 4'h0;
             B_in_L <= 4'h0;
+            F_in_L <= 4'h0;
             HSYNC_in_L <= 1'b0;
             VSYNC_in_L <= 1'b0;
         end
@@ -91,6 +92,7 @@ begin
             R_in_L <= R_in;
             G_in_L <= G_in;
             B_in_L <= B_in;
+            F_in_L <= F_in;
             HSYNC_in_L <= HSYNC_in;
             VSYNC_in_L <= VSYNC_in;
         end
@@ -188,7 +190,7 @@ videogen vg0 (
 
 i2s_upsampler upsampler0 (
     .reset_n        (reset_n),
-    .I2S_BCK        (~I2S_BCK),
+    .I2S_BCK        (I2S_BCK),
     .I2S_BCK_OUT    (I2S_BCK_OUT),
     .I2S_WS         (I2S_WS),
     .I2S_DATA       (I2S_DATA),

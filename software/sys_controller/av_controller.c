@@ -78,7 +78,7 @@ void SetupAudio(alt_u8 bAudioEn)
 
     if (bAudioEn) {
         alt_u32 pclk = 25000000;
-        EnableAudioOutputHDMI(pclk, 0, 0);
+        EnableAudioOutputHDMI(pclk);
         //if (tc.tx_mode == TX_HDMI) {
             HDMITX_SetAudioInfoFrame(0);
             printf("enable infoframe\n");
@@ -96,7 +96,7 @@ int main()
 	init_stat = init_hw();
 
 	if (init_stat >= 0) {
-		printf("### DIY VIDEO DIGITIZER / SCANCONVERTER INIT OK ###\n\n");
+		printf("### cps2_digiAV INIT OK ###\n\n");
 	} else {
         printf("Init error  %d", init_stat);
 		while (1) {}

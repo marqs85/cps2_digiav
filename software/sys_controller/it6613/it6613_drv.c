@@ -523,10 +523,9 @@ BOOL EnableAudioOutput(ULONG VideoPixelClock,BYTE bAudioSampleFreq,BYTE ChannelN
     return TRUE ;
 }
 
-BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudioSwapLR)
+BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock)
 {
-    // set NTSC
-    // TODO: proper calculation of N-factor (???)
+    // set N and CTS
     ULONG n = 6144;
 
     Switch_HDMITX_Bank(1) ;
@@ -539,13 +538,14 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudio
     HDMITX_WriteI2C_Byte(REGPktAudCTS2,((VideoPixelClock/1000)>>16) & 0xff) ;
     Switch_HDMITX_Bank(0) ;
 
-    //HDMITX_WriteI2C_Byte(REG_TX_PKT_SINGLE_CTRL,0) ; // D[1] = 0,HW auto count CTS
-
-    // sw cts
+#ifdef MANUAL_CTS
     HDMITX_WriteI2C_Byte(0xF8, 0xC3);
     HDMITX_WriteI2C_Byte(0xF8, 0xA5);
     HDMITX_WriteI2C_Byte(REG_TX_PKT_SINGLE_CTRL,B_SW_CTS);
     HDMITX_WriteI2C_Byte(0xF8, 0xFF);
+#else
+    HDMITX_WriteI2C_Byte(REG_TX_PKT_SINGLE_CTRL,0) ; // D[1] = 0,HW auto count CTS
+#endif
 
     // define internal MCLK and audio down-sampling
     HDMITX_SetREG_Byte(REG_TX_CLK_CTRL0,~M_EXT_MCLK_SEL,B_EXT_256FS);
@@ -554,8 +554,7 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudio
     Instance[0].TMDSClock = VideoPixelClock ;
     BYTE fs = AUDFS_48KHz;
     Instance[0].bAudFs = fs;
-    Instance[0].bOutputAudioMode = B_AUDFMT_STD_I2S|B_AUDFMT_NO_DELAY_TO_WS|B_AUDFMT_FALL_EDGE_SAMPLE_WS;
-    Instance[0].bAudioChannelSwap = bAudioSwapLR == 0x1 ? 0xf : 0x0; // swap channels
+    Instance[0].bOutputAudioMode = B_AUDFMT_STD_I2S|B_AUDFMT_NO_DELAY_TO_WS;
     BYTE AudioEnable = (0x1 & ~(M_AUD_SWL|B_SPDIFTC)) | M_AUD_16BIT;
 
 
@@ -565,7 +564,7 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock, BYTE bAudioDwSampl,BYTE bAudio
     HDMITX_AndREG_Byte(REG_TX_SW_RST,~(B_AUD_RST|B_AREF_RST));
     HDMITX_WriteI2C_Byte(REG_TX_AUDIO_CTRL1,Instance[0].bOutputAudioMode);
     HDMITX_WriteI2C_Byte(REG_TX_AUDIO_FIFOMAP,0xE4); // default mapping.
-    HDMITX_WriteI2C_Byte(REG_TX_AUDIO_CTRL3,(Instance[0].bAudioChannelSwap&0xF)|(AudioEnable&B_AUD_SPDIF));
+    HDMITX_WriteI2C_Byte(REG_TX_AUDIO_CTRL3,(AudioEnable&B_AUD_SPDIF));
     HDMITX_WriteI2C_Byte(REG_TX_AUD_SRCVALID_FLAT,B_AUD_ERR2FLAT); // only two channels
 
     Switch_HDMITX_Bank(1) ;

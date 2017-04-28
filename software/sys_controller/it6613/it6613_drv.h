@@ -821,7 +821,7 @@ BOOL ProgramDEGenModeByID(MODE_ID id,BYTE bInputSignalType) ;
 BOOL ProgramSyncEmbeddedVideoMode(BYTE VIC,BYTE bInputType) ;
 #endif
 BOOL EnableAudioOutput(unsigned long VideoPixelClock,BYTE bAudioSampleFreq,BYTE ChannelNumber,BYTE bAudSWL,BYTE bSPDIF) ;
-BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock,BYTE bAudioDwSampl,BYTE bAudioSwapLR) ;
+BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock) ;
 void DisableIT6613() ;
 void DisableVideoOutput() ;
 void DisableAudioOutput() ;
