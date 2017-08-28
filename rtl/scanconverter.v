@@ -22,17 +22,24 @@
 `define HI                      1'b1
 `define LO                      1'b0
 
-`define LINEMULT_DISABLE        2'h0
-`define LINEMULT_DOUBLE         2'h1
-`define LINEMULT_5x             2'h2
+`define HSYNC_POL               `LO
+`define VSYNC_POL               `LO
 
-`define VSYNC_LEADING_EDGE      ((prev_vs == `HI) & (VSYNC_in == `LO))
-`define VSYNC_TRAILING_EDGE     ((prev_vs == `LO) & (VSYNC_in == `HI))
+`define V_MULTMODE_1X           3'd0
+`define V_MULTMODE_2X           3'd1
+`define V_MULTMODE_3X           3'd2
+`define V_MULTMODE_4X           3'd3
+`define V_MULTMODE_5X           3'd4
 
-`define HSYNC_LEADING_EDGE      ((prev_hs == `HI) & (HSYNC_in == `LO))
-`define HSYNC_TRAILING_EDGE     ((prev_hs == `LO) & (HSYNC_in == `HI))
+`define SCANLINES_OFF           2'h0
+`define SCANLINES_H             2'h1
+`define SCANLINES_V             2'h2
+
+`define HSYNC_LEADING_EDGE      ((HSYNC_in_L == `HI) & (HSYNC_in == `LO))
+`define VSYNC_LEADING_EDGE      ((VSYNC_in_L == `HI) & (VSYNC_in == `LO))
 
 module scanconverter (
+    input reset_n,
     input [3:0] R_in,
     input [3:0] G_in,
     input [3:0] B_in,
@@ -41,9 +48,9 @@ module scanconverter (
     input HSYNC_in,
     input PCLK_in,
     input pclk_ext,
+    input pclk_5x,
     input [10:0] h_ext,
-    input [31:0] h_info,
-    input [31:0] v_info,
+    input [31:0] x_info,
     output reg [7:0] R_out,
     output reg [7:0] G_out,
     output reg [7:0] B_out,
@@ -52,91 +59,87 @@ module scanconverter (
     output PCLK_out,
     output reg DE_out,
     output [2:0] pclk_lock,
-    output [2:0] pll_lock_lost,
-    output [10:0] lines_out
+    output [2:0] pll_lock_lost
 );
 
-wire pclk_1x, pclk_2x, pclk_5x;
+//clock-related signals
+wire pclk_act;
+wire pclk_1x, pclk_2x;
+wire pclk_2x_lock;
 wire linebuf_rdclock;
 
-wire pclk_act;
-wire [1:0] slid_act;
+//RGB signals&registers: 4 bits per component + 4 bit fade
+wire [3:0] R_act, G_act, B_act, F_act;
+wire [3:0] R_lbuf, G_lbuf, B_lbuf, F_lbuf;
+reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L, R_in_LL, G_in_LL, B_in_LL, F_in_LL, R_1x, G_1x, B_1x, F_1x;
+reg [7:0] R_pp1, G_pp1, B_pp1, R_pp2, G_pp2, B_pp2, R_pp3, G_pp3, B_pp3, R_pp4, G_pp4, B_pp4;
 
-wire pclk_2x_lock;
+//H+V syncs + data enable signals&registers
+wire HSYNC_act, VSYNC_act, DE_act;
+reg HSYNC_in_L, VSYNC_in_L;
+reg HSYNC_1x, HSYNC_2x, HSYNC_5x, HSYNC_pp1, HSYNC_pp2, HSYNC_pp3, HSYNC_pp4;
+reg VSYNC_1x, VSYNC_2x, VSYNC_5x, VSYNC_pp1, VSYNC_pp2, VSYNC_pp3, VSYNC_pp4;
+reg DE_1x, DE_2x, DE_3x, DE_4x, DE_5x, DE_pp1, DE_pp2, DE_pp3, DE_pp4;
 
-wire HSYNC_act, VSYNC_act;
-reg HSYNC_1x, HSYNC_2x, HSYNC_5x, HSYNC_pp1, HSYNC_pp2;
-reg VSYNC_1x, VSYNC_2x, VSYNC_5x, VSYNC_pp1, VSYNC_pp2;
+//registers indicating line/frame change
+reg frame_change, line_change;
 
-reg [11:0] HSYNC_start;
-
-wire DE_act;
-reg DE_pp1, DE_pp2;
-
+//H+V counters
 wire [11:0] linebuf_hoffset; //Offset for line (max. 2047 pixels), MSB indicates which line is read/written
 wire [11:0] hcnt_act;
-reg [11:0] hcnt_1x, hcnt_2x, hcnt_5x;
-
+reg [11:0] hcnt_1x, hcnt_2x, hcnt_3x, hcnt_4x, hcnt_5x;
 wire [10:0] vcnt_act;
-reg [10:0] vcnt_1x, vcnt_2x, vcnt_2x_ref, vcnt_5x, vcnt_5x_ref, lines_1x, lines_2x, lines_5x;        //max. 2047
+reg [10:0] vcnt_1x, vcnt_2x, vcnt_3x, vcnt_4x, vcnt_5x, vcnt_2x_ref, vcnt_5x_ref;        //max. 2047
 
-reg DE_1x, DE_2x, DE_5x;
-
-reg [1:0] line_out_idx_2x;
+//other counters
+wire [2:0] line_id_act, col_id_act;
+reg [2:0] line_id_pp1, line_id_pp2, line_id_pp3, col_id_pp1, col_id_pp2, col_id_pp3;
+reg [11:0] hmax[0:1];
+reg [10:0] vmax;
+reg line_idx;
+reg [1:0] line_out_idx_2x, line_out_idx_3x, line_out_idx_4x;
 reg [2:0] line_out_idx_5x;
+reg [23:0] warn_h_unstable, warn_pll_lock_lost, warn_pll_lock_lost_3x;
+reg mask_enable_pp1, mask_enable_pp2, mask_enable_pp3, mask_enable_pp4;
 
+//helper registers for sampling at synchronized clock edges
 reg pclk_1x_prev5x;
 reg pclk_1x_prevprev5x;
 reg [2:0] pclk_5x_cnt;
 
-reg prev_hs, prev_vs;
-reg [11:0] hmax[0:1];
-reg line_idx;
-
-reg [23:0] warn_h_unstable, warn_pll_lock_lost;
 
 reg [10:0] H_ACTIVE;    //max. 2047
-reg [7:0] H_BACKPORCH;  //max. 255
+reg [9:0] H_AVIDSTART;  //max. 1023
 reg [10:0] V_ACTIVE;    //max. 2047
-reg [5:0] V_BACKPORCH;  //max. 63
-reg V_MISMODE;
-reg V_SCANLINES;
-reg V_SCANLINEDIR;
-reg V_SCANLINEID;
-reg [7:0] V_SCANLINESTR;
-reg [5:0] V_MASK;
-reg [1:0] H_LINEMULT;
+reg [6:0] V_AVIDSTART;  //max. 127
 reg [7:0] H_SYNCLEN;
-reg [3:0] V_SYNCLEN;
-reg [5:0] H_MASK;
-
-//8 bits per component -> 16.7M colors
-reg [3:0] R_1x, G_1x, B_1x, F_1x, R_2x, G_2x, B_2x, F_2x, R_5x, G_5x, B_5x, F_5x;
-reg [7:0] R_pp1, G_pp1, B_pp1, R_pp2, G_pp2, B_pp2;
-wire [3:0] R_lbuf, G_lbuf, B_lbuf, F_lbuf;
-wire [3:0] R_act, G_act, B_act, F_act;
+reg [2:0] V_SYNCLEN;
+reg [1:0] V_SCANLINEMODE;
+reg [4:0] V_SCANLINEID;
+reg [2:0] V_MULTMODE;
+reg [7:0] V_MASK;
+reg [7:0] H_MASK;
+reg [3:0] X_MASK_BR;
+reg [7:0] X_SCANLINESTR;
 
 
 assign pclk_1x = PCLK_in;
+assign PCLK_out = pclk_act;
 assign pclk_lock = {pclk_2x_lock, 2'b11};
 
-assign PCLK_out = pclk_act;
-
-assign lines_out = lines_5x;
 
 //Scanline generation
 function [7:0] apply_scanlines;
-    input enable;
-    input dir;
+    input [1:0] mode;
     input [7:0] data;
     input [7:0] str;
-    input [1:0] actid;
-    input [1:0] lineid;
-    input pixid;
+    input [4:0] mask;
+    input [2:0] line_id;
+    input [2:0] col_id;
     begin
-        if (enable & (dir == 1'b0) & (actid == lineid))
+        if ((mode == `SCANLINES_H) && (mask & (5'h1<<line_id)))
             apply_scanlines = (data > str) ? (data-str) : 8'h00;
-        else if (enable & (dir == 1'b1) & (actid == pixid))
+        else if ((mode == `SCANLINES_V) && (5'h0 == col_id))
             apply_scanlines = (data > str) ? (data-str) : 8'h00;
         else
             apply_scanlines = data;
@@ -147,15 +150,10 @@ function [7:0] apply_scanlines;
 function [7:0] apply_mask;
     input enable;
     input [7:0] data;
-    input [11:0] hoffset;
-    input [11:0] hstart;
-    input [11:0] hend;
-    input [10:0] voffset;
-    input [10:0] vstart;
-    input [10:0] vend;
+    input [3:0] brightness;
     begin
-        if (enable & (/*(hoffset < hstart) | (hoffset >= hend) | */(voffset < vstart) | (voffset >= vend)))
-            apply_mask = 8'h00;
+        if (enable)
+            apply_mask = {brightness, 4'h0};
         else
             apply_mask = data;
     end
@@ -177,301 +175,269 @@ function [7:0] apply_fade;
 //Non-critical signals and inactive clock combinations filtered out in SDC
 always @(*)
 begin
-    case (H_LINEMULT)
-    `LINEMULT_DISABLE: begin
+case (V_MULTMODE)
+    default: begin //`V_MULTMODE_1X
         R_act = R_lbuf;
         G_act = G_lbuf;
         B_act = B_lbuf;
         F_act = F_lbuf;
-        DE_act = DE_1x;
         HSYNC_act = HSYNC_1x;
         VSYNC_act = VSYNC_1x;
+        DE_act = DE_1x;
         linebuf_rdclock = pclk_ext;
         linebuf_hoffset = ((6*{2'b00, h_ext})/5)+24;
-        pclk_act = pclk_ext;
-        slid_act = {1'b0, vcnt_1x[0]};
+        line_id_act = {2'b00, vcnt_1x[0]};
         hcnt_act = hcnt_1x;
         vcnt_act = vcnt_1x;
+        pclk_act = pclk_ext;
     end
-    `LINEMULT_DOUBLE: begin
-        R_act = R_2x;
-        G_act = G_2x;
-        B_act = B_2x;
-        F_act = F_2x;
-        DE_act = DE_2x;
+    `V_MULTMODE_2X: begin
+        R_act = R_lbuf;
+        G_act = G_lbuf;
+        B_act = B_lbuf;
+        F_act = F_lbuf;
         HSYNC_act = HSYNC_2x;
         VSYNC_act = VSYNC_2x;
+        DE_act = DE_2x;
         linebuf_rdclock = pclk_2x;
         linebuf_hoffset = hcnt_2x;
-        pclk_act = pclk_2x;
-        slid_act = {1'b0, vcnt_2x[0]};
+        line_id_act = {1'b0, line_out_idx_2x};
         hcnt_act = hcnt_2x;
         vcnt_act = vcnt_2x_ref;
+        pclk_act = pclk_2x;
     end
-    `LINEMULT_5x: begin
-        R_act = R_5x;
-        G_act = G_5x;
-        B_act = B_5x;
-        F_act = F_5x;
-        DE_act = DE_5x;
+    `V_MULTMODE_5X: begin
+        R_act = R_lbuf;
+        G_act = G_lbuf;
+        B_act = B_lbuf;
+        F_act = F_lbuf;
         HSYNC_act = HSYNC_5x;
         VSYNC_act = VSYNC_5x;
+        DE_act = DE_5x;
         linebuf_rdclock = pclk_5x;
         linebuf_hoffset = hcnt_5x;
-        pclk_act = pclk_5x;
-        slid_act = {1'b0, vcnt_2x[0]};
+        line_id_act = line_out_idx_5x;
         hcnt_act = hcnt_5x;
-        vcnt_act = vcnt_5x_ref;
-    end
-    default: begin
-        R_act = 0;
-        G_act = 0;
-        B_act = 0;
-        F_act = 0;
-        DE_act = 0;
-        HSYNC_act = 0;
-        VSYNC_act = VSYNC_1x;
-        linebuf_rdclock = 0;
-        linebuf_hoffset = 0;
-        pclk_act = 0;
-        slid_act = 0;
-        hcnt_act = 0;
-        vcnt_act = 0;
+        vcnt_act = vcnt_5x;
+        pclk_act = pclk_5x;
     end
     endcase
 end
 
-pll_2x pll_linedouble (
-    .areset ( 1'b0 ),
-    .inclk0 ( PCLK_in ),
-    .c0 ( pclk_2x ),
-    .c1 ( pclk_5x ),
-    .locked ( pclk_2x_lock )
-);
+wire [9:0] linebuf_rdaddr = (linebuf_hoffset>>1)-H_AVIDSTART+30;
+wire [9:0] linebuf_wraddr = (hcnt_1x>>1)-H_AVIDSTART;
 
 linebuf	linebuf_rgb (
-    .data ( {R_1x, G_1x, B_1x, F_1x} ),
-    .rdaddress ( linebuf_hoffset + (~line_idx << 11) ),
+    .data ( {R_in_L, G_in_L, B_in_L, F_in_L} ),
+    .rdaddress ( {~line_idx, linebuf_rdaddr[8:0]} ),
     .rdclock ( linebuf_rdclock ),
-    .wraddress ( hcnt_1x + (line_idx << 11) ),
+    .wraddress( {line_idx, linebuf_wraddr[8:0]} ),
     .wrclock ( pclk_1x ),
-    .wren ( 1'b1 ),
+    .wren ( !linebuf_wraddr[9] ),
     .q ( {R_lbuf, G_lbuf, B_lbuf, F_lbuf} )
 );
 
 //Postprocess pipeline
-always @(posedge pclk_act /*or negedge reset_n*/)
+// h_cnt, v_cnt, line_id, col_id:   0
+// HSYNC, VSYNC, DE:                1
+// RGB:                             2
+always @(posedge pclk_act)
 begin
-    /*if (!reset_n)
-        begin
-        end
-    else*/
-        begin
-            R_pp1 <= apply_fade(R_act, F_act);
-            G_pp1 <= apply_fade(G_act, F_act);
-            B_pp1 <= apply_fade(B_act, F_act);
-            HSYNC_pp1 <= HSYNC_act;
-            VSYNC_pp1 <= VSYNC_act;
-            DE_pp1 <= DE_act;
-            
-            R_pp2 <= apply_mask(1, R_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
-            G_pp2 <= apply_mask(1, G_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
-            B_pp2 <= apply_mask(1, B_pp1, hcnt_act, H_BACKPORCH+H_MASK, H_BACKPORCH+H_ACTIVE-H_MASK, vcnt_act, V_BACKPORCH+V_MASK, V_BACKPORCH+V_ACTIVE-V_MASK);
-            HSYNC_pp2 <= HSYNC_pp1;
-            VSYNC_pp2 <= VSYNC_pp1;
-            DE_pp2 <= DE_pp1;
-            
-            R_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, R_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            G_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, G_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            B_out <= apply_scanlines(V_SCANLINES, V_SCANLINEDIR, B_pp2, V_SCANLINESTR, {1'b0, V_SCANLINEID}, slid_act, hcnt_act[0]);
-            HSYNC_out <= HSYNC_pp2;
-            VSYNC_out <= VSYNC_pp2;
-            DE_out <= DE_pp2;
-        end
+    line_id_pp1 <= line_id_act;
+    col_id_pp1 <= col_id_act;
+    mask_enable_pp1 <= ((hcnt_act < H_AVIDSTART+H_MASK) | (hcnt_act >= H_AVIDSTART+H_ACTIVE-H_MASK) | (vcnt_act < V_AVIDSTART+V_MASK) | (vcnt_act >= V_AVIDSTART+V_ACTIVE-V_MASK));
+
+    HSYNC_pp2 <= HSYNC_act;
+    VSYNC_pp2 <= VSYNC_act;
+    DE_pp2 <= DE_act;
+    line_id_pp2 <= line_id_pp1;
+    col_id_pp2 <= col_id_pp1;
+    mask_enable_pp2 <= mask_enable_pp1;
+    
+    R_pp3 <= apply_fade(R_act, F_act);
+    G_pp3 <= apply_fade(G_act, F_act);
+    B_pp3 <= apply_fade(B_act, F_act);
+    HSYNC_pp3 <= HSYNC_pp2;
+    VSYNC_pp3 <= VSYNC_pp2;
+    DE_pp3 <= DE_pp2;
+    line_id_pp3 <= line_id_pp2;
+    col_id_pp3 <= col_id_pp2;
+    mask_enable_pp3 <= mask_enable_pp2;
+
+    R_pp4 <= apply_scanlines(V_SCANLINEMODE, R_pp3, X_SCANLINESTR, V_SCANLINEID, line_id_pp3, col_id_pp3);
+    G_pp4 <= apply_scanlines(V_SCANLINEMODE, G_pp3, X_SCANLINESTR, V_SCANLINEID, line_id_pp3, col_id_pp3);
+    B_pp4 <= apply_scanlines(V_SCANLINEMODE, B_pp3, X_SCANLINESTR, V_SCANLINEID, line_id_pp3, col_id_pp3);
+    HSYNC_pp4 <= HSYNC_pp3;
+    VSYNC_pp4 <= VSYNC_pp3;
+    DE_pp4 <= DE_pp3;
+    mask_enable_pp4 <= mask_enable_pp3;
+
+    R_out <= apply_mask(mask_enable_pp4, R_pp4, X_MASK_BR);
+    G_out <= apply_mask(mask_enable_pp4, G_pp4, X_MASK_BR);
+    B_out <= apply_mask(mask_enable_pp4, B_pp4, X_MASK_BR);
+    HSYNC_out <= HSYNC_pp4;
+    VSYNC_out <= VSYNC_pp4;
+    DE_out <= DE_pp4;
 end
 
 //Generate a warning signal from horizontal instability or PLL sync loss
 always @(posedge pclk_1x /*or negedge reset_n*/)
 begin
-    /*if (!reset_n)
-        begin
-        end
-    else*/
-        begin
-            if (hmax[0] != hmax[1])
-                warn_h_unstable <= 1;
-            else if (warn_h_unstable != 0)
-                warn_h_unstable <= warn_h_unstable + 1'b1;
-        
-            if ((H_LINEMULT == `LINEMULT_DOUBLE) & ~pclk_2x_lock)
-                warn_pll_lock_lost <= 1;
-            else if (warn_pll_lock_lost != 0)
-                warn_pll_lock_lost <= warn_pll_lock_lost + 1'b1;
-        end
+    if (hmax[0] != hmax[1])
+        warn_h_unstable <= 1;
+    else if (warn_h_unstable != 0)
+        warn_h_unstable <= warn_h_unstable + 1'b1;
+
+    if ((V_MULTMODE == `V_MULTMODE_2X) & ~pclk_2x_lock)
+        warn_pll_lock_lost <= 1;
+    else if (warn_pll_lock_lost != 0)
+        warn_pll_lock_lost <= warn_pll_lock_lost + 1'b1;
 end
 
 assign h_unstable = (warn_h_unstable != 0);
 assign pll_lock_lost = {(warn_pll_lock_lost != 0), 2'b00};
 
 //Buffer the inputs using input pixel clock and generate 1x signals
-always @(posedge pclk_1x /*or negedge reset_n*/)
+always @(posedge pclk_1x or negedge reset_n)
 begin
-    /*if (!reset_n)
-        begin
+    if (!reset_n) begin
+        hcnt_1x <= 0;
+        vcnt_1x <= 0;
+        hmax[0] <= 0;
+        hmax[1] <= 0;
+        vmax <= 0;
+        line_idx <= 0;
+        line_change <= 1'b0;
+        frame_change <= 1'b0;
+        V_MULTMODE <= 0;
+    end else begin
+        if (`HSYNC_LEADING_EDGE) begin
+            hcnt_1x <= 0;
+            hmax[line_idx] <= hcnt_1x;
+            line_idx <= line_idx ^ 1'b1;
+            line_change <= 1'b1;
+        end else begin
+            hcnt_1x <= hcnt_1x + 1'b1;
+            line_change <= 1'b0;
         end
-    else*/
-        begin
-            if (`HSYNC_LEADING_EDGE)
-                begin
-                    hcnt_1x <= 0;
-                    hmax[line_idx] <= hcnt_1x;
-                    line_idx <= line_idx ^ 1'b1;
-                    vcnt_1x <= vcnt_1x + 1'b1;
-                end
-            else
-                begin
-                    hcnt_1x <= hcnt_1x + 1'b1;
-                end
 
-            if (`VSYNC_LEADING_EDGE) begin
+        if (`HSYNC_LEADING_EDGE) begin
+            if ((VSYNC_in == `LO) & (vcnt_1x > 100)) begin
                 vcnt_1x <= 0;
-                lines_1x <= vcnt_1x;
-                
-                /*H_ACTIVE <= 384*2;
-                H_BACKPORCH <= 66*2;
-                H_LINEMULT <= `LINEMULT_DOUBLE;
-                H_SYNCLEN <= 31*2;
-                H_MASK <= 0;
-                V_SYNCLEN <= 3;
-                V_ACTIVE <= 240;
-                V_BACKPORCH <= 16;
-                V_MISMODE <= 0;
-                V_SCANLINES <= 0;
-                V_SCANLINEDIR <= 0;
-                V_SCANLINEID <= 0;
-                V_SCANLINESTR <= 0;
-                V_MASK <= 0;*/
-                H_ACTIVE <= 960;
-                H_BACKPORCH <= 20;
-                H_LINEMULT <= `LINEMULT_DISABLE;
-                H_SYNCLEN <= 20;
-                V_SYNCLEN <= 3;
-                H_MASK <= 0;
-                V_ACTIVE <= /*216*/224;
-                V_BACKPORCH <= 16+12;
-                V_MISMODE <= 0;
-                V_SCANLINES <= 0;
-                V_SCANLINEDIR <= 0;
-                V_SCANLINEID <= 0;
-                V_SCANLINESTR <= 0;
-                V_MASK <= 0;
+                frame_change <= 1'b1;
+                vmax <= vcnt_1x;
+            end else begin
+                vcnt_1x <= vcnt_1x + 1'b1;
             end
-            
-            prev_hs <= HSYNC_in;
-            prev_vs <= VSYNC_in;
+        end else
+            frame_change <= 1'b0;
 
-            R_1x <= R_in;
-            G_1x <= G_in;
-            B_1x <= B_in;
-            F_1x <= F_in;
-            HSYNC_1x <= HSYNC_in;
-            VSYNC_1x <= VSYNC_in;
-            DE_1x <= ((hcnt_1x >= H_SYNCLEN+H_BACKPORCH) & (hcnt_1x < H_SYNCLEN+H_BACKPORCH + H_ACTIVE)) & ((vcnt_1x >= V_SYNCLEN+V_BACKPORCH) & (vcnt_1x < V_SYNCLEN+V_BACKPORCH + V_ACTIVE));
+        if (frame_change) begin
+            //Read configuration data from CPU
+            V_MULTMODE <= `V_MULTMODE_5X;    // Line multiply mode
+
+            H_SYNCLEN <= 20;
+            H_AVIDSTART <= 20+20-2;
+            H_ACTIVE <= 960;
+
+            V_SYNCLEN <= 3;
+            V_AVIDSTART <= 3+16+12;
+            V_ACTIVE <= 216/*224*/;
+
+            H_MASK <= 96;
+            V_MASK <= 0;
+
+            V_SCANLINEMODE <= x_info[1:0];
+            X_SCANLINESTR <= ((x_info[5:2]+8'h01)<<4)-1'b1;
+            V_SCANLINEID <= x_info[10:6];
+            X_MASK_BR <= 0;
         end
+            
+        R_in_L <= R_in;
+        G_in_L <= G_in;
+        B_in_L <= B_in;
+        F_in_L <= F_in;
+        HSYNC_in_L <= HSYNC_in;
+        VSYNC_in_L <= VSYNC_in;
+
+        // Add one delay stage to match linebuf delay
+        R_in_LL <= R_in_L;
+        G_in_LL <= G_in_L;
+        B_in_LL <= B_in_L;
+        F_in_LL <= F_in_L;
+
+        R_1x <= R_in_LL;
+        G_1x <= G_in_LL;
+        B_1x <= B_in_LL;
+        F_1x <= F_in_LL;
+        HSYNC_1x <= (hcnt_1x < H_SYNCLEN) ? `HSYNC_POL : ~`HSYNC_POL;
+        VSYNC_1x <= (vcnt_1x < V_SYNCLEN) ? `VSYNC_POL : ~`VSYNC_POL;
+        DE_1x <= ((hcnt_1x >= H_AVIDSTART) & (hcnt_1x < H_AVIDSTART+H_ACTIVE)) & ((vcnt_1x >= V_AVIDSTART) & (vcnt_1x < V_AVIDSTART+V_ACTIVE));
+    end
 end
 
 //Generate 2x signals for linedouble
-always @(posedge pclk_2x /*or negedge reset_n*/)
+always @(posedge pclk_2x or negedge reset_n)
 begin
-    /*if (!reset_n)
-        begin
-        end
-    else*/
-        begin
-            if ((pclk_1x == 1'b0) & `HSYNC_LEADING_EDGE) begin
-                hcnt_2x <= 0;
-                line_out_idx_2x <= 0;
+    if (!reset_n) begin
+        hcnt_2x <= 0;
+        vcnt_2x <= 0;
+        line_out_idx_2x <= 0;
+    end else begin
+        if ((pclk_1x == 1'b0) & (line_change | frame_change)) begin  //aligned with posedge of pclk_1x
+            hcnt_2x <= 0;
+            line_out_idx_2x <= 0;
+            if (frame_change)
+                vcnt_2x <= -1;
+            else if (line_change)
                 vcnt_2x <= vcnt_2x + 1'b1;
-                vcnt_2x_ref <= vcnt_2x_ref + 1'b1;
-            end else if (hcnt_2x == hmax[~line_idx]) begin
-                hcnt_2x <= 0;
-                line_out_idx_2x <= line_out_idx_2x + 1'b1;
-                vcnt_2x <= vcnt_2x + 1'b1;
-                /*if (line_out_idx_2x == 1)
-                    vcnt_2x_ref <= vcnt_2x_ref + 1'b1;*/
-            end else begin
-                hcnt_2x <= hcnt_2x + 1'b1;
-            end
-
-            if ((pclk_1x == 1'b0) & `VSYNC_LEADING_EDGE) begin
-                vcnt_2x <= 0;
-                vcnt_2x_ref <= 0;
-                lines_2x <= vcnt_2x;
-            end
-
-            R_2x <= R_lbuf;
-            G_2x <= G_lbuf;
-            B_2x <= B_lbuf;
-            F_2x <= F_lbuf;
-            HSYNC_2x <= ~(hcnt_2x < H_SYNCLEN);
-            VSYNC_2x <= ~(vcnt_2x_ref < V_SYNCLEN);
-            DE_2x <= ((hcnt_2x >= H_SYNCLEN+H_BACKPORCH) & (hcnt_2x < H_SYNCLEN+H_BACKPORCH + H_ACTIVE)) & ((vcnt_2x_ref >= V_SYNCLEN+V_BACKPORCH) & (vcnt_2x_ref < V_SYNCLEN+V_BACKPORCH + V_ACTIVE));
+        end else if (hcnt_2x == hmax[~line_idx]) begin
+            hcnt_2x <= 0;
+            line_out_idx_2x <= line_out_idx_2x + 1'b1;
+        end else begin
+            hcnt_2x <= hcnt_2x + 1'b1;
         end
+
+        HSYNC_2x <= (hcnt_2x < H_SYNCLEN) ? `HSYNC_POL : ~`HSYNC_POL;
+        VSYNC_2x <= (vcnt_2x < V_SYNCLEN) ? `VSYNC_POL : ~`VSYNC_POL;
+        DE_2x <= ((hcnt_2x >= H_AVIDSTART) & (hcnt_2x < H_AVIDSTART+H_ACTIVE)) & ((vcnt_2x >= V_AVIDSTART) & (vcnt_2x < V_AVIDSTART+V_ACTIVE));
+    end
 end
 
-always @(posedge pclk_5x /*or negedge reset_n*/)
+always @(posedge pclk_5x or negedge reset_n)
 begin
-    /*if (!reset_n)
-        begin
+    if (!reset_n) begin
+        hcnt_5x <= 0;
+        vcnt_5x <= 0;
+        line_out_idx_5x <= 0;
+    end else begin
+        if ((pclk_5x_cnt == 0) & (line_change | frame_change)) begin  //aligned with posedge of pclk_1x
             hcnt_5x <= 0;
-            vcnt_5x <= 0;
-            vcnt_5x_ref <= 0;
-            lines_5x <= 0;
-            R_5x <= 8'h00;
-            G_5x <= 8'h00;
-            B_5x <= 8'h00;
-        end
-    else*/
-        begin
-            if ((pclk_5x_cnt == 0) & `HSYNC_LEADING_EDGE) begin
-                hcnt_5x <= 0;
-                line_out_idx_5x <= 0;
+            line_out_idx_5x <= 0;
+            if (frame_change)
+                vcnt_5x <= -1;
+            else if (line_change)
                 vcnt_5x <= vcnt_5x + 1'b1;
-                vcnt_5x_ref <= vcnt_5x_ref + 1'b1;
-            end else if (hcnt_5x == hmax[~line_idx]) begin
-                hcnt_5x <= 0;
-                line_out_idx_5x <= line_out_idx_5x + 1'b1;
-                vcnt_5x <= vcnt_5x + 1'b1;
-                /*if (line_out_idx_5x == 4)
-                    vcnt_5x_ref <= vcnt_5x_ref + 1'b1;*/
-            end else begin
-                hcnt_5x <= hcnt_5x + 1'b1;
-            end
-                
-            if ((pclk_5x_cnt == 0) & `VSYNC_LEADING_EDGE) begin //aligned with posedge of pclk_1x
-                vcnt_5x <= 0;
-                vcnt_5x_ref <= 0;
-                lines_5x <= vcnt_5x_ref;
-            end
-            
-            //track pclk_5x alignment to pclk_1x rising edge (pclk_1x=1 @ 144deg & pclk_1x=0 @ 216deg & pclk_1x=0 @ 288deg)
-            if (((pclk_1x_prevprev5x == 1'b1) & (pclk_1x_prev5x == 1'b0)) | (pclk_5x_cnt == 3'h4))
-                pclk_5x_cnt <= 0;
-            else
-                pclk_5x_cnt <= pclk_5x_cnt + 1'b1;
-                
-            pclk_1x_prev5x <= pclk_1x;
-            pclk_1x_prevprev5x <= pclk_1x_prev5x;
-            
-            
-            R_5x <= R_lbuf;
-            G_5x <= G_lbuf;
-            B_5x <= B_lbuf;
-            F_5x <= F_lbuf;
-            HSYNC_5x <= ~(hcnt_5x < H_SYNCLEN);
-            VSYNC_5x <= ~(vcnt_5x_ref < V_SYNCLEN);
-            DE_5x <= ((hcnt_5x >= H_SYNCLEN+H_BACKPORCH) & (hcnt_5x < H_SYNCLEN+H_BACKPORCH + H_ACTIVE)) & ((vcnt_5x_ref >= V_SYNCLEN+V_BACKPORCH) & (vcnt_5x_ref < V_SYNCLEN+V_BACKPORCH + V_ACTIVE));
+        end else if (hcnt_5x == hmax[~line_idx]) begin
+            hcnt_5x <= 0;
+            line_out_idx_5x <= line_out_idx_5x + 1'b1;
+        end else begin
+            hcnt_5x <= hcnt_5x + 1'b1;
         end
+
+        //track pclk_5x alignment to pclk_1x rising edge (pclk_1x=1 @ 144deg & pclk_1x=0 @ 216deg & pclk_1x=0 @ 288deg)
+        if (((pclk_1x_prevprev5x == 1'b1) & (pclk_1x_prev5x == 1'b0)) | (pclk_5x_cnt == 3'h4))
+            pclk_5x_cnt <= 0;
+        else
+            pclk_5x_cnt <= pclk_5x_cnt + 1'b1;
+
+        pclk_1x_prev5x <= pclk_1x;
+        pclk_1x_prevprev5x <= pclk_1x_prev5x;
+
+        HSYNC_5x <= (hcnt_5x < H_SYNCLEN) ? `HSYNC_POL : ~`HSYNC_POL;
+        VSYNC_5x <= (vcnt_5x < V_SYNCLEN) ? `VSYNC_POL : ~`VSYNC_POL;
+        DE_5x <= ((hcnt_5x >= H_AVIDSTART) & (hcnt_5x < H_AVIDSTART+H_ACTIVE)) & ((vcnt_5x >= V_AVIDSTART) & (vcnt_5x < V_AVIDSTART+V_ACTIVE));
+    end
 end
 
 endmodule

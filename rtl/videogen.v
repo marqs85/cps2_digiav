@@ -37,14 +37,20 @@ module videogen (
 parameter   H_SYNCLEN       =   96;
 parameter   H_BACKPORCH     =   48;
 parameter   H_ACTIVE        =   640;
-/*parameter   H_SYNCLEN       =   12;
-parameter   H_BACKPORCH     =   12;
-parameter   H_ACTIVE        =   768;*/
 parameter   H_TOTAL         =   800;
 parameter   V_SYNCLEN       =   6;
 parameter   V_BACKPORCH     =   32;
 parameter   V_ACTIVE        =   480;
 parameter   V_TOTAL         =   524;
+
+/*parameter   H_SYNCLEN       =   44;
+parameter   H_BACKPORCH     =   188;
+parameter   H_ACTIVE        =   1920;
+parameter   H_TOTAL         =   2191;
+parameter   V_SYNCLEN       =   5;
+parameter   V_BACKPORCH     =   36;
+parameter   V_ACTIVE        =   1080;
+parameter   V_TOTAL         =   1125;*/
 
 parameter   H_OVERSCAN      =   40; //at both sides
 parameter   V_OVERSCAN      =   16; //top and bottom
@@ -57,11 +63,8 @@ parameter   X_START     =   H_SYNCLEN + H_BACKPORCH;
 parameter   Y_START     =   V_SYNCLEN + V_BACKPORCH;
 
 //Counters
-reg [10:0] h_cnt; //max. 1024
-reg [9:0] v_cnt; //max. 1024
-
-reg [9:0] xpos;
-reg [9:0] ypos;
+reg [11:0] h_cnt; //max. 4096
+reg [10:0] v_cnt; //max. 2048
 
 assign PCLK_out = clk25;
 
@@ -76,6 +79,7 @@ assign B_out = ENABLE_out ? V_gen : 8'h00;
 assign H_cnt = h_cnt;
 
 reg [7:0] V_gen;
+reg frameid;
 
 //HSYNC gen (negative polarity)
 always @(posedge clk25 or negedge reset_n)
@@ -120,9 +124,9 @@ begin
         end
     else
         begin
-            if ((prev_vs == 1'b1) && (VSYNC_in == 1'b0))
+            if ((prev_vs == 1'b1) && (VSYNC_in == 1'b0)) begin
                 v_cnt <= 0;
-            else if (h_cnt == 0)
+            end else if (h_cnt == 0)
                 begin
                     //Vsync counter
                     if (v_cnt < V_TOTAL-1 )

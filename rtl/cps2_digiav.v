@@ -17,7 +17,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-`define VGAMODE
+//`define VGAMODE
 //`define TESTPATTERN
 
 module cps2_digiav(
@@ -53,9 +53,7 @@ module cps2_digiav(
 wire reset_n;
 wire [2:0] pclk_lock;
 wire [2:0] pll_lock_lost;
-wire [31:0] h_info;
-wire [31:0] v_info;
-wire [10:0] lines_out;
+wire [31:0] x_info;
 
 wire [7:0] R_out, G_out, B_out;
 wire HSYNC_out;
@@ -63,7 +61,8 @@ wire VSYNC_out;
 wire PCLK_out;
 wire DATA_enable;
 
-wire clk25;
+wire clk25, pclk_5x, pclk_hdtv;
+wire pclk_ext = clk25;
 
 wire I2S_WS_2x;
 wire I2S_DATA_2x;
@@ -78,24 +77,21 @@ reg HSYNC_in_L, VSYNC_in_L;
 // Latch inputs syncronized to PCLKx2_in (negedge)
 always @(negedge PCLK2x_in or negedge reset_n)
 begin
-    if (!reset_n)
-        begin
-            R_in_L <= 4'h0;
-            G_in_L <= 4'h0;
-            B_in_L <= 4'h0;
-            F_in_L <= 4'h0;
-            HSYNC_in_L <= 1'b0;
-            VSYNC_in_L <= 1'b0;
-        end
-    else
-        begin
-            R_in_L <= R_in;
-            G_in_L <= G_in;
-            B_in_L <= B_in;
-            F_in_L <= F_in;
-            HSYNC_in_L <= HSYNC_in;
-            VSYNC_in_L <= VSYNC_in;
-        end
+    if (!reset_n) begin
+        R_in_L <= 4'h0;
+        G_in_L <= 4'h0;
+        B_in_L <= 4'h0;
+        F_in_L <= 4'h0;
+        HSYNC_in_L <= 1'b0;
+        VSYNC_in_L <= 1'b0;
+    end else begin
+        R_in_L <= R_in;
+        G_in_L <= G_in;
+        B_in_L <= B_in;
+        F_in_L <= F_in;
+        HSYNC_in_L <= HSYNC_in;
+        VSYNC_in_L <= VSYNC_in;
+    end
 end
 
 
@@ -117,23 +113,25 @@ assign HDMI_TX_BD = B_out;
 sys sys_inst(
     .clk_clk                            (clk25),
     .reset_reset_n                      (reset_n),
-    .pio_0_ctrl_in_export               ({22'h0, lines_out}),
+    .pio_0_ctrl_in_export               ({BTN_volminus, BTN_volplus, 30'h0}),
+    .pio_1_ctrl_out_export              (x_info),
     .i2c_opencores_0_export_scl_pad_io  (scl),
     .i2c_opencores_0_export_sda_pad_io  (sda)
 );
 
 scanconverter scanconverter_inst (
+    .reset_n        (reset_n),
     .HSYNC_in       (HSYNC_in_L),
     .VSYNC_in       (VSYNC_in_L),
     .PCLK_in        (PCLK2x_in),
-    .pclk_ext       (clk25),
+    .pclk_ext       (pclk_ext),
+    .pclk_5x        (pclk_5x),
     .h_ext          (h_ext),
     .R_in           (R_in_L),
     .G_in           (G_in_L),
     .B_in           (B_in_L),
     .F_in           (F_in_L),
-    .h_info         (h_info),
-    .v_info         (v_info),
+    .x_info         (x_info),
 `ifdef TESTPATTERN
     .R_out          (),
     .G_out          (),
@@ -155,20 +153,26 @@ scanconverter scanconverter_inst (
     .DE_out         (DATA_enable),
 `endif
     .pclk_lock      (pclk_lock),
-    .pll_lock_lost  (pll_lock_lost),
-    .lines_out      (lines_out),
+    .pll_lock_lost  (pll_lock_lost)
 );
 
-pll_vga	pll_vga_inst (
+pll_pclk pll_pclk_inst (
     .inclk0 ( PCLK2x_in ),
     .c0 ( clk25 ),
+    .c1 ( pclk_5x ),
+    .locked ( )
+);
+
+pll_pclk_hdtv pll_pclk_hdtv_inst (
+    .inclk0 ( PCLK2x_in ),
+    .c0 ( pclk_hdtv ),
     .locked ( )
 );
 
 `ifdef VGAMODE
 videogen vg0 (
-    .clk25          (clk25),
-    .reset_n        (1'b1),
+    .clk25          (pclk_ext),
+    .reset_n        (reset_n),
     .HSYNC_in       (HSYNC_in_L),
     .VSYNC_in       (VSYNC_in_L),
     .HSYNC_out      (HSYNC_out),
