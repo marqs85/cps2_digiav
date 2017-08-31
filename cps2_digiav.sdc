@@ -46,7 +46,7 @@ set_false_path -from [get_clocks pclk_5x] -to [get_clocks clk16]
 #set_false_path -from [get_clocks {pclk_vga}] -through $clkmuxregs
 
 # Ignore paths from registers which are updated only at the end of vsync
-#set_false_path -from [get_cells {scanconverter_inst|H_* scanconverter_inst|V_* scanconverter:scanconverter_inst|lines_*}]
+set_false_path -from [get_cells {scanconverter_inst|H_* scanconverter_inst|V_* scanconverter_inst|X_*}]
 
 # Ignore paths from registers which are updated only at the end of hsync
 #set_false_path -from [get_cells {scanconverter:scanconverter_inst|vcnt_* scanconverter:scanconverter_inst|line_idx scanconverter:scanconverter_inst|line_out_idx* scanconverter:scanconverter_inst|HSYNC_start*}]

@@ -17,7 +17,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-//`define VGAMODE
 //`define TESTPATTERN
 
 module cps2_digiav(
@@ -53,22 +52,28 @@ module cps2_digiav(
 wire reset_n;
 wire [2:0] pclk_lock;
 wire [2:0] pll_lock_lost;
-wire [31:0] x_info;
+wire [31:0] h_info, v_info, x_info;
 
 wire [7:0] R_out, G_out, B_out;
 wire HSYNC_out;
 wire VSYNC_out;
 wire PCLK_out;
-wire DATA_enable;
+wire DE_out;
 
-wire clk25, pclk_5x, pclk_hdtv;
+wire clk25, pclk_5x;
 wire pclk_ext = clk25;
 
 wire I2S_WS_2x;
 wire I2S_DATA_2x;
 wire I2S_BCK_OUT;
 wire [7:0] clkcnt_out;
-wire [10:0] h_ext;
+
+wire [10:0] hcnt_videogen, vcnt_videogen;
+wire HSYNC_videogen, VSYNC_videogen, DE_videogen;
+wire PCLK_videogen;
+
+wire BTN_volminus_debounced;
+wire BTN_volplus_debounced;
 
 
 reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
@@ -98,7 +103,7 @@ end
 assign reset_n = 1'b1;
 
 assign HDMI_TX_RST_N = reset_n;
-assign HDMI_TX_DE = DATA_enable;
+assign HDMI_TX_DE = DE_out;
 assign HDMI_TX_PCLK = PCLK_out;
 assign HDMI_TX_HS = HSYNC_out;
 assign HDMI_TX_VS = VSYNC_out;
@@ -113,8 +118,10 @@ assign HDMI_TX_BD = B_out;
 sys sys_inst(
     .clk_clk                            (clk25),
     .reset_reset_n                      (reset_n),
-    .pio_0_ctrl_in_export               ({BTN_volminus, BTN_volplus, 30'h0}),
-    .pio_1_ctrl_out_export              (x_info),
+    .pio_0_ctrl_in_export               ({BTN_volminus_debounced, BTN_volplus_debounced, 30'h0}),
+    .pio_1_h_info_out_export            (h_info),
+    .pio_2_v_info_out_export            (v_info),
+    .pio_3_x_info_out_export            (x_info),
     .i2c_opencores_0_export_scl_pad_io  (scl),
     .i2c_opencores_0_export_sda_pad_io  (sda)
 );
@@ -124,13 +131,19 @@ scanconverter scanconverter_inst (
     .HSYNC_in       (HSYNC_in_L),
     .VSYNC_in       (VSYNC_in_L),
     .PCLK_in        (PCLK2x_in),
-    .pclk_ext       (pclk_ext),
     .pclk_5x        (pclk_5x),
-    .h_ext          (h_ext),
+    .pclk_ext       (PCLK_videogen),
+    .hcnt_ext       (hcnt_videogen),
+    .vcnt_ext       (vcnt_videogen),
+    .HSYNC_ext      (HSYNC_videogen),
+    .VSYNC_ext      (VSYNC_videogen),
+    .DE_ext         (DE_videogen),
     .R_in           (R_in_L),
     .G_in           (G_in_L),
     .B_in           (B_in_L),
     .F_in           (F_in_L),
+    .h_info         (h_info),
+    .v_info         (v_info),
     .x_info         (x_info),
 `ifdef TESTPATTERN
     .R_out          (),
@@ -141,17 +154,10 @@ scanconverter scanconverter_inst (
     .G_out          (G_out),
     .B_out          (B_out),
 `endif
-`ifdef VGAMODE
-    .HSYNC_out      (),
-    .VSYNC_out      (),
-    .PCLK_out       (),
-    .DATA_enable    (),
-`else
     .HSYNC_out      (HSYNC_out),
     .VSYNC_out      (VSYNC_out),
     .PCLK_out       (PCLK_out),
-    .DE_out         (DATA_enable),
-`endif
+    .DE_out         (DE_out),
     .pclk_lock      (pclk_lock),
     .pll_lock_lost  (pll_lock_lost)
 );
@@ -163,23 +169,17 @@ pll_pclk pll_pclk_inst (
     .locked ( )
 );
 
-pll_pclk_hdtv pll_pclk_hdtv_inst (
-    .inclk0 ( PCLK2x_in ),
-    .c0 ( pclk_hdtv ),
-    .locked ( )
-);
-
-`ifdef VGAMODE
 videogen vg0 (
     .clk25          (pclk_ext),
     .reset_n        (reset_n),
     .HSYNC_in       (HSYNC_in_L),
     .VSYNC_in       (VSYNC_in_L),
-    .HSYNC_out      (HSYNC_out),
-    .VSYNC_out      (VSYNC_out),
-    .PCLK_out       (PCLK_out),
-    .ENABLE_out     (DATA_enable),
-    .H_cnt          (h_ext),
+    .HSYNC_out      (HSYNC_videogen),
+    .VSYNC_out      (VSYNC_videogen),
+    .PCLK_out       (PCLK_videogen),
+    .ENABLE_out     (DE_videogen),
+    .H_cnt          (hcnt_videogen),
+    .V_cnt          (vcnt_videogen),
 `ifdef TESTPATTERN
     .R_out          (R_out),
     .G_out          (G_out),
@@ -190,7 +190,6 @@ videogen vg0 (
     .B_out          ()
 `endif
 );
-`endif
 
 i2s_upsampler upsampler0 (
     .reset_n        (reset_n),
@@ -201,6 +200,18 @@ i2s_upsampler upsampler0 (
     .I2S_WS_2x      (I2S_WS_2x),
     .I2S_DATA_2x    (I2S_DATA_2x),
     .clkcnt_out     (clkcnt_out)
+);
+
+btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb0 (
+    .i_clk          (clk25),
+    .i_btn          (BTN_volminus),
+    .o_btn          (BTN_volminus_debounced)
+);
+
+btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb1 (
+    .i_clk          (clk25),
+    .i_btn          (BTN_volplus),
+    .o_btn          (BTN_volplus_debounced)
 );
 
 endmodule

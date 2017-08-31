@@ -29,7 +29,8 @@ module videogen (
     output reg VSYNC_out,
     output PCLK_out,
     output reg ENABLE_out,
-    output [10:0] H_cnt
+    output [10:0] H_cnt,
+    output [10:0] V_cnt
 );
 
 //Parameters for 640x480@60Hz (800px x 524lines, pclk 25MHz -> 59.637Hz)
@@ -38,8 +39,8 @@ parameter   H_SYNCLEN       =   96;
 parameter   H_BACKPORCH     =   48;
 parameter   H_ACTIVE        =   640;
 parameter   H_TOTAL         =   800;
-parameter   V_SYNCLEN       =   6;
-parameter   V_BACKPORCH     =   32;
+parameter   V_SYNCLEN       =   2;
+parameter   V_BACKPORCH     =   33;
 parameter   V_ACTIVE        =   480;
 parameter   V_TOTAL         =   524;
 
@@ -77,6 +78,7 @@ assign G_out = ENABLE_out ? V_gen : 8'h00;
 assign B_out = ENABLE_out ? V_gen : 8'h00;
 
 assign H_cnt = h_cnt;
+assign V_cnt = v_cnt;
 
 reg [7:0] V_gen;
 reg frameid;

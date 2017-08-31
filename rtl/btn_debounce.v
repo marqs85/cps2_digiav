@@ -1,7 +1,7 @@
 //
-// Copyright (C) 2015-2016  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2017  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
-// This file is part of Open Source Scan Converter project.
+// This file is part of CPS2_digiav project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,24 +17,28 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SYSCONFIG_H_
-#define SYSCONFIG_H_
+module btn_debounce #(
+    parameter MIN_PULSE_WIDTH=100
+) (
+    input i_clk,
+    input i_btn,
+    output reg o_btn
+);
 
-//#define I2C_DEBUG
-#define I2CA_BASE I2C_OPENCORES_0_BASE
+reg [$clog2(MIN_PULSE_WIDTH)-1:0] clk_ctr;
+reg i_btn_prev;
 
-#ifndef DEBUG
-#define OS_PRINTF(...)
-#define ErrorF(...)
-#define printf(...)
-#else
-#include <stdio.h>
-#define OS_PRINTF printf
-#define ErrorF printf
-// use reduced printf
-//#define printf alt_printf
-#endif
+always @(posedge i_clk) begin
+    if (i_btn == i_btn_prev) begin
+        if (clk_ctr == MIN_PULSE_WIDTH-1)
+            o_btn <= i_btn;
+        else
+            clk_ctr <= clk_ctr + 1;
+    end else begin
+        clk_ctr <= 0;
+    end
 
-#define WAITLOOP_SLEEP_US   10000
+    i_btn_prev <= i_btn;
+end
 
-#endif /* SYSCONFIG_H_ */
+endmodule

@@ -554,7 +554,7 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock)
     Instance[0].TMDSClock = VideoPixelClock ;
     BYTE fs = AUDFS_48KHz;
     Instance[0].bAudFs = fs;
-    Instance[0].bOutputAudioMode = B_AUDFMT_STD_I2S|B_AUDFMT_NO_DELAY_TO_WS;
+    Instance[0].bOutputAudioMode = B_AUDFMT_STD_I2S|B_AUDFMT_NO_DELAY_TO_WS|B_AUDFMT_FALL_EDGE_SAMPLE_WS;
     BYTE AudioEnable = (0x1 & ~(M_AUD_SWL|B_SPDIFTC)) | M_AUD_16BIT;
 
 
@@ -3269,25 +3269,16 @@ DISABLE_MPG_INFOFRM_PKT()
     HDMITX_WriteI2C_Byte(REG_TX_MPG_INFOFRM_CTRL,0);
 }
 
-void HDMITX_SetPixelRepetition(int pixelrep, int set_infoframe) {
+void TX_SetPixelRepetition(BYTE pixelrep, BYTE via_infoframe) {
     BYTE pllpr;
 
-    //Switch_HDMITX_Bank(0);
-    pllpr = HDMITX_ReadI2C_Byte(REG_TX_CLK_CTRL1) & 0x2F;
-    pixelrep &= 0x3;
-
-    if (set_infoframe) {
-        HDMITX_WriteI2C_Byte(REG_TX_CLK_CTRL1, pllpr);
-        Switch_HDMITX_Bank(1);
-        HDMITX_WriteI2C_Byte(REG_TX_AVIINFO_DB5, pixelrep);
-    } else {
-        pllpr |= (1<<4)|(pixelrep<<6);
-        HDMITX_WriteI2C_Byte(REG_TX_CLK_CTRL1, pllpr);
-        Switch_HDMITX_Bank(1);
-        HDMITX_WriteI2C_Byte(REG_TX_AVIINFO_DB5, 0);
-    }
-
     Switch_HDMITX_Bank(0);
+    pllpr = HDMITX_ReadI2C_Byte(REG_TX_CLK_CTRL1) & 0x2F;
+
+    if (!via_infoframe)
+        pllpr |= (1<<4)|((pixelrep&0x3)<<6);
+
+    HDMITX_WriteI2C_Byte(REG_TX_CLK_CTRL1, pllpr);
 }
 
 //////////////////////////////////////////////////////////////////////

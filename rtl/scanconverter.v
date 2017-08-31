@@ -25,7 +25,7 @@
 `define HSYNC_POL               `LO
 `define VSYNC_POL               `LO
 
-`define V_MULTMODE_1X           3'd0
+`define V_MULTMODE_EXT          3'd0
 `define V_MULTMODE_2X           3'd1
 `define V_MULTMODE_3X           3'd2
 `define V_MULTMODE_4X           3'd3
@@ -38,18 +38,29 @@
 `define HSYNC_LEADING_EDGE      ((HSYNC_in_L == `HI) & (HSYNC_in == `LO))
 `define VSYNC_LEADING_EDGE      ((VSYNC_in_L == `HI) & (VSYNC_in == `LO))
 
+`define EXT_H_AVIDSTART         144
+
+`define CPS2_H_AVIDSTART        97
+`define CPS2_H_ACTIVE           384
+
 module scanconverter (
     input reset_n,
     input [3:0] R_in,
     input [3:0] G_in,
     input [3:0] B_in,
     input [3:0] F_in,
-    input VSYNC_in,
     input HSYNC_in,
+    input VSYNC_in,
     input PCLK_in,
-    input pclk_ext,
     input pclk_5x,
-    input [10:0] h_ext,
+    input pclk_ext,
+    input [10:0] hcnt_ext,
+    input [10:0] vcnt_ext,
+    input HSYNC_ext,
+    input VSYNC_ext,
+    input DE_ext,
+    input [31:0] h_info,
+    input [31:0] v_info,
     input [31:0] x_info,
     output reg [7:0] R_out,
     output reg [7:0] G_out,
@@ -176,19 +187,19 @@ function [7:0] apply_fade;
 always @(*)
 begin
 case (V_MULTMODE)
-    default: begin //`V_MULTMODE_1X
+    default: begin //`V_MULTMODE_EXT
         R_act = R_lbuf;
         G_act = G_lbuf;
         B_act = B_lbuf;
         F_act = F_lbuf;
-        HSYNC_act = HSYNC_1x;
-        VSYNC_act = VSYNC_1x;
-        DE_act = DE_1x;
+        HSYNC_act = HSYNC_ext;
+        VSYNC_act = VSYNC_ext;
+        DE_act = DE_ext;
         linebuf_rdclock = pclk_ext;
-        linebuf_hoffset = ((6*{2'b00, h_ext})/5)+24;
-        line_id_act = {2'b00, vcnt_1x[0]};
-        hcnt_act = hcnt_1x;
-        vcnt_act = vcnt_1x;
+        linebuf_hoffset = ((6*{2'b00, hcnt_ext})/5)-((6*`EXT_H_AVIDSTART)/5);
+        line_id_act = {2'b0, vcnt_ext[0]};
+        hcnt_act = hcnt_ext;
+        vcnt_act = vcnt_ext;
         pclk_act = pclk_ext;
     end
     `V_MULTMODE_2X: begin
@@ -215,7 +226,7 @@ case (V_MULTMODE)
         VSYNC_act = VSYNC_5x;
         DE_act = DE_5x;
         linebuf_rdclock = pclk_5x;
-        linebuf_hoffset = hcnt_5x;
+        linebuf_hoffset = hcnt_5x - H_AVIDSTART - 96;
         line_id_act = line_out_idx_5x;
         hcnt_act = hcnt_5x;
         vcnt_act = vcnt_5x;
@@ -224,16 +235,17 @@ case (V_MULTMODE)
     endcase
 end
 
-wire [9:0] linebuf_rdaddr = (linebuf_hoffset>>1)-H_AVIDSTART+30;
-wire [9:0] linebuf_wraddr = (hcnt_1x>>1)-H_AVIDSTART;
+//wire [9:0] linebuf_rdaddr = (linebuf_hoffset-H_AVIDSTART-96)>>1;
+wire [9:0] linebuf_rdaddr = linebuf_hoffset>>1;
+wire [9:0] linebuf_wraddr = (hcnt_1x>>1)-`CPS2_H_AVIDSTART;
 
-linebuf	linebuf_rgb (
+linebuf linebuf_rgb (
     .data ( {R_in_L, G_in_L, B_in_L, F_in_L} ),
     .rdaddress ( {~line_idx, linebuf_rdaddr[8:0]} ),
     .rdclock ( linebuf_rdclock ),
     .wraddress( {line_idx, linebuf_wraddr[8:0]} ),
     .wrclock ( pclk_1x ),
-    .wren ( !linebuf_wraddr[9] ),
+    .wren ( linebuf_wraddr < `CPS2_H_ACTIVE ),
     .q ( {R_lbuf, G_lbuf, B_lbuf, F_lbuf} )
 );
 
@@ -334,18 +346,18 @@ begin
 
         if (frame_change) begin
             //Read configuration data from CPU
-            V_MULTMODE <= `V_MULTMODE_5X;    // Line multiply mode
+            V_MULTMODE <= x_info[31] ? `V_MULTMODE_EXT : `V_MULTMODE_5X;    // Line multiply mode
 
             H_SYNCLEN <= 20;
-            H_AVIDSTART <= 20+20-2;
-            H_ACTIVE <= 960;
+            H_AVIDSTART <= h_info[20:11];
+            H_ACTIVE <= h_info[10:0];
 
             V_SYNCLEN <= 3;
-            V_AVIDSTART <= 3+16+12;
-            V_ACTIVE <= 216/*224*/;
+            V_AVIDSTART <= v_info[17:11];
+            V_ACTIVE <= v_info[10:0];
 
-            H_MASK <= 96;
-            V_MASK <= 0;
+            H_MASK <= h_info[28:21];
+            V_MASK <= v_info[25:18];
 
             V_SCANLINEMODE <= x_info[1:0];
             X_SCANLINESTR <= ((x_info[5:2]+8'h01)<<4)-1'b1;

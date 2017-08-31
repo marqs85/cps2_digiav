@@ -148,20 +148,20 @@ begin
     reg [3:0] sample_idx_norm;
 
     if (!reset_n) begin
-            sample2x_ctr <= 0;
-            resample_l_ctr <= 0;
-            resample_r_ctr <= 0;
-            resample_idx <= 3'd4;
-            clken <= 0;
+        sample2x_ctr <= 0;
+        resample_l_ctr <= 0;
+        resample_r_ctr <= 0;
+        resample_idx <= 3'd4;
+        clken <= 0;
     end else begin
         if ((sample2x_ctr == 0) || (sample2x_ctr == 83)) begin
-                I2S_WS_2x <= 1'b0;
-                resample_l_ctr <= 16;
-                clken <= 1;
+            I2S_WS_2x <= 1'b0;
+            resample_l_ctr <= 16;
+            clken <= 1;
         end else if ((sample2x_ctr == 42) || (sample2x_ctr == (42+83))) begin
-                I2S_WS_2x <= 1'b1;
-                resample_r_ctr <= 16;
-                clken <= 1;
+            I2S_WS_2x <= 1'b1;
+            resample_r_ctr <= 16;
+            clken <= 1;
         end
 
         if (sample_idx_LL < resample_idx)

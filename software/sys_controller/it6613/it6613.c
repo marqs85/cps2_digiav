@@ -36,14 +36,6 @@ inline void write_it(alt_u32 regaddr, alt_u8 data) {
 	I2C_write(I2CA_BASE, data, 1);
 }
 
-/*inline void reset_it() {
-	usleep(100000);
-	IOWR_ALTERA_AVALON_PIO_DATA(PIO_0_BASE, 0x00);
-	usleep(100000);
-	IOWR_ALTERA_AVALON_PIO_DATA(PIO_0_BASE, 0x01);
-	usleep(100000);
-}*/
-
 int init_it() {
 	alt_u32 vendor_id, device_id;
 	alt_u32 i;
