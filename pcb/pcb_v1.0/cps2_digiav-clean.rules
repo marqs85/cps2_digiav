@@ -1,0 +1,221 @@
+
+(rules PCB cps2_digiav-clean
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 2048)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 3.1)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.5)
+    )
+  )
+  (rule
+    (width 220.0)
+    (clear 160.2)
+    (clear 110.0 (type smd_to_turn_gap))
+    (clear 240.2 (type default_"75ohm_vid"))
+    (clear 40.0 (type smd_smd))
+    (clear 240.2 (type smd_"75ohm_vid"))
+    (clear 240.2 (type "kicad_default"_"75ohm_vid"))
+    (clear 240.2 (type "75ohm_vid"_"75ohm_vid"))
+    (clear 240.2 (type "75ohm_vid"_"FAT_power"))
+    (clear 240.2 (type "75ohm_vid"_Power))
+    (clear 240.2 (type "75ohm_vid"_"digi_hs"))
+  )
+  (padstack "Via[0-1]_686:330_um"
+    (shape
+      (circle F.Cu 686.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 686.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_686:350_um"
+    (shape
+      (circle F.Cu 686.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 686.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (padstack "Via[0-1]_1500:1100_um"
+    (shape
+      (circle F.Cu 1500.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 1500.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_686:330_um" "Via[0-1]_686:330_um" default
+  )
+  (via 
+    "Via[0-1]_686:350_um" "Via[0-1]_686:350_um" default
+  )
+  (via 
+    "Via[0-1]_1500:1100_um" "Via[0-1]_1500:1100_um" default
+  )
+  (via 
+    "Via[0-1]_686:330_um-kicad_default" "Via[0-1]_686:330_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_686:350_um-kicad_default" "Via[0-1]_686:350_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_1500:1100_um-kicad_default" "Via[0-1]_1500:1100_um" "kicad_default"
+  )
+  (via 
+    "Via[0-1]_686:330_um-75ohm_vid" "Via[0-1]_686:330_um" "75ohm_vid"
+  )
+  (via 
+    "Via[0-1]_686:350_um-75ohm_vid" "Via[0-1]_686:350_um" "75ohm_vid"
+  )
+  (via 
+    "Via[0-1]_1500:1100_um-75ohm_vid" "Via[0-1]_1500:1100_um" "75ohm_vid"
+  )
+  (via 
+    "Via[0-1]_686:330_um-FAT_power" "Via[0-1]_686:330_um" "FAT_power"
+  )
+  (via 
+    "Via[0-1]_686:350_um-FAT_power" "Via[0-1]_686:350_um" "FAT_power"
+  )
+  (via 
+    "Via[0-1]_1500:1100_um-FAT_power" "Via[0-1]_1500:1100_um" "FAT_power"
+  )
+  (via 
+    "Via[0-1]_686:330_um-Power" "Via[0-1]_686:330_um" Power
+  )
+  (via 
+    "Via[0-1]_686:350_um-Power" "Via[0-1]_686:350_um" Power
+  )
+  (via 
+    "Via[0-1]_1500:1100_um-Power" "Via[0-1]_1500:1100_um" Power
+  )
+  (via 
+    "Via[0-1]_686:330_um-digi_hs" "Via[0-1]_686:330_um" "digi_hs"
+  )
+  (via 
+    "Via[0-1]_686:350_um-digi_hs" "Via[0-1]_686:350_um" "digi_hs"
+  )
+  (via 
+    "Via[0-1]_1500:1100_um-digi_hs" "Via[0-1]_1500:1100_um" "digi_hs"
+  )
+  (via_rule
+    default "Via[0-1]_686:330_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_686:330_um-kicad_default"
+  )
+  (via_rule
+    "75ohm_vid" "Via[0-1]_686:350_um-75ohm_vid"
+  )
+  (via_rule
+    "FAT_power" "Via[0-1]_1500:1100_um-FAT_power"
+  )
+  (via_rule
+    Power "Via[0-1]_686:350_um-Power"
+  )
+  (via_rule
+    "digi_hs" "Via[0-1]_686:330_um-digi_hs"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 220.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    /fpga1/TCK /fpga1/TDI /fpga1/TDO /fpga1/TMS "/hdmitx1/DDC_SCL" "/hdmitx1/DDC_SDA" /hdmitx1/HPD "Net-(C74-Pad1)"
+    "Net-(C77-Pad1)" "Net-(C80-Pad1)" "Net-(R16-Pad2)" "Net-(R24-Pad1)" "Net-(R25-Pad1)" "Net-(R26-Pad1)" "Net-(R17-Pad1)" "Net-(R18-Pad2)"
+    "Net-(R19-Pad1)" "Net-(R23-Pad2)" "/fpga1/btn_vol-" "/fpga1/btn_vol+" "/fpga1/I2S_WS" "/fpga1/I2S_DATA" "/fpga1/I2S_BCK" "/fpga1/HSYNC_in"
+    "/fpga1/VSYNC_in" "/fpga1/HDMITX_RESET_N" "/fpga1/HDMITX_I2S_BCK" "/fpga1/HDMITX_I2S_WS" "/fpga1/HDMITX_I2S_DATA" "/fpga1/AUD_MCLK" "Net-(U33-Pad2)" "Net-(U33-Pad3)"
+    "Net-(U33-Pad7)" "Net-(U33-Pad8)" "Net-(U33-Pad9)" "Net-(U34-Pad1)" "Net-(U34-Pad3)" "Net-(U34-Pad6)" "Net-(J1-Pad6)" "Net-(J1-Pad2)"
+    "Net-(J1-Pad7)" "Net-(J1-Pad3)" "Net-(J1-Pad8)" "Net-(J1-Pad4)" "Net-(J1-Pad9)" "Net-(J1-Pad10)" "Net-(J2-Pad6)" "Net-(J2-Pad2)"
+    "Net-(J2-Pad7)" "Net-(J2-Pad3)" "Net-(J2-Pad8)" "Net-(J2-Pad4)" "Net-(J2-Pad9)" "Net-(J2-Pad10)" "Net-(J1-Pad1)" "Net-(J2-Pad1)"
+    "Net-(J4-Pad13)" "Net-(J4-Pad14)" "Net-(P1-Pad6)" "Net-(P1-Pad7)" "Net-(P1-Pad8)" "Net-(U2-Pad28)" "Net-(U2-Pad32)" "Net-(U2-Pad33)"
+    "Net-(U2-Pad76)" "Net-(U2-Pad77)" "Net-(U2-Pad80)" "Net-(U2-Pad83)" "Net-(U3-Pad45)" "Net-(U33-Pad4)" "Net-(U33-Pad5)" "Net-(U33-Pad6)"
+    "Net-(U33-Pad11)" "Net-(U33-Pad12)" "Net-(U33-Pad13)"
+    (clearance_class "kicad_default")
+    (via_rule kicad_default)
+    (rule
+      (width 220.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "75ohm_vid"
+    (clearance_class "75ohm_vid")
+    (via_rule 75ohm_vid)
+    (rule
+      (width 640.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "FAT_power"
+    /5V
+    (clearance_class "FAT_power")
+    (via_rule FAT_power)
+    (rule
+      (width 1000.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class Power
+    /fpga1/VCCA "/fpga1/VCCD_PLL" /fpga1/VCCINT /hdmitx1/AVCC1V8 /hdmitx1/DVDD1V8 GND "/hdmitx1/5V_FUSED" /IOVDD
+    /A33VDD
+    (clearance_class Power)
+    (via_rule Power)
+    (rule
+      (width 250.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "digi_hs"
+    /fpga1/ASDO /fpga1/DATA0 /fpga1/DCLK "/fpga1/HDMITX_HSYNC" "/fpga1/HDMITX_INT_N" "/fpga1/HDMITX_PCLK" "/fpga1/HDMITX_R0" "/fpga1/HDMITX_R1"
+    "/fpga1/HDMITX_R2" "/fpga1/HDMITX_R3" "/fpga1/HDMITX_R4" "/fpga1/HDMITX_R5" "/fpga1/HDMITX_R6" "/fpga1/HDMITX_R7" "/fpga1/HDMITX_VSYNC" /fpga1/SCL
+    /fpga1/SDA /fpga1/nCSO /hdmitx1/B0 /hdmitx1/B1 /hdmitx1/B2 /hdmitx1/B3 /hdmitx1/B4 /hdmitx1/B5
+    /hdmitx1/B6 /hdmitx1/B7 /hdmitx1/DE /hdmitx1/G0 /hdmitx1/G1 /hdmitx1/G2 /hdmitx1/G3 /hdmitx1/G4
+    /hdmitx1/G5 /hdmitx1/G6 /hdmitx1/G7 "/hdmitx1/TMDS_CLK+" "/hdmitx1/TMDS_CLK-" "/hdmitx1/TMDS_D0+" "/hdmitx1/TMDS_D0-" "/hdmitx1/TMDS_D1+"
+    "/hdmitx1/TMDS_D1-" "/hdmitx1/TMDS_D2+" "/hdmitx1/TMDS_D2-" /fpga1/Rin0 /fpga1/Rin1 /fpga1/Rin2 /fpga1/Rin3 /fpga1/Gin0
+    /fpga1/Gin1 /fpga1/Gin2 /fpga1/Gin3 /fpga1/Bin0 /fpga1/Bin1 /fpga1/Bin2 /fpga1/Bin3 /fpga1/Fin0
+    /fpga1/Fin1 /fpga1/Fin2 /fpga1/Fin3 "/fpga1/PCLKx2_in"
+    (clearance_class "digi_hs")
+    (via_rule digi_hs)
+    (rule
+      (width 180.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)
