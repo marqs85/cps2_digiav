@@ -1,4 +1,4 @@
-update=Mon 18 Dec 2017 08:41:43 PM PST
+update=Tue 19 Dec 2017 12:15:53 AM PST
 version=1
 last_client=kicad
 [general]
@@ -90,5 +90,4 @@ LibName27=atmel
 LibName28=contrib
 LibName29=valves
 LibName30=./custom_components
-LibName31=/home/andrew/FAB/cps2_digiav_mod/kicad-libs/schematics/analog/analog
-LibName32=/home/andrew/FAB/cps2_digiav_mod/kicad-libs/schematics/Video/HDMI
+LibName31=/home/andrew/FAB/cps2_digiav/kicad-libs/schematics/Video/HDMI
