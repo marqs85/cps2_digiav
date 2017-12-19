@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ADV7513
+D ADV7513 HDMI Transmitter
+K HDMI PHY Transmitter Video TX
+F http://www.analog.com/en/products/audio-video/analoghdmidvi-interfaces/analog-hdmidvi-display-interfaces/adv7513.html
+$ENDCMP
+#
+#End Doc Library
