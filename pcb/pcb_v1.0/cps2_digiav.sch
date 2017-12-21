@@ -29,7 +29,6 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:custom_components
-LIBS:analog
 LIBS:HDMI
 LIBS:cps2_digiav-cache
 EELAYER 25 0
