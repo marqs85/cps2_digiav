@@ -806,7 +806,7 @@ U 1 1 5A38E9E6
 P 3750 6300
 F 0 "U1" H 3750 6450 50  0000 C CNN
 F 1 "ADV7513" H 3750 6350 50  0000 C CNN
-F 2 "Housings_QFP:LQFP-64_10x10mm_Pitch0.5mm" H 3600 6650 50  0001 C CNN
+F 2 "Housings_QFP:LQFP-64-1EP_10x10mm_Pitch0.5mm" H 3600 6650 50  0001 C CNN
 F 3 "http://www.analog.com/en/products/audio-video/analoghdmidvi-interfaces/analog-hdmidvi-display-interfaces/adv7513.html" H 5450 6550 50  0001 C CNN
 F 4 "Makise Kurisu <kurisu@shimatta.de>" H 3700 6750 50  0001 C CNN "Author"
 F 5 "1.0" H 3050 6850 50  0001 C CNN "Version"
@@ -819,7 +819,7 @@ U 2 1 5A38EC28
 P 2950 850
 F 0 "U1" H 2950 1000 50  0000 C CNN
 F 1 "ADV7513" H 2950 900 50  0000 C CNN
-F 2 "Housings_QFP:LQFP-64_10x10mm_Pitch0.5mm" H 2800 1200 50  0001 C CNN
+F 2 "Housings_QFP:LQFP-64-1EP_10x10mm_Pitch0.5mm" H 2800 1200 50  0001 C CNN
 F 3 "http://www.analog.com/en/products/audio-video/analoghdmidvi-interfaces/analog-hdmidvi-display-interfaces/adv7513.html" H 4650 1100 50  0001 C CNN
 F 4 "Makise Kurisu <kurisu@shimatta.de>" H 2900 1300 50  0001 C CNN "Author"
 F 5 "1.0" H 2250 1400 50  0001 C CNN "Version"
