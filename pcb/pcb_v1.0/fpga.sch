@@ -30,12 +30,67 @@ LIBS:contrib
 LIBS:valves
 LIBS:custom_components
 LIBS:HDMI
+LIBS:74lvc
+LIBS:altera
+LIBS:analog_devices
+LIBS:barrel_jack
+LIBS:battery
+LIBS:beaglebone_black
+LIBS:ck
+LIBS:conn_power
+LIBS:conn_rf
+LIBS:conn_rj
+LIBS:crystal
+LIBS:ddr2_sdram_sodimm
+LIBS:diode
+LIBS:epcos
+LIBS:epcos_dcc6c
+LIBS:fbead
+LIBS:fiducial
+LIBS:freescale_mcu
+LIBS:hackrf_expansion
+LIBS:hdmi
+LIBS:header
+LIBS:hirose
+LIBS:hole
+LIBS:io_expander
+LIBS:lcd_kingtech
+LIBS:ltc
+LIBS:microphone
+LIBS:minicircuits
+LIBS:molex
+LIBS:mosfet
+LIBS:newhaven
+LIBS:noritake
+LIBS:nxp_micro
+LIBS:on_cat24c256
+LIBS:on_semi
+LIBS:osc
+LIBS:passive
+LIBS:regulator
+LIBS:rf_antenna
+LIBS:rf_lna
+LIBS:r_sense
+LIBS:samtec
+LIBS:sd
+LIBS:sharebrained
+LIBS:silabs
+LIBS:supply
+LIBS:switch
+LIBS:terminal_block
+LIBS:ti
+LIBS:ti_cc
+LIBS:tp
+LIBS:trs_jack
+LIBS:usb3_esd_son50-10
+LIBS:usb3_micro_ab
+LIBS:wolfson
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 3
+Sheet 4 4
 Title "CPS2_digiAV"
 Date "2016-09-24"
 Rev "1.0"

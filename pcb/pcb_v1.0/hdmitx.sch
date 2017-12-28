@@ -30,12 +30,67 @@ LIBS:contrib
 LIBS:valves
 LIBS:custom_components
 LIBS:HDMI
+LIBS:74lvc
+LIBS:altera
+LIBS:analog_devices
+LIBS:barrel_jack
+LIBS:battery
+LIBS:beaglebone_black
+LIBS:ck
+LIBS:conn_power
+LIBS:conn_rf
+LIBS:conn_rj
+LIBS:crystal
+LIBS:ddr2_sdram_sodimm
+LIBS:diode
+LIBS:epcos
+LIBS:epcos_dcc6c
+LIBS:fbead
+LIBS:fiducial
+LIBS:freescale_mcu
+LIBS:hackrf_expansion
+LIBS:hdmi
+LIBS:header
+LIBS:hirose
+LIBS:hole
+LIBS:io_expander
+LIBS:lcd_kingtech
+LIBS:ltc
+LIBS:microphone
+LIBS:minicircuits
+LIBS:molex
+LIBS:mosfet
+LIBS:newhaven
+LIBS:noritake
+LIBS:nxp_micro
+LIBS:on_cat24c256
+LIBS:on_semi
+LIBS:osc
+LIBS:passive
+LIBS:regulator
+LIBS:rf_antenna
+LIBS:rf_lna
+LIBS:r_sense
+LIBS:samtec
+LIBS:sd
+LIBS:sharebrained
+LIBS:silabs
+LIBS:supply
+LIBS:switch
+LIBS:terminal_block
+LIBS:ti
+LIBS:ti_cc
+LIBS:tp
+LIBS:trs_jack
+LIBS:usb3_esd_son50-10
+LIBS:usb3_micro_ab
+LIBS:wolfson
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 3
+Sheet 2 4
 Title "CPS2_digiAV"
 Date "2016-09-24"
 Rev "1.0"
@@ -476,7 +531,7 @@ F 3 "" H 9950 5900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10650 5550 0    60   ~ 0
-AVDD1V8
+DVDD1V8
 $Comp
 L TLV71209DBV U16
 U 1 1 5502F844
@@ -522,7 +577,7 @@ F 3 "" H 9950 6850 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 10650 6500 0    60   ~ 0
-PVDD1V8
+AVDD1V8
 Text Notes 7000 4100 0    60   ~ 0
 max. 55mA
 Text Notes 9750 5350 0    60   ~ 0
@@ -675,7 +730,7 @@ F 3 "" H 5400 6500 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text Label 8850 5550 0    60   ~ 0
-AVDD3V3
+DVDD3V3
 Text Notes 9800 3100 0    60   ~ 0
 max. 1mA (OVDD)
 Text Notes 9800 3200 0    60   ~ 0
@@ -1188,9 +1243,9 @@ Wire Wire Line
 	4300 6800 5100 6800
 Connection ~ 4800 6800
 Text Label 5900 6800 0    60   ~ 0
-PVDD1V8
-Text Label 1200 6400 2    60   ~ 0
 AVDD1V8
+Text Label 1200 6400 2    60   ~ 0
+DVDD1V8
 Text Label 1750 6950 2    60   ~ 0
 DVDD3V3
 Text Label 9200 6500 2    60   ~ 0
