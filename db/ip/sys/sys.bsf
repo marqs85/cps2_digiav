@@ -1,0 +1,123 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 2016  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 496 360)
+	(text "sys" (rect 238 -1 253 11)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 344 20 356)(font "Arial" ))
+	(port
+		(pt 0 72)
+		(input)
+		(text "clk_clk" (rect 0 0 27 12)(font "Arial" (font_size 8)))
+		(text "clk_clk" (rect 4 61 46 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 208 72)(line_width 1))
+	)
+	(port
+		(pt 0 168)
+		(input)
+		(text "pio_0_ctrl_in_export[31..0]" (rect 0 0 105 12)(font "Arial" (font_size 8)))
+		(text "pio_0_ctrl_in_export[31..0]" (rect 4 157 166 168)(font "Arial" (font_size 8)))
+		(line (pt 0 168)(pt 208 168)(line_width 3))
+	)
+	(port
+		(pt 0 328)
+		(input)
+		(text "reset_reset_n" (rect 0 0 56 12)(font "Arial" (font_size 8)))
+		(text "reset_reset_n" (rect 4 317 82 328)(font "Arial" (font_size 8)))
+		(line (pt 0 328)(pt 208 328)(line_width 1))
+	)
+	(port
+		(pt 0 208)
+		(output)
+		(text "pio_1_h_info_out_export[31..0]" (rect 0 0 122 12)(font "Arial" (font_size 8)))
+		(text "pio_1_h_info_out_export[31..0]" (rect 4 197 184 208)(font "Arial" (font_size 8)))
+		(line (pt 0 208)(pt 208 208)(line_width 3))
+	)
+	(port
+		(pt 0 248)
+		(output)
+		(text "pio_2_v_info_out_export[31..0]" (rect 0 0 125 12)(font "Arial" (font_size 8)))
+		(text "pio_2_v_info_out_export[31..0]" (rect 4 237 184 248)(font "Arial" (font_size 8)))
+		(line (pt 0 248)(pt 208 248)(line_width 3))
+	)
+	(port
+		(pt 0 288)
+		(output)
+		(text "pio_3_x_info_out_export[31..0]" (rect 0 0 123 12)(font "Arial" (font_size 8)))
+		(text "pio_3_x_info_out_export[31..0]" (rect 4 277 184 288)(font "Arial" (font_size 8)))
+		(line (pt 0 288)(pt 208 288)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(bidir)
+		(text "i2c_opencores_0_export_scl_pad_io" (rect 0 0 147 12)(font "Arial" (font_size 8)))
+		(text "i2c_opencores_0_export_scl_pad_io" (rect 4 101 202 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 208 112)(line_width 1))
+	)
+	(port
+		(pt 0 128)
+		(bidir)
+		(text "i2c_opencores_0_export_sda_pad_io" (rect 0 0 151 12)(font "Arial" (font_size 8)))
+		(text "i2c_opencores_0_export_sda_pad_io" (rect 4 117 202 128)(font "Arial" (font_size 8)))
+		(line (pt 0 128)(pt 208 128)(line_width 1))
+	)
+	(drawing
+		(text "clk" (rect 193 43 404 99)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "clk" (rect 213 67 444 144)(font "Arial" (color 0 0 0)))
+		(text "i2c_opencores_0_export" (rect 66 83 264 179)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "scl_pad_io" (rect 213 107 486 224)(font "Arial" (color 0 0 0)))
+		(text "sda_pad_io" (rect 213 123 486 256)(font "Arial" (color 0 0 0)))
+		(text "pio_0_ctrl_in" (rect 133 139 344 291)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 163 462 336)(font "Arial" (color 0 0 0)))
+		(text "pio_1_h_info_out" (rect 108 179 312 371)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 203 462 416)(font "Arial" (color 0 0 0)))
+		(text "pio_2_v_info_out" (rect 107 219 310 451)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 243 462 496)(font "Arial" (color 0 0 0)))
+		(text "pio_3_x_info_out" (rect 107 259 310 531)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "export" (rect 213 283 462 576)(font "Arial" (color 0 0 0)))
+		(text "reset" (rect 179 299 388 611)(font "Arial" (color 128 0 0)(font_size 9)))
+		(text "reset_n" (rect 213 323 468 656)(font "Arial" (color 0 0 0)))
+		(text " sys " (rect 477 344 984 698)(font "Arial" ))
+		(line (pt 208 32)(pt 288 32)(line_width 1))
+		(line (pt 288 32)(pt 288 344)(line_width 1))
+		(line (pt 208 344)(pt 288 344)(line_width 1))
+		(line (pt 208 32)(pt 208 344)(line_width 1))
+		(line (pt 209 52)(pt 209 76)(line_width 1))
+		(line (pt 210 52)(pt 210 76)(line_width 1))
+		(line (pt 209 92)(pt 209 132)(line_width 1))
+		(line (pt 210 92)(pt 210 132)(line_width 1))
+		(line (pt 209 148)(pt 209 172)(line_width 1))
+		(line (pt 210 148)(pt 210 172)(line_width 1))
+		(line (pt 209 188)(pt 209 212)(line_width 1))
+		(line (pt 210 188)(pt 210 212)(line_width 1))
+		(line (pt 209 228)(pt 209 252)(line_width 1))
+		(line (pt 210 228)(pt 210 252)(line_width 1))
+		(line (pt 209 268)(pt 209 292)(line_width 1))
+		(line (pt 210 268)(pt 210 292)(line_width 1))
+		(line (pt 209 308)(pt 209 332)(line_width 1))
+		(line (pt 210 308)(pt 210 332)(line_width 1))
+		(line (pt 0 0)(pt 496 0)(line_width 1))
+		(line (pt 496 0)(pt 496 360)(line_width 1))
+		(line (pt 0 360)(pt 496 360)(line_width 1))
+		(line (pt 0 0)(pt 0 360)(line_width 1))
+	)
+)

@@ -1,0 +1,16 @@
+Fitter Status : Successful - Mon Jan  8 19:05:15 2018
+Quartus Prime Version : 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+Revision Name : cps2_digiav
+Top-level Entity Name : cps2_digiav
+Family : Cyclone IV E
+Device : EP4CE15E22C8
+Timing Models : Final
+Total logic elements : 4,075 / 15,408 ( 26 % )
+    Total combinational functions : 3,530 / 15,408 ( 23 % )
+    Dedicated logic registers : 2,275 / 15,408 ( 15 % )
+Total registers : 2275
+Total pins : 60 / 82 ( 73 % )
+Total virtual pins : 0
+Total memory bits : 157,696 / 516,096 ( 31 % )
+Embedded Multiplier 9-bit elements : 0 / 112 ( 0 % )
+Total PLLs : 2 / 4 ( 50 % )
