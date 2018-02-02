@@ -1,17 +1,17 @@
-CPS2 digital AV interface
+CPS2 digital AV interface (Rev 2)
 ==============
 
 Overview
 --------------------------
 cps2_digiav is an add-on for Capcom CP System II arcade board which enables digital video and audio output via HDMI connector. The project consists of an interface PCB and FPGA firmware.
 
-Features (pcb v1.0)
+Features (Rev 1)
 --------------------------
-* 2 selectable video outputs
-  * 640x480@59.64Hz (near-VESA)
-  * 1920x1080@59.64Hz (reduced hblank, increased vblank)
-* ~48kHz audio output
-* Scanlines enable/disable
+See [rev1](tree/rev1) branch
+
+Features (Rev 2)
+--------------------------
+TBA
 
 Installation
 --------------------------
