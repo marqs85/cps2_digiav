@@ -48,8 +48,8 @@ set_false_path -from [get_clocks pclk_5x] -to [get_clocks clk16]
 # Ignore paths from registers which are updated only at the end of vsync
 set_false_path -from [get_cells {scanconverter_inst|H_* scanconverter_inst|V_* scanconverter_inst|X_*}]
 
-# Ignore paths from registers which are updated only at the end of hsync
-#set_false_path -from [get_cells {scanconverter:scanconverter_inst|vcnt_* scanconverter:scanconverter_inst|line_idx scanconverter:scanconverter_inst|line_out_idx* scanconverter:scanconverter_inst|HSYNC_start*}]
+# Ignore paths from registers which are updated only at leading edge of hsync
+set_false_path -from [get_registers {scanconverter:scanconverter_inst|line_idx scanconverter:scanconverter_inst|line_out_idx* scanconverter:scanconverter_inst|HSYNC_start*}]
 
 # Ignore paths to registers which do not drive critical logic
 #set_false_path -to [get_cells {scanconverter:scanconverter_inst|line_out_idx*}]

@@ -34,7 +34,7 @@ module cps2_digiav(
     input BTN_volplus,
     inout sda,
     output scl,
-    output HDMI_TX_RST_N,
+    //output HDMI_TX_RST_N,
     output [7:0] HDMI_TX_RD,
     output [7:0] HDMI_TX_GD,
     output [7:0] HDMI_TX_BD,
@@ -45,8 +45,8 @@ module cps2_digiav(
     input HDMI_TX_INT_N,
     output HDMI_TX_I2S_DATA,
     output HDMI_TX_I2S_BCK,
-    output HDMI_TX_I2S_WS,
-    output HDMI_TX_I2S_MCLK
+    output HDMI_TX_I2S_WS
+    //output HDMI_TX_I2S_MCLK
 );
 
 wire reset_n;
@@ -102,7 +102,7 @@ end
 
 assign reset_n = 1'b1;
 
-assign HDMI_TX_RST_N = reset_n;
+//assign HDMI_TX_RST_N = reset_n;
 assign HDMI_TX_DE = DE_out;
 assign HDMI_TX_PCLK = PCLK_out;
 assign HDMI_TX_HS = HSYNC_out;
@@ -110,7 +110,7 @@ assign HDMI_TX_VS = VSYNC_out;
 assign HDMI_TX_I2S_DATA = I2S_DATA_2x;
 assign HDMI_TX_I2S_BCK = I2S_BCK_OUT;
 assign HDMI_TX_I2S_WS = I2S_WS_2x;
-assign HDMI_TX_I2S_MCLK = 0;
+//assign HDMI_TX_I2S_MCLK = 0;
 assign HDMI_TX_RD = R_out;
 assign HDMI_TX_GD = G_out;
 assign HDMI_TX_BD = B_out;
