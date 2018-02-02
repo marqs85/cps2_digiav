@@ -29,62 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:custom_components
-LIBS:74lvc
-LIBS:altera
-LIBS:analog_devices
-LIBS:barrel_jack
-LIBS:battery
-LIBS:beaglebone_black
-LIBS:ck
-LIBS:conn_power
-LIBS:conn_rf
-LIBS:conn_rj
-LIBS:crystal
-LIBS:ddr2_sdram_sodimm
-LIBS:diode
-LIBS:epcos
-LIBS:epcos_dcc6c
-LIBS:fbead
-LIBS:fiducial
-LIBS:freescale_mcu
-LIBS:hackrf_expansion
-LIBS:hdmi
-LIBS:header
-LIBS:hirose
-LIBS:hole
-LIBS:io_expander
-LIBS:lcd_kingtech
-LIBS:ltc
-LIBS:microphone
-LIBS:minicircuits
-LIBS:molex
-LIBS:mosfet
-LIBS:newhaven
-LIBS:noritake
-LIBS:nxp_micro
-LIBS:on_cat24c256
-LIBS:on_semi
-LIBS:osc
-LIBS:passive
-LIBS:regulator
-LIBS:rf_antenna
-LIBS:rf_lna
-LIBS:r_sense
-LIBS:samtec
-LIBS:sd
-LIBS:sharebrained
-LIBS:silabs
-LIBS:supply
-LIBS:switch
-LIBS:terminal_block
-LIBS:ti
-LIBS:ti_cc
-LIBS:tp
-LIBS:trs_jack
-LIBS:usb3_esd_son50-10
-LIBS:usb3_micro_ab
-LIBS:wolfson
-LIBS:ossc_board-cache
+LIBS:HDMI
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
@@ -93,7 +38,7 @@ encoding utf-8
 Sheet 2 4
 Title "CPS2_digiAV"
 Date "2016-09-24"
-Rev "1.0"
+Rev "2.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -188,15 +133,15 @@ F 3 "~" H 750 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L FILTER FB1
+L Ferrite_Bead FB1
 U 1 1 5501ED08
 P 6100 6500
-F 0 "FB1" H 6100 6650 60  0000 C CNN
-F 1 "MPZ1608S221A" H 6100 6400 60  0000 C CNN
+F 0 "FB1" V 5950 6550 60  0000 C CNN
+F 1 "MPZ1608S221A" V 6250 6500 60  0000 C CNN
 F 2 "custom_components:SM0603_Resistor_libcms" H 6100 6500 60  0001 C CNN
 F 3 "~" H 6100 6500 60  0000 C CNN
 	1    6100 6500
-	1    0    0    -1  
+	0    1    1    0   
 $EndComp
 $Comp
 L GND #PWR05
@@ -243,15 +188,15 @@ F 3 "~" H 2450 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L FILTER FB2
+L Ferrite_Bead FB2
 U 1 1 5501F495
 P 5450 6800
-F 0 "FB2" H 5450 6950 60  0000 C CNN
-F 1 "MPZ1608S221A" H 5450 6700 60  0000 C CNN
+F 0 "FB2" V 5300 6900 60  0000 C CNN
+F 1 "MPZ1608S221A" V 5600 6850 60  0000 C CNN
 F 2 "custom_components:SM0603_Resistor_libcms" H 5450 6800 60  0001 C CNN
 F 3 "~" H 5450 6800 60  0000 C CNN
 	1    5450 6800
-	1    0    0    -1  
+	0    1    1    0   
 $EndComp
 $Comp
 L GND #PWR07
@@ -487,7 +432,7 @@ AVDD3V3
 Text Label 10500 850  0    60   ~ 0
 DVDD3V3
 $Comp
-L TLV71209DBV U15
+L TLV70018_SOT23-5 U15
 U 1 1 5502F816
 P 9950 5600
 F 0 "U15" H 9700 5800 40  0000 C CNN
@@ -533,7 +478,7 @@ $EndComp
 Text Label 10650 5550 0    60   ~ 0
 DVDD1V8
 $Comp
-L TLV71209DBV U16
+L TLV70018_SOT23-5 U16
 U 1 1 5502F844
 P 9950 6550
 F 0 "U16" H 9700 6750 40  0000 C CNN
@@ -686,15 +631,15 @@ F 3 "" H 3000 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L FILTER FB4
+L Ferrite_Bead FB4
 U 1 1 5501F45A
 P 2250 6950
-F 0 "FB4" H 2250 7100 60  0000 C CNN
-F 1 "MPZ1608S221A" H 2250 6850 60  0000 C CNN
+F 0 "FB4" V 2100 6950 60  0000 C CNN
+F 1 "MPZ1608S221A" V 2450 6900 60  0000 C CNN
 F 2 "custom_components:SM0603_Resistor_libcms" H 2250 6950 60  0001 C CNN
 F 3 "~" H 2250 6950 60  0000 C CNN
 	1    2250 6950
-	1    0    0    -1  
+	0    1    1    0   
 $EndComp
 $Comp
 L PWR_FLAG #FLG026
@@ -814,7 +759,7 @@ DDCSCL
 Text Label 5450 4050 0    60   ~ 0
 DDCSDA
 $Comp
-L F_Small F2
+L Fuse_Small F2
 U 1 1 5686BBED
 P 6500 4250
 F 0 "F2" H 6460 4310 50  0000 L CNN
@@ -904,15 +849,15 @@ DDCSDA
 Text Label 4200 3600 0    60   ~ 0
 HPD
 $Comp
-L FILTER FB3
+L Ferrite_Bead FB3
 U 1 1 5A3CCA28
 P 1550 6400
-F 0 "FB3" H 1550 6550 60  0000 C CNN
-F 1 "MPZ1608S221A" H 1550 6300 60  0000 C CNN
+F 0 "FB3" V 1350 6400 60  0000 C CNN
+F 1 "MPZ1608S221A" V 1700 6350 60  0000 C CNN
 F 2 "custom_components:SM0603_Resistor_libcms" H 1550 6400 60  0001 C CNN
 F 3 "~" H 1550 6400 60  0000 C CNN
 	1    1550 6400
-	1    0    0    -1  
+	0    1    1    0   
 $EndComp
 $Comp
 L C C11
@@ -1068,7 +1013,7 @@ U 1 1 5A45A154
 P 7500 2800
 F 0 "D2" H 7500 3150 60  0000 C CNN
 F 1 "RClamp0524P" V 7500 2800 50  0000 C CNN
-F 2 "Custom_OSSC:SLP2510P8" H 7550 2850 60  0001 C CNN
+F 2 "custom_components:SLP2510P8" H 7550 2850 60  0001 C CNN
 F 3 "" H 7550 2850 60  0001 C CNN
 	1    7500 2800
 	1    0    0    -1  
@@ -1079,7 +1024,7 @@ U 1 1 5A45A34F
 P 7500 3400
 F 0 "D3" H 7500 3050 60  0000 C CNN
 F 1 "RClamp0524P" V 7500 3400 50  0000 C CNN
-F 2 "Custom_OSSC:SLP2510P8" H 7550 3450 60  0001 C CNN
+F 2 "custom_components:SLP2510P8" H 7550 3450 60  0001 C CNN
 F 3 "" H 7550 3450 60  0001 C CNN
 	1    7500 3400
 	1    0    0    -1  
@@ -1107,21 +1052,21 @@ F 3 "" H 6900 3400 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	6900 2600 7350 2600
+	6900 2600 7700 2600
 Wire Wire Line
-	6900 2700 7350 2700
+	6900 2700 7700 2700
 Wire Wire Line
-	6900 2900 7350 2900
+	6900 2900 7700 2900
 Wire Wire Line
-	6900 3000 7350 3000
+	6900 3000 7750 3000
 Wire Wire Line
-	6900 3200 7350 3200
+	6900 3200 7700 3200
 Wire Wire Line
-	6900 3300 7350 3300
+	6900 3300 7700 3300
 Wire Wire Line
-	6900 3500 7350 3500
+	6900 3500 7700 3500
 Wire Wire Line
-	6900 3600 7350 3600
+	6900 3600 7700 3600
 Wire Wire Line
 	10900 1000 10450 1000
 Wire Wire Line
@@ -1129,15 +1074,11 @@ Wire Wire Line
 Connection ~ 9350 5550
 Wire Wire Line
 	10400 5550 10700 5550
-Wire Wire Line
-	9500 5550 9500 5700
 Connection ~ 9350 6500
 Wire Wire Line
-	8750 6500 9500 6500
+	8750 6500 9650 6500
 Wire Wire Line
 	10400 6500 10700 6500
-Wire Wire Line
-	9500 6500 9500 6650
 Wire Notes Line
 	8400 4200 8950 4200
 Wire Notes Line
@@ -1147,7 +1088,7 @@ Wire Notes Line
 Wire Notes Line
 	8400 4300 8400 4200
 Wire Wire Line
-	8750 5550 9500 5550
+	8750 5550 9650 5550
 Wire Wire Line
 	10050 4750 10500 4750
 Wire Wire Line
@@ -1281,11 +1222,11 @@ Wire Wire Line
 	3950 3600 4350 3600
 Connection ~ 2700 6950
 Wire Wire Line
-	750  6400 1200 6400
+	750  6400 1400 6400
 Wire Wire Line
-	1200 6950 1900 6950
+	1200 6950 2100 6950
 Wire Wire Line
-	2600 6950 2700 6950
+	2400 6950 2700 6950
 Connection ~ 3000 6800
 Wire Wire Line
 	3200 6400 3200 6700
@@ -1305,26 +1246,26 @@ Wire Wire Line
 Connection ~ 4300 6500
 Connection ~ 4550 6500
 Wire Wire Line
-	6450 6500 7150 6500
+	6250 6500 7150 6500
 Connection ~ 2050 6400
 Connection ~ 2450 6400
 Connection ~ 2700 6400
 Connection ~ 2950 6400
 Wire Wire Line
-	1900 6400 3200 6400
+	1700 6400 3200 6400
 Connection ~ 2250 6400
 Wire Wire Line
 	2700 6950 2700 6800
 Wire Wire Line
 	2700 6800 3200 6800
 Wire Wire Line
-	4300 6500 5750 6500
+	4300 6500 5950 6500
 Connection ~ 5400 6500
 Wire Wire Line
-	4300 6800 5100 6800
+	4300 6800 5300 6800
 Connection ~ 4800 6800
 Wire Wire Line
-	6500 6800 5800 6800
+	5600 6800 6500 6800
 Wire Wire Line
 	3950 3750 4200 3750
 Connection ~ 5950 4050
@@ -1333,53 +1274,67 @@ Wire Wire Line
 Wire Wire Line
 	6900 3400 7350 3400
 Wire Wire Line
-	7650 2600 7700 2600
-Wire Wire Line
 	7700 2600 7700 2550
 Wire Wire Line
 	7700 2550 7850 2550
-Wire Wire Line
-	7650 2700 7700 2700
 Wire Wire Line
 	7700 2700 7700 2750
 Wire Wire Line
 	7700 2750 7850 2750
 Wire Wire Line
-	7650 2900 7700 2900
-Wire Wire Line
 	7700 2900 7700 2850
 Wire Wire Line
 	7700 2850 7850 2850
-Wire Wire Line
-	7650 3000 7700 3000
-Wire Wire Line
-	7700 3000 7700 3050
-Wire Wire Line
-	7700 3050 7850 3050
-Wire Wire Line
-	7650 3200 7700 3200
 Wire Wire Line
 	7700 3200 7700 3150
 Wire Wire Line
 	7700 3150 7850 3150
 Wire Wire Line
-	7650 3300 7700 3300
-Wire Wire Line
 	7700 3300 7700 3350
 Wire Wire Line
 	7700 3350 7850 3350
 Wire Wire Line
-	7650 3500 7700 3500
-Wire Wire Line
 	7700 3500 7700 3450
 Wire Wire Line
 	7700 3450 7850 3450
-Wire Wire Line
-	7650 3600 7700 3600
 Wire Wire Line
 	7700 3600 7700 3650
 Wire Wire Line
 	7700 3650 7850 3650
 NoConn ~ 7650 2800
 NoConn ~ 7650 3400
+Wire Wire Line
+	9650 5500 9650 5600
+Connection ~ 9650 5550
+Wire Wire Line
+	10250 5500 10400 5500
+Wire Wire Line
+	10400 5500 10400 5550
+Wire Wire Line
+	9650 6450 9650 6550
+Connection ~ 9650 6500
+Wire Wire Line
+	10250 6450 10400 6450
+Wire Wire Line
+	10400 6450 10400 6500
+Wire Wire Line
+	7750 3000 7750 3050
+Wire Wire Line
+	7750 3050 7850 3050
+Connection ~ 7650 2600
+Connection ~ 7350 2600
+Connection ~ 7650 2900
+Connection ~ 7350 2900
+Connection ~ 7350 3000
+Connection ~ 7650 3000
+Connection ~ 7650 3200
+Connection ~ 7350 3200
+Connection ~ 7350 3300
+Connection ~ 7650 3300
+Connection ~ 7650 3500
+Connection ~ 7350 3500
+Connection ~ 7350 3600
+Connection ~ 7650 3600
+Connection ~ 7650 2700
+Connection ~ 7350 2700
 $EndSCHEMATC

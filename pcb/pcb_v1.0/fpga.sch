@@ -29,62 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:custom_components
-LIBS:74lvc
-LIBS:altera
-LIBS:analog_devices
-LIBS:barrel_jack
-LIBS:battery
-LIBS:beaglebone_black
-LIBS:ck
-LIBS:conn_power
-LIBS:conn_rf
-LIBS:conn_rj
-LIBS:crystal
-LIBS:ddr2_sdram_sodimm
-LIBS:diode
-LIBS:epcos
-LIBS:epcos_dcc6c
-LIBS:fbead
-LIBS:fiducial
-LIBS:freescale_mcu
-LIBS:hackrf_expansion
-LIBS:hdmi
-LIBS:header
-LIBS:hirose
-LIBS:hole
-LIBS:io_expander
-LIBS:lcd_kingtech
-LIBS:ltc
-LIBS:microphone
-LIBS:minicircuits
-LIBS:molex
-LIBS:mosfet
-LIBS:newhaven
-LIBS:noritake
-LIBS:nxp_micro
-LIBS:on_cat24c256
-LIBS:on_semi
-LIBS:osc
-LIBS:passive
-LIBS:regulator
-LIBS:rf_antenna
-LIBS:rf_lna
-LIBS:r_sense
-LIBS:samtec
-LIBS:sd
-LIBS:sharebrained
-LIBS:silabs
-LIBS:supply
-LIBS:switch
-LIBS:terminal_block
-LIBS:ti
-LIBS:ti_cc
-LIBS:tp
-LIBS:trs_jack
-LIBS:usb3_esd_son50-10
-LIBS:usb3_micro_ab
-LIBS:wolfson
-LIBS:ossc_board-cache
+LIBS:HDMI
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
@@ -93,7 +38,7 @@ encoding utf-8
 Sheet 4 4
 Title "CPS2_digiAV"
 Date "2016-09-24"
-Rev "1.0"
+Rev "2.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -1094,14 +1039,14 @@ $EndComp
 Text Label 900  3150 0    60   ~ 0
 VCCIO
 $Comp
-L CONN_02X05 P1
+L AVR-JTAG-10 P1
 U 1 1 54FE1877
-P 10200 2050
-F 0 "P1" H 10200 2350 60  0000 C CNN
-F 1 "JTAG_CONN" V 10200 2050 50  0000 C CNN
-F 2 "Connect:VASCH5x2" H 10200 2050 60  0001 C CNN
-F 3 "" H 10200 2050 60  0000 C CNN
-	1    10200 2050
+P 10300 2050
+F 0 "P1" H 10250 2400 60  0000 C CNN
+F 1 "JTAG_CONN" H 10250 1750 50  0000 C CNN
+F 2 "Connect:VASCH5x2" H 10300 2050 60  0001 C CNN
+F 3 "" H 10300 2050 60  0000 C CNN
+	1    10300 2050
 	1    0    0    -1  
 $EndComp
 Text Label 9650 1850 0    60   ~ 0
@@ -1115,26 +1060,26 @@ TDI
 $Comp
 L GND #PWR0110
 U 1 1 54FE19F5
-P 10450 1850
-F 0 "#PWR0110" H 10450 1850 30  0001 C CNN
-F 1 "GND" H 10450 1780 30  0001 C CNN
-F 2 "" H 10450 1850 60  0001 C CNN
-F 3 "" H 10450 1850 60  0000 C CNN
-	1    10450 1850
+P 10700 1850
+F 0 "#PWR0110" H 10700 1850 30  0001 C CNN
+F 1 "GND" H 10700 1780 30  0001 C CNN
+F 2 "" H 10700 1850 60  0001 C CNN
+F 3 "" H 10700 1850 60  0000 C CNN
+	1    10700 1850
 	0    -1   -1   0   
 $EndComp
 $Comp
 L GND #PWR0111
 U 1 1 54FE19FB
-P 10450 2250
-F 0 "#PWR0111" H 10450 2250 30  0001 C CNN
-F 1 "GND" H 10450 2180 30  0001 C CNN
-F 2 "" H 10450 2250 60  0001 C CNN
-F 3 "" H 10450 2250 60  0000 C CNN
-	1    10450 2250
+P 10700 2250
+F 0 "#PWR0111" H 10700 2250 30  0001 C CNN
+F 1 "GND" H 10700 2180 30  0001 C CNN
+F 2 "" H 10700 2250 60  0001 C CNN
+F 3 "" H 10700 2250 60  0000 C CNN
+	1    10700 2250
 	0    -1   -1   0   
 $EndComp
-Text Label 10550 1950 0    60   ~ 0
+Text Label 10800 1950 0    60   ~ 0
 VCCA
 $Comp
 L R R20
@@ -1229,7 +1174,7 @@ L S25FL216K U10
 U 1 1 54FE2C52
 P 9500 1250
 F 0 "U10" H 9500 1150 50  0000 C CNN
-F 1 "S25FL116K" H 9500 1350 50  0000 C CNN
+F 1 "IS25LP016D-JBLE" H 9500 1550 50  0000 C CNN
 F 2 "custom_components:SOIC-8_3.9x4.9mm_Pitch1.27mm_Handsoldering" H 9500 1250 50  0001 C CNN
 F 3 "DOCUMENTATION" H 9500 1250 50  0001 C CNN
 	1    9500 1250
@@ -1283,7 +1228,7 @@ $EndComp
 Text Label 8300 1300 2    60   ~ 0
 VCCIO
 $Comp
-L TLV71209DBV U14
+L TLV70012_SOT23-5 U14
 U 1 1 55035A89
 P 10050 6650
 F 0 "U14" H 9800 6850 40  0000 C CNN
@@ -1329,7 +1274,7 @@ $EndComp
 Text Notes 9850 6400 0    60   ~ 0
 max. 200mA
 $Comp
-L TLV71209DBV U13
+L TLV70025_SOT23-5 U13
 U 1 1 55035DBA
 P 10050 5850
 F 0 "U13" H 9800 6050 40  0000 C CNN
@@ -1431,9 +1376,9 @@ F 3 "" H 2800 7150 60  0000 C CNN
 	1    2800 7150
 	1    0    0    -1  
 $EndComp
-NoConn ~ 9950 2150
-NoConn ~ 10450 2150
-NoConn ~ 10450 2050
+NoConn ~ 10100 2150
+NoConn ~ 10350 2150
+NoConn ~ 10350 2050
 Text Label 3900 1450 3    60   ~ 0
 VCCIO
 $Comp
@@ -1459,7 +1404,7 @@ F 3 "" H 3900 1100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L TLV71209DBV U12
+L TLV70012_SOT23-5 U12
 U 1 1 55089296
 P 10050 5100
 F 0 "U12" H 9800 5300 40  0000 C CNN
@@ -1801,15 +1746,15 @@ Wire Wire Line
 Wire Wire Line
 	900  3150 1400 3150
 Wire Wire Line
-	9500 1850 9950 1850
+	9500 1850 10100 1850
 Wire Wire Line
-	9500 1950 9950 1950
+	9500 1950 10100 1950
 Wire Wire Line
-	9500 2050 9950 2050
+	9500 2050 10100 2050
 Wire Wire Line
-	9500 2250 9950 2250
+	9500 2250 10100 2250
 Wire Wire Line
-	10450 1950 10850 1950
+	10350 1950 11100 1950
 Wire Wire Line
 	8850 2050 9200 2050
 Wire Wire Line
@@ -1845,22 +1790,18 @@ Wire Wire Line
 Connection ~ 9450 6600
 Connection ~ 10600 6600
 Wire Wire Line
-	8850 6600 9600 6600
+	8850 6600 9750 6600
 Wire Wire Line
 	10500 6600 10800 6600
-Wire Wire Line
-	9600 6600 9600 6750
 Connection ~ 9450 5800
 Connection ~ 10600 5800
 Connection ~ 10050 6150
 Wire Wire Line
 	9450 6150 10600 6150
 Wire Wire Line
-	8850 5800 9600 5800
+	8850 5800 9750 5800
 Wire Wire Line
 	10500 5800 10800 5800
-Wire Wire Line
-	9600 5800 9600 5950
 Connection ~ 10600 5050
 Wire Wire Line
 	10500 5050 10950 5050
@@ -1874,9 +1815,7 @@ Wire Wire Line
 Wire Wire Line
 	1250 5850 1200 5850
 Wire Wire Line
-	8850 5050 9600 5050
-Wire Wire Line
-	9600 5050 9600 5200
+	8850 5050 9750 5050
 Connection ~ 9450 5050
 Wire Wire Line
 	8850 4650 8850 6600
@@ -1995,4 +1934,29 @@ F 3 "" H 4200 6350 60  0000 C CNN
 	1    4200 6350
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	9750 5000 9750 5100
+Connection ~ 9750 5050
+Wire Wire Line
+	10350 5000 10500 5000
+Wire Wire Line
+	10500 5000 10500 5050
+Wire Wire Line
+	9750 5750 9750 5850
+Connection ~ 9750 5800
+Wire Wire Line
+	10350 5750 10500 5750
+Wire Wire Line
+	10500 5750 10500 5800
+Wire Wire Line
+	9750 6550 9750 6650
+Connection ~ 9750 6600
+Wire Wire Line
+	10350 6550 10500 6550
+Wire Wire Line
+	10500 6550 10500 6600
+Wire Wire Line
+	10700 1850 10350 1850
+Wire Wire Line
+	10700 2250 10350 2250
 $EndSCHEMATC

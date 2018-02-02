@@ -29,62 +29,7 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:custom_components
-LIBS:74lvc
-LIBS:altera
-LIBS:analog_devices
-LIBS:barrel_jack
-LIBS:battery
-LIBS:beaglebone_black
-LIBS:ck
-LIBS:conn_power
-LIBS:conn_rf
-LIBS:conn_rj
-LIBS:crystal
-LIBS:ddr2_sdram_sodimm
-LIBS:diode
-LIBS:epcos
-LIBS:epcos_dcc6c
-LIBS:fbead
-LIBS:fiducial
-LIBS:freescale_mcu
-LIBS:hackrf_expansion
-LIBS:hdmi
-LIBS:header
-LIBS:hirose
-LIBS:hole
-LIBS:io_expander
-LIBS:lcd_kingtech
-LIBS:ltc
-LIBS:microphone
-LIBS:minicircuits
-LIBS:molex
-LIBS:mosfet
-LIBS:newhaven
-LIBS:noritake
-LIBS:nxp_micro
-LIBS:on_cat24c256
-LIBS:on_semi
-LIBS:osc
-LIBS:passive
-LIBS:regulator
-LIBS:rf_antenna
-LIBS:rf_lna
-LIBS:r_sense
-LIBS:samtec
-LIBS:sd
-LIBS:sharebrained
-LIBS:silabs
-LIBS:supply
-LIBS:switch
-LIBS:terminal_block
-LIBS:ti
-LIBS:ti_cc
-LIBS:tp
-LIBS:trs_jack
-LIBS:usb3_esd_son50-10
-LIBS:usb3_micro_ab
-LIBS:wolfson
-LIBS:ossc_board-cache
+LIBS:HDMI
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
@@ -93,7 +38,7 @@ encoding utf-8
 Sheet 1 4
 Title "CPS2_digiAV"
 Date "2016-09-24"
-Rev "1.0"
+Rev "2.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -153,12 +98,12 @@ F38 "I2S_DATA" I L 8350 4950 60
 F39 "I2S_WS" I L 8350 5050 60 
 F40 "I2S_BCK" I L 8350 5150 60 
 $EndSheet
-Text Label 7750 6400 0    60   ~ 0
+Text Label 7750 6300 0    60   ~ 0
 A33VDD
 Text Label 4450 6650 0    60   ~ 0
 IOVDD
 $Comp
-L TLV71209DBV U8
+L TLV70033_SOT23-5 U8
 U 1 1 57E7546E
 P 7150 6700
 F 0 "U8" H 6900 6900 40  0000 C CNN
@@ -239,14 +184,14 @@ $EndComp
 Text Notes 3150 7050 0    60   ~ 0
 max. 500mA
 $Comp
-L SPX2920M3-3.3 U7
+L TC1262-33 U7
 U 1 1 57E754A0
-P 3850 6700
-F 0 "U7" H 3850 6950 40  0000 C CNN
-F 1 "TC1262-3.3VDBTR" H 3850 6900 40  0000 C CNN
-F 2 "custom_components:SOT-223_Handsoldering" H 3850 6800 35  0001 C CIN
-F 3 "" H 3850 6700 60  0000 C CNN
-	1    3850 6700
+P 3850 6650
+F 0 "U7" H 3850 6850 40  0000 C CNN
+F 1 "AP7361" H 3850 6800 40  0000 C CNN
+F 2 "custom_components:SOT-223_Handsoldering" H 3850 6750 35  0001 C CIN
+F 3 "" H 3850 6650 60  0000 C CNN
+	1    3850 6650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -455,9 +400,7 @@ Wire Notes Line
 	9800 5800 9800 5700
 Connection ~ 6550 6650
 Wire Wire Line
-	5800 6650 6700 6650
-Wire Wire Line
-	6700 6650 6700 6800
+	5800 6650 6850 6650
 Connection ~ 3250 6650
 Connection ~ 4400 6650
 Connection ~ 7150 7000
@@ -514,7 +457,7 @@ Wire Wire Line
 Wire Wire Line
 	3550 3400 4650 3400
 Wire Wire Line
-	2650 6650 3450 6650
+	2650 6650 3550 6650
 Connection ~ 7700 6650
 Wire Wire Line
 	6550 6200 6550 6650
@@ -563,7 +506,7 @@ Wire Wire Line
 Wire Wire Line
 	6750 5150 8350 5150
 Wire Wire Line
-	4400 6650 4250 6650
+	4400 6650 4150 6650
 Connection ~ 4400 6100
 Wire Wire Line
 	1400 6100 1400 5850
@@ -577,4 +520,11 @@ Wire Wire Line
 	3550 5200 4650 5200
 Wire Wire Line
 	3550 4900 4650 4900
+Wire Wire Line
+	6850 6600 6850 6700
+Connection ~ 6850 6650
+Wire Wire Line
+	7450 6600 7600 6600
+Wire Wire Line
+	7600 6600 7600 6650
 $EndSCHEMATC

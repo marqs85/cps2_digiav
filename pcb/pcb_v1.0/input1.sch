@@ -29,71 +29,16 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:custom_components
-LIBS:74lvc
-LIBS:altera
-LIBS:analog_devices
-LIBS:barrel_jack
-LIBS:battery
-LIBS:beaglebone_black
-LIBS:ck
-LIBS:conn_power
-LIBS:conn_rf
-LIBS:conn_rj
-LIBS:crystal
-LIBS:ddr2_sdram_sodimm
-LIBS:diode
-LIBS:epcos
-LIBS:epcos_dcc6c
-LIBS:fbead
-LIBS:fiducial
-LIBS:freescale_mcu
-LIBS:hackrf_expansion
-LIBS:hdmi
-LIBS:header
-LIBS:hirose
-LIBS:hole
-LIBS:io_expander
-LIBS:lcd_kingtech
-LIBS:ltc
-LIBS:microphone
-LIBS:minicircuits
-LIBS:molex
-LIBS:mosfet
-LIBS:newhaven
-LIBS:noritake
-LIBS:nxp_micro
-LIBS:on_cat24c256
-LIBS:on_semi
-LIBS:osc
-LIBS:passive
-LIBS:regulator
-LIBS:rf_antenna
-LIBS:rf_lna
-LIBS:r_sense
-LIBS:samtec
-LIBS:sd
-LIBS:sharebrained
-LIBS:silabs
-LIBS:supply
-LIBS:switch
-LIBS:terminal_block
-LIBS:ti
-LIBS:ti_cc
-LIBS:tp
-LIBS:trs_jack
-LIBS:usb3_esd_son50-10
-LIBS:usb3_micro_ab
-LIBS:wolfson
-LIBS:ossc_board-cache
+LIBS:HDMI
 LIBS:cps2_digiav-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 4
-Title ""
-Date ""
-Rev ""
+Title "CPS2_digiAV"
+Date "2016-09-24"
+Rev "2.0"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -546,7 +491,7 @@ F 3 "~" H 1850 6300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L ZENERsmall D1
+L D_Zener_Small_ALT D1
 U 1 1 5A44760D
 P 1600 6250
 F 0 "D1" H 1600 6350 50  0000 C CNN
@@ -640,12 +585,12 @@ VOL+_O
 Text HLabel 4000 4650 2    60   Output ~ 0
 VOL-_O
 $Comp
-L SI5351C-B U6
+L Si5351C U6
 U 1 1 5A4643C7
 P 7750 3350
 F 0 "U6" H 7750 3400 60  0000 C CNN
 F 1 "SI5351C-B" H 7750 3300 60  0000 C CNN
-F 2 "Housings_DFN_QFN:QFN-20-1EP_4x4mm_Pitch0.5mm" H 7750 3350 60  0001 C CNN
+F 2 "custom_components:QFN-20-1EP_4x4mm_Pitch0.5mm_Handsoldering" H 7750 3350 60  0001 C CNN
 F 3 "" H 7750 3350 60  0001 C CNN
 	1    7750 3350
 	1    0    0    -1  
@@ -661,13 +606,13 @@ VSYNC_O
 $Comp
 L GND #PWR059
 U 1 1 5A491F14
-P 8400 4150
-F 0 "#PWR059" H 8400 4150 30  0001 C CNN
-F 1 "GND" H 8400 4080 30  0001 C CNN
-F 2 "" H 8400 4150 60  0001 C CNN
-F 3 "" H 8400 4150 60  0000 C CNN
-	1    8400 4150
-	0    -1   -1   0   
+P 7200 2550
+F 0 "#PWR059" H 7200 2550 30  0001 C CNN
+F 1 "GND" H 7200 2480 30  0001 C CNN
+F 2 "" H 7200 2550 60  0001 C CNN
+F 3 "" H 7200 2550 60  0000 C CNN
+	1    7200 2550
+	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR060
@@ -680,8 +625,8 @@ F 3 "" H 7650 4150 60  0000 C CNN
 	1    7650 4150
 	1    0    0    -1  
 $EndComp
-NoConn ~ 6950 3150
-NoConn ~ 6950 3250
+NoConn ~ 6900 3150
+NoConn ~ 6900 3250
 Text HLabel 9350 4950 2    60   Output ~ 0
 PCLKx2
 Text HLabel 9300 3350 2    60   Output ~ 0
@@ -714,6 +659,50 @@ F 3 "" H 7550 2050 60  0000 C CNN
 $EndComp
 Text Label 8400 2350 0    60   ~ 0
 VCCIO
+NoConn ~ 8600 3150
+NoConn ~ 7950 2550
+NoConn ~ 7850 2550
+NoConn ~ 7650 2550
+$Comp
+L C C15
+U 1 1 5A45C2D5
+P 9150 3550
+F 0 "C15" H 9175 3650 50  0000 L CNN
+F 1 "0.1u" H 9175 3450 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 9188 3400 50  0001 C CNN
+F 3 "" H 9150 3550 50  0000 C CNN
+	1    9150 3550
+	0    1    1    0   
+$EndComp
+$Comp
+L R R4
+U 1 1 5A44E79C
+P 6650 3200
+F 0 "R4" V 6730 3200 50  0000 C CNN
+F 1 "4.7k" V 6650 3200 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" V 6580 3200 50  0001 C CNN
+F 3 "" H 6650 3200 50  0001 C CNN
+	1    6650 3200
+	1    0    0    -1  
+$EndComp
+Text Label 6650 3050 1    60   ~ 0
+VCCIO
+NoConn ~ 7750 4150
+NoConn ~ 7850 4150
+Text Label 8500 4350 0    60   ~ 0
+VCCIO
+$Comp
+L GND #PWR062
+U 1 1 5A45D76C
+P 9300 3550
+F 0 "#PWR062" H 9300 3550 30  0001 C CNN
+F 1 "GND" H 9300 3480 30  0001 C CNN
+F 2 "" H 9300 3550 60  0001 C CNN
+F 3 "" H 9300 3550 60  0000 C CNN
+	1    9300 3550
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 8600 3450
 Wire Wire Line
 	7000 5400 6850 5400
 Wire Wire Line
@@ -882,16 +871,14 @@ Wire Wire Line
 Wire Wire Line
 	1400 4650 1750 4650
 Wire Wire Line
-	6600 3450 6950 3450
+	6600 3450 6900 3450
 Wire Wire Line
-	6600 3550 6950 3550
+	6600 3550 6900 3550
 Wire Wire Line
 	8500 5600 9350 5600
-Wire Wire Line
-	8250 4150 8400 4150
 Connection ~ 7550 4950
 Wire Wire Line
-	8550 3350 9300 3350
+	8600 3350 9300 3350
 Wire Wire Line
 	9700 1150 10150 1150
 Wire Wire Line
@@ -900,67 +887,19 @@ Wire Wire Line
 	7750 2350 7750 2550
 Connection ~ 7750 2350
 Wire Wire Line
-	8650 3250 8550 3250
+	7550 2350 8750 2350
 Wire Wire Line
-	8650 2350 8650 3250
-Wire Wire Line
-	7550 2350 8650 2350
-NoConn ~ 8550 3150
-NoConn ~ 7950 2550
-NoConn ~ 7850 2550
-NoConn ~ 7650 2550
-$Comp
-L C C15
-U 1 1 5A45C2D5
-P 9150 3550
-F 0 "C15" H 9175 3650 50  0000 L CNN
-F 1 "0.1u" H 9175 3450 50  0000 L CNN
-F 2 "custom_components:SM0603_Capa_libcms" H 9188 3400 50  0001 C CNN
-F 3 "" H 9150 3550 50  0000 C CNN
-	1    9150 3550
-	0    1    1    0   
-$EndComp
-$Comp
-L R R4
-U 1 1 5A44E79C
-P 6650 3200
-F 0 "R4" V 6730 3200 50  0000 C CNN
-F 1 "4.7k" V 6650 3200 50  0000 C CNN
-F 2 "custom_components:SM0603_Resistor_libcms" V 6580 3200 50  0001 C CNN
-F 3 "" H 6650 3200 50  0001 C CNN
-	1    6650 3200
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	6950 3350 6650 3350
+	6650 3350 6900 3350
 Wire Wire Line
 	6650 3050 6650 2750
-Text Label 6650 3050 1    60   ~ 0
-VCCIO
-NoConn ~ 7750 4150
-NoConn ~ 7850 4150
 Wire Wire Line
-	8550 3550 9000 3550
+	8600 3550 9000 3550
 Wire Wire Line
 	9000 3550 9000 4350
 Wire Wire Line
 	9000 4350 7950 4350
 Wire Wire Line
 	7950 4350 7950 4150
-Text Label 8500 4350 0    60   ~ 0
-VCCIO
-$Comp
-L GND #PWR062
-U 1 1 5A45D76C
-P 9300 3550
-F 0 "#PWR062" H 9300 3550 30  0001 C CNN
-F 1 "GND" H 9300 3480 30  0001 C CNN
-F 2 "" H 9300 3550 60  0001 C CNN
-F 3 "" H 9300 3550 60  0000 C CNN
-	1    9300 3550
-	0    -1   -1   0   
-$EndComp
-NoConn ~ 8550 3450
 Wire Wire Line
 	1100 1100 750  1100
 Wire Wire Line
@@ -973,4 +912,10 @@ Wire Wire Line
 	800  2900 1050 2900
 Wire Wire Line
 	700  2700 1050 2700
+Wire Wire Line
+	8600 3250 8750 3250
+Wire Wire Line
+	8750 3250 8750 2350
+Wire Wire Line
+	7350 2550 7200 2550
 $EndSCHEMATC

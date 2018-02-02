@@ -1,4 +1,3 @@
 (fp_lib_table
   (lib (name custom_components)(type KiCad)(uri "$(KIPRJMOD)/custom_components.pretty")(options "")(descr ""))
-  (lib (name Custom_OSSC)(type KiCad)(uri /home/andrew/Emu/OSSC/ossc_pcb/custom_components.pretty)(options "")(descr ""))
 )
