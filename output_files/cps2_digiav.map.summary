@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Mon Jan  8 19:04:56 2018
+Quartus Prime Version : 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+Revision Name : cps2_digiav
+Top-level Entity Name : cps2_digiav
+Family : Cyclone IV E
+Total logic elements : 4,488
+    Total combinational functions : 3,526
+    Dedicated logic registers : 2,275
+Total registers : 2275
+Total pins : 60
+Total virtual pins : 0
+Total memory bits : 157,696
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 2

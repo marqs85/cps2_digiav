@@ -1,0 +1,253 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "scl",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[0]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[1]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[2]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[3]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[4]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[5]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[6]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_RD[7]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[0]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[1]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[2]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[3]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[4]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[5]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[6]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_GD[7]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[0]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[1]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[2]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[3]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[4]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[5]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[6]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_BD[7]",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_DE",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_HS",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_VS",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_PCLK",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_I2S_DATA",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_I2S_BCK",
+					"strict" : false
+				},
+				{
+					"name" : "HDMI_TX_I2S_WS",
+					"strict" : false
+				},
+				{
+					"name" : "sda",
+					"strict" : false
+				},
+				{
+					"name" : "I2S_WS",
+					"strict" : false
+				},
+				{
+					"name" : "I2S_BCK",
+					"strict" : false
+				},
+				{
+					"name" : "PCLK2x_in",
+					"strict" : false
+				},
+				{
+					"name" : "I2S_DATA",
+					"strict" : false
+				},
+				{
+					"name" : "VSYNC_in",
+					"strict" : false
+				},
+				{
+					"name" : "HSYNC_in",
+					"strict" : false
+				},
+				{
+					"name" : "R_in[1]",
+					"strict" : false
+				},
+				{
+					"name" : "R_in[3]",
+					"strict" : false
+				},
+				{
+					"name" : "R_in[2]",
+					"strict" : false
+				},
+				{
+					"name" : "G_in[1]",
+					"strict" : false
+				},
+				{
+					"name" : "G_in[3]",
+					"strict" : false
+				},
+				{
+					"name" : "G_in[2]",
+					"strict" : false
+				},
+				{
+					"name" : "B_in[1]",
+					"strict" : false
+				},
+				{
+					"name" : "B_in[3]",
+					"strict" : false
+				},
+				{
+					"name" : "B_in[2]",
+					"strict" : false
+				},
+				{
+					"name" : "R_in[0]",
+					"strict" : false
+				},
+				{
+					"name" : "F_in[0]",
+					"strict" : false
+				},
+				{
+					"name" : "F_in[3]",
+					"strict" : false
+				},
+				{
+					"name" : "F_in[1]",
+					"strict" : false
+				},
+				{
+					"name" : "F_in[2]",
+					"strict" : false
+				},
+				{
+					"name" : "G_in[0]",
+					"strict" : false
+				},
+				{
+					"name" : "B_in[0]",
+					"strict" : false
+				},
+				{
+					"name" : "BTN_volminus",
+					"strict" : false
+				},
+				{
+					"name" : "BTN_volplus",
+					"strict" : false
+				},
+				{
+					"name" : "altera_reserved_tms",
+					"strict" : false
+				},
+				{
+					"name" : "altera_reserved_tck",
+					"strict" : false
+				},
+				{
+					"name" : "altera_reserved_tdi",
+					"strict" : false
+				},
+				{
+					"name" : "altera_reserved_tdo",
+					"strict" : false
+				}
+			]
+		}
+	]
+}
