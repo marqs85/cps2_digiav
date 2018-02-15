@@ -1,4 +1,4 @@
-(module QFN-20-1EP_4x4mm_Pitch0.5mm_Handsoldering (layer F.Cu) (tedit 59CD5A0D)
+(module QFN-20-1EP_4x4mm_Pitch0.5mm_Handsoldering (layer F.Cu) (tedit 5A85F51D)
   (descr "20-Lead Plastic Quad Flat, No Lead Package (ML) - 4x4x0.9 mm Body [QFN]; (see Microchip Packaging Specification 00000049BS.pdf)")
   (tags "QFN 0.5")
   (attr smd)
@@ -24,6 +24,8 @@
   (fp_line (start -2.15 2.15) (end -1.375 2.15) (layer F.SilkS) (width 0.15))
   (fp_line (start 2.15 2.15) (end 1.375 2.15) (layer F.SilkS) (width 0.15))
   (fp_line (start 2.15 -2.15) (end 1.375 -2.15) (layer F.SilkS) (width 0.15))
+  (pad EP smd rect (at 0 0) (size 2.5 2.5) (layers F.Cu F.Paste F.Mask)
+    (solder_paste_margin_ratio -0.2))
   (pad 1 smd rect (at -2.115 -1) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
   (pad 2 smd rect (at -2.115 -0.5) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
   (pad 3 smd rect (at -2.115 0) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
@@ -44,7 +46,7 @@
   (pad 18 smd rect (at 0 -2.115 90) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
   (pad 19 smd rect (at -0.5 -2.115 90) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
   (pad 20 smd rect (at -1 -2.115 90) (size 1 0.3) (layers F.Cu F.Paste F.Mask))
-  (pad EP smd rect (at 0 0) (size 2.5 2.5) (layers F.Cu F.Paste F.Mask)
+  (pad EP smd rect (at 0 0) (size 2.5 2.5) (layers B.Cu B.Mask)
     (solder_paste_margin_ratio -0.2))
   (pad EP thru_hole circle (at 0 0 90) (size 2.25 2.25) (drill 1.75) (layers *.Cu *.Mask))
   (model Housings_DFN_QFN.3dshapes/QFN-20-1EP_4x4mm_Pitch0.5mm.wrl

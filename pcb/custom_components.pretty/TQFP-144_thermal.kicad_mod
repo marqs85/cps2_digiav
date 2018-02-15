@@ -1,4 +1,4 @@
-(module TQFP-144_thermal (layer F.Cu) (tedit 56867A9C)
+(module TQFP-144_thermal (layer F.Cu) (tedit 5A7E1929)
   (descr "P/PG-TQFP-144-2, -3, -7 (see MAXIM 21-0087.PDF and 90-0144.PDF)")
   (tags "QFP 0.5")
   (attr smd)
@@ -207,7 +207,7 @@
   (pad 41 thru_hole circle (at 0.85 2.55) (size 0.69 0.69) (drill 0.33) (layers *.Cu *.Mask F.SilkS))
   (pad 41 thru_hole circle (at 1.7 2.55) (size 0.69 0.69) (drill 0.33) (layers *.Cu *.Mask F.SilkS))
   (pad 41 thru_hole circle (at 2.55 2.55) (size 0.69 0.69) (drill 0.33) (layers *.Cu *.Mask F.SilkS))
-  (pad 41 thru_hole circle (at 0 0) (size 2.2 2.2) (drill 1) (layers *.Cu *.Mask F.SilkS))
+  (pad 41 thru_hole circle (at 0 0) (size 2.25 2.25) (drill 1.75) (layers *.Cu *.Mask F.SilkS))
   (model Housings_QFP.3dshapes/TQFP-144_20x20mm_Pitch0.5mm.wrl
     (at (xyz 0 0 0))
     (scale (xyz 1 1 1))
