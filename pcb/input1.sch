@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 4
 Title "CPS2_digiAV"
-Date "2018-02-15"
+Date "2018-03-22"
 Rev "2.0"
 Comp ""
 Comment1 ""
@@ -59,12 +59,12 @@ $EndComp
 $Comp
 L 74LVC245 U3
 U 1 1 5A447519
-P 2400 1500
-F 0 "U3" H 2500 2075 50  0000 L BNN
-F 1 "74LVC245" H 2450 925 50  0000 L TNN
-F 2 "custom_components:TSSOP-20_4.4x6.5mm_Pitch0.65mm_Handsoldering" H 2400 1500 50  0001 C CNN
-F 3 "" H 2400 1500 50  0000 C CNN
-	1    2400 1500
+P 2450 1500
+F 0 "U3" H 2550 2075 50  0000 L BNN
+F 1 "74LVC245" H 2500 925 50  0000 L TNN
+F 2 "custom_components:TSSOP-20_4.4x6.5mm_Pitch0.65mm_Handsoldering" H 2450 1500 50  0001 C CNN
+F 3 "" H 2450 1500 50  0000 C CNN
+	1    2450 1500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -127,12 +127,12 @@ $EndComp
 $Comp
 L GND #PWR050
 U 1 1 5A447541
-P 2400 2100
-F 0 "#PWR050" H 2400 2100 30  0001 C CNN
-F 1 "GND" H 2400 2030 30  0001 C CNN
-F 2 "" H 2400 2100 60  0001 C CNN
-F 3 "" H 2400 2100 60  0000 C CNN
-	1    2400 2100
+P 2450 2100
+F 0 "#PWR050" H 2450 2100 30  0001 C CNN
+F 1 "GND" H 2450 2030 30  0001 C CNN
+F 2 "" H 2450 2100 60  0001 C CNN
+F 3 "" H 2450 2100 60  0000 C CNN
+	1    2450 2100
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -185,34 +185,34 @@ Text Label 1450 5150 0    60   ~ 0
 VCCIO
 Text Label 1450 3500 0    60   ~ 0
 VCCIO
-Text Label 1400 1900 0    60   ~ 0
+Text Label 1450 1900 0    60   ~ 0
 VCCIO
 Text Label 2150 4100 0    60   ~ 0
 VCCIO
 Text Label 2150 2450 0    60   ~ 0
 VCCIO
-Text Label 2100 850  0    60   ~ 0
+Text Label 2150 850  0    60   ~ 0
 VCCIO
 $Comp
 L TEST_1P W2
 U 1 1 5A447566
-P 1400 4250
-F 0 "W2" H 1400 4520 50  0001 C CNN
-F 1 "I2S_BCK" V 1400 4650 50  0000 C CNN
-F 2 "custom_components:SMD_PAD" H 1600 4250 50  0001 C CNN
-F 3 "" H 1600 4250 50  0000 C CNN
-	1    1400 4250
+P 1400 4550
+F 0 "W2" H 1400 4820 50  0001 C CNN
+F 1 "I2S_BCK" V 1400 4950 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 1600 4550 50  0001 C CNN
+F 3 "" H 1600 4550 50  0000 C CNN
+	1    1400 4550
 	0    -1   -1   0   
 $EndComp
 $Comp
 L TEST_1P W3
 U 1 1 5A44756C
-P 1400 4350
-F 0 "W3" H 1400 4620 50  0001 C CNN
-F 1 "I2S_WS" V 1400 4750 50  0000 C CNN
-F 2 "custom_components:SMD_PAD" H 1600 4350 50  0001 C CNN
-F 3 "" H 1600 4350 50  0000 C CNN
-	1    1400 4350
+P 1400 4650
+F 0 "W3" H 1400 4920 50  0001 C CNN
+F 1 "I2S_WS" V 1400 5050 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 1600 4650 50  0001 C CNN
+F 3 "" H 1600 4650 50  0000 C CNN
+	1    1400 4650
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -229,23 +229,23 @@ $EndComp
 $Comp
 L TEST_1P W5
 U 1 1 5A447578
-P 1400 4550
-F 0 "W5" H 1400 4820 50  0001 C CNN
-F 1 "btn_vol+" V 1400 4950 50  0000 C CNN
-F 2 "custom_components:SMD_PAD" H 1600 4550 50  0001 C CNN
-F 3 "" H 1600 4550 50  0000 C CNN
-	1    1400 4550
+P 1400 4250
+F 0 "W5" H 1400 4520 50  0001 C CNN
+F 1 "btn_vol+" V 1400 4650 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 1600 4250 50  0001 C CNN
+F 3 "" H 1600 4250 50  0000 C CNN
+	1    1400 4250
 	0    -1   -1   0   
 $EndComp
 $Comp
 L TEST_1P W6
 U 1 1 5A44757E
-P 1400 4650
-F 0 "W6" H 1400 4920 50  0001 C CNN
-F 1 "btn_vol-" V 1400 5050 50  0000 C CNN
-F 2 "custom_components:SMD_PAD" H 1600 4650 50  0001 C CNN
-F 3 "" H 1600 4650 50  0000 C CNN
-	1    1400 4650
+P 1400 4350
+F 0 "W6" H 1400 4620 50  0001 C CNN
+F 1 "btn_vol-" V 1400 4750 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 1600 4350 50  0001 C CNN
+F 3 "" H 1600 4350 50  0000 C CNN
+	1    1400 4350
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -284,12 +284,12 @@ $EndComp
 $Comp
 L C C6
 U 1 1 5A447599
-P 1950 850
-F 0 "C6" H 1975 950 50  0000 L CNN
-F 1 "0.1u" H 1975 750 50  0000 L CNN
-F 2 "custom_components:SM0603_Capa_libcms" H 1988 700 50  0001 C CNN
-F 3 "" H 1950 850 50  0000 C CNN
-	1    1950 850 
+P 2000 850
+F 0 "C6" H 2025 950 50  0000 L CNN
+F 1 "0.1u" H 2025 750 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 2038 700 50  0001 C CNN
+F 3 "" H 2000 850 50  0000 C CNN
+	1    2000 850 
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -306,12 +306,12 @@ $EndComp
 $Comp
 L GND #PWR053
 U 1 1 5A4475A6
-P 1800 850
-F 0 "#PWR053" H 1800 850 30  0001 C CNN
-F 1 "GND" H 1800 780 30  0001 C CNN
-F 2 "" H 1800 850 60  0001 C CNN
-F 3 "" H 1800 850 60  0000 C CNN
-	1    1800 850 
+P 1850 850
+F 0 "#PWR053" H 1850 850 30  0001 C CNN
+F 1 "GND" H 1850 780 30  0001 C CNN
+F 2 "" H 1850 850 60  0001 C CNN
+F 3 "" H 1850 850 60  0000 C CNN
+	1    1850 850 
 	0    1    1    0   
 $EndComp
 $Comp
@@ -383,12 +383,12 @@ $EndComp
 $Comp
 L GND #PWR059
 U 1 1 5A4475D0
-P 1700 2000
-F 0 "#PWR059" H 1700 2000 30  0001 C CNN
-F 1 "GND" H 1700 1930 30  0001 C CNN
-F 2 "" H 1700 2000 60  0001 C CNN
-F 3 "" H 1700 2000 60  0000 C CNN
-	1    1700 2000
+P 1750 2000
+F 0 "#PWR059" H 1750 2000 30  0001 C CNN
+F 1 "GND" H 1750 1930 30  0001 C CNN
+F 2 "" H 1750 2000 60  0001 C CNN
+F 3 "" H 1750 2000 60  0000 C CNN
+	1    1750 2000
 	0    1    1    0   
 $EndComp
 $Comp
@@ -460,23 +460,23 @@ $EndComp
 $Comp
 L GND #PWR063
 U 1 1 5A4475FA
-P 950 3000
-F 0 "#PWR063" H 950 3000 30  0001 C CNN
-F 1 "GND" H 950 2930 30  0001 C CNN
-F 2 "" H 950 3000 60  0001 C CNN
-F 3 "" H 950 3000 60  0000 C CNN
-	1    950  3000
+P 700 3050
+F 0 "#PWR063" H 700 3050 30  0001 C CNN
+F 1 "GND" H 700 2980 30  0001 C CNN
+F 2 "" H 700 3050 60  0001 C CNN
+F 3 "" H 700 3050 60  0000 C CNN
+	1    700  3050
 	0    1    1    0   
 $EndComp
 $Comp
 L GND #PWR064
 U 1 1 5A447600
-P 1000 1400
-F 0 "#PWR064" H 1000 1400 30  0001 C CNN
-F 1 "GND" H 1000 1330 30  0001 C CNN
-F 2 "" H 1000 1400 60  0001 C CNN
-F 3 "" H 1000 1400 60  0000 C CNN
-	1    1000 1400
+P 700 1450
+F 0 "#PWR064" H 700 1450 30  0001 C CNN
+F 1 "GND" H 700 1380 30  0001 C CNN
+F 2 "" H 700 1450 60  0001 C CNN
+F 3 "" H 700 1450 60  0000 C CNN
+	1    700  1450
 	0    1    1    0   
 $EndComp
 $Comp
@@ -515,74 +515,71 @@ $EndComp
 $Comp
 L Conn_02x05_Counter_Clockwise J2
 U 1 1 5A44761A
-P 1300 1200
-F 0 "J2" H 1350 1500 50  0000 C CNN
-F 1 "Conn_02x05" V 1350 1200 50  0000 C CNN
-F 2 "Housings_DIP:DIP-10_W7.62mm_LongPads" H 1300 1200 50  0001 C CNN
-F 3 "" H 1300 1200 50  0001 C CNN
-	1    1300 1200
+P 900 1250
+F 0 "J2" H 950 1550 50  0000 C CNN
+F 1 "Conn_02x05" V 950 1250 50  0000 C CNN
+F 2 "custom_components:HLE-105-02-G-DV-PE" H 900 1250 50  0001 C CNN
+F 3 "" H 900 1250 50  0001 C CNN
+	1    900  1250
 	1    0    0    -1  
 $EndComp
 $Comp
 L Conn_02x05_Counter_Clockwise J1
 U 1 1 5A447621
-P 1250 2800
-F 0 "J1" H 1300 3100 50  0000 C CNN
-F 1 "Conn_02x05" V 1300 2800 50  0000 C CNN
-F 2 "Housings_DIP:DIP-10_W7.62mm_LongPads" H 1250 2800 50  0001 C CNN
-F 3 "" H 1250 2800 50  0001 C CNN
-	1    1250 2800
+P 900 2850
+F 0 "J1" H 950 3150 50  0000 C CNN
+F 1 "Conn_02x05" V 950 2850 50  0000 C CNN
+F 2 "custom_components:HLE-105-02-G-DV-PE" H 900 2850 50  0001 C CNN
+F 3 "" H 900 2850 50  0001 C CNN
+	1    900  2850
 	1    0    0    -1  
 $EndComp
-NoConn ~ 1100 1000
-NoConn ~ 1050 2600
-NoConn ~ 1750 4750
-NoConn ~ 1750 4850
-NoConn ~ 1750 4950
+NoConn ~ 700  1050
+NoConn ~ 700  2650
 NoConn ~ 3150 4750
 NoConn ~ 3150 4850
 NoConn ~ 3150 4950
-Text HLabel 4700 1700 2    60   Output ~ 0
+Text HLabel 4750 1200 2    60   Output ~ 0
 R0_O
-Text HLabel 4700 1600 2    60   Output ~ 0
+Text HLabel 4750 1100 2    60   Output ~ 0
 R1_O
-Text HLabel 4700 1500 2    60   Output ~ 0
+Text HLabel 4750 1000 2    60   Output ~ 0
 R2_O
-Text HLabel 4700 1400 2    60   Output ~ 0
+Text HLabel 4750 1700 2    60   Output ~ 0
 R3_O
-Text HLabel 4350 2900 2    60   Output ~ 0
-G0_O
-Text HLabel 4350 2800 2    60   Output ~ 0
-G1_O
-Text HLabel 4350 2700 2    60   Output ~ 0
-G2_O
-Text HLabel 4350 2600 2    60   Output ~ 0
-G3_O
-Text HLabel 4350 3300 2    60   Output ~ 0
-B0_O
-Text HLabel 4350 3200 2    60   Output ~ 0
-B1_O
-Text HLabel 4350 3100 2    60   Output ~ 0
-B2_O
 Text HLabel 4350 3000 2    60   Output ~ 0
+G0_O
+Text HLabel 4350 3100 2    60   Output ~ 0
+G1_O
+Text HLabel 4350 3200 2    60   Output ~ 0
+G2_O
+Text HLabel 4350 3300 2    60   Output ~ 0
+G3_O
+Text HLabel 4350 2800 2    60   Output ~ 0
+B0_O
+Text HLabel 4350 2700 2    60   Output ~ 0
+B1_O
+Text HLabel 4350 2600 2    60   Output ~ 0
+B2_O
+Text HLabel 4350 2900 2    60   Output ~ 0
 B3_O
-Text HLabel 4700 1300 2    60   Output ~ 0
+Text HLabel 4750 1600 2    60   Output ~ 0
 F0_O
-Text HLabel 4700 1200 2    60   Output ~ 0
+Text HLabel 4750 1500 2    60   Output ~ 0
 F1_O
-Text HLabel 4700 1100 2    60   Output ~ 0
+Text HLabel 4750 1400 2    60   Output ~ 0
 F2_O
-Text HLabel 4700 1000 2    60   Output ~ 0
+Text HLabel 4750 1300 2    60   Output ~ 0
 F3_O
-Text HLabel 4000 4250 2    60   Output ~ 0
+Text HLabel 4000 4550 2    60   Output ~ 0
 I2S_BCK_O
-Text HLabel 4000 4350 2    60   Output ~ 0
+Text HLabel 4000 4650 2    60   Output ~ 0
 I2S_WS_O
 Text HLabel 4000 4450 2    60   Output ~ 0
 I2S_DAT_O
-Text HLabel 4000 4550 2    60   Output ~ 0
+Text HLabel 4000 4250 2    60   Output ~ 0
 VOL+_O
-Text HLabel 4000 4650 2    60   Output ~ 0
+Text HLabel 4000 4350 2    60   Output ~ 0
 VOL-_O
 $Comp
 L Si5351C U6
@@ -702,6 +699,116 @@ F 3 "" H 9300 3550 60  0000 C CNN
 	1    9300 3550
 	0    -1   -1   0   
 $EndComp
+Text HLabel 9700 1300 0    60   Input ~ 0
+AVCC3v3
+Text Label 9800 1300 0    60   ~ 0
+AVCC3v3
+Text Label 7300 2050 0    60   ~ 0
+AVCC3v3
+$Comp
+L GND #PWR070
+U 1 1 5A7E4355
+P 8100 2050
+F 0 "#PWR070" H 8100 2050 30  0001 C CNN
+F 1 "GND" H 8100 1980 30  0001 C CNN
+F 2 "" H 8100 2050 60  0001 C CNN
+F 3 "" H 8100 2050 60  0000 C CNN
+	1    8100 2050
+	-1   0    0    1   
+$EndComp
+$Comp
+L C C16
+U 1 1 5A7E43B2
+P 7250 2200
+F 0 "C16" H 7275 2300 50  0000 L CNN
+F 1 "0.1u" H 7275 2100 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 7288 2050 50  0001 C CNN
+F 3 "" H 7250 2200 50  0000 C CNN
+	1    7250 2200
+	-1   0    0    1   
+$EndComp
+Text HLabel 9300 3450 2    60   Output ~ 0
+CLK1
+Text Label 550  2750 0    60   ~ 0
+B0
+Text Label 550  2850 0    60   ~ 0
+B1
+Text Label 550  2950 0    60   ~ 0
+B2
+Text Label 1250 3050 0    60   ~ 0
+B3
+Text Label 1250 2950 0    60   ~ 0
+G0
+Text Label 1250 2850 0    60   ~ 0
+G1
+Text Label 1250 2750 0    60   ~ 0
+G2
+Text Label 1250 2650 0    60   ~ 0
+G3
+Text Label 1600 3300 0    60   ~ 0
+G3
+Text Label 1600 3200 0    60   ~ 0
+G2
+Text Label 1600 3100 0    60   ~ 0
+G1
+Text Label 1600 3000 0    60   ~ 0
+G0
+Text Label 1600 2900 0    60   ~ 0
+B3
+Text Label 1600 2800 0    60   ~ 0
+B0
+Text Label 1600 2700 0    60   ~ 0
+B1
+Text Label 1600 2600 0    60   ~ 0
+B2
+Text Label 550  1150 0    60   ~ 0
+R0
+Text Label 550  1250 0    60   ~ 0
+R1
+Text Label 550  1350 0    60   ~ 0
+R2
+Text Label 1250 1450 0    60   ~ 0
+R3
+Text Label 1250 1350 0    60   ~ 0
+F0
+Text Label 1250 1250 0    60   ~ 0
+F1
+Text Label 1250 1150 0    60   ~ 0
+F2
+Text Label 1250 1050 0    60   ~ 0
+F3
+Wire Wire Line
+	700  1150 500  1150
+Wire Wire Line
+	700  1250 500  1250
+Wire Wire Line
+	700  1350 500  1350
+Wire Wire Line
+	1550 2600 1750 2600
+Wire Wire Line
+	1550 2700 1750 2700
+Wire Wire Line
+	1550 2800 1750 2800
+Wire Wire Line
+	1550 2900 1750 2900
+Wire Wire Line
+	1550 3000 1750 3000
+Wire Wire Line
+	1550 3100 1750 3100
+Wire Wire Line
+	1550 3200 1750 3200
+Wire Wire Line
+	1550 3300 1750 3300
+Wire Wire Line
+	1400 2650 1200 2650
+Wire Wire Line
+	1400 2750 1200 2750
+Wire Wire Line
+	1400 2850 1200 2850
+Wire Wire Line
+	1400 2950 1200 2950
+Wire Wire Line
+	1400 3050 1200 3050
 Wire Wire Line
 	7000 5400 6850 5400
 Wire Wire Line
@@ -711,7 +818,7 @@ Wire Wire Line
 Wire Wire Line
 	8900 5300 8500 5300
 Wire Wire Line
-	2400 2100 2400 2050
+	2450 2100 2450 2050
 Wire Wire Line
 	2450 3700 2450 3650
 Wire Wire Line
@@ -739,7 +846,7 @@ Wire Wire Line
 Wire Wire Line
 	1450 3500 1750 3500
 Wire Wire Line
-	1400 1900 1700 1900
+	1450 1900 1750 1900
 Wire Wire Line
 	2150 4100 2450 4100
 Wire Wire Line
@@ -747,9 +854,9 @@ Wire Wire Line
 Wire Wire Line
 	2450 2450 2450 2550
 Wire Wire Line
-	2100 850  2400 850 
+	2150 850  2450 850 
 Wire Wire Line
-	2400 850  2400 950 
+	2450 850  2450 950 
 Wire Wire Line
 	2450 4100 2450 4200
 Wire Wire Line
@@ -765,54 +872,6 @@ Wire Wire Line
 Connection ~ 1600 6150
 Connection ~ 1850 6150
 Connection ~ 1750 6450
-Wire Wire Line
-	1600 1000 1700 1000
-Wire Wire Line
-	1600 1100 1700 1100
-Wire Wire Line
-	1600 1200 1700 1200
-Wire Wire Line
-	1600 1300 1700 1300
-Wire Wire Line
-	1600 1400 1700 1400
-Wire Wire Line
-	850  1500 1700 1500
-Wire Wire Line
-	1100 1200 800  1200
-Wire Wire Line
-	800  1200 800  1600
-Wire Wire Line
-	800  1600 1700 1600
-Wire Wire Line
-	750  1100 750  1700
-Wire Wire Line
-	750  1700 1700 1700
-Wire Wire Line
-	1000 1400 1100 1400
-Wire Wire Line
-	950  3000 1050 3000
-Wire Wire Line
-	1550 2600 1750 2600
-Wire Wire Line
-	1550 2700 1750 2700
-Wire Wire Line
-	1550 2800 1750 2800
-Wire Wire Line
-	1550 2900 1750 2900
-Wire Wire Line
-	1550 3000 1750 3000
-Wire Wire Line
-	800  3100 1750 3100
-Wire Wire Line
-	1050 2800 750  2800
-Wire Wire Line
-	750  2800 750  3200
-Wire Wire Line
-	750  3200 1750 3200
-Wire Wire Line
-	700  2700 700  3300
-Wire Wire Line
-	700  3300 1750 3300
 Wire Wire Line
 	3150 2600 4350 2600
 Wire Wire Line
@@ -830,21 +889,21 @@ Wire Wire Line
 Wire Wire Line
 	3150 3300 4350 3300
 Wire Wire Line
-	3100 1700 4700 1700
+	3150 1700 4750 1700
 Wire Wire Line
-	3100 1600 4700 1600
+	3150 1600 4750 1600
 Wire Wire Line
-	3100 1500 4700 1500
+	3150 1500 4750 1500
 Wire Wire Line
-	3100 1400 4700 1400
+	3150 1400 4750 1400
 Wire Wire Line
-	3100 1300 4700 1300
+	3150 1300 4750 1300
 Wire Wire Line
-	3100 1200 4700 1200
+	3150 1200 4750 1200
 Wire Wire Line
-	3100 1100 4700 1100
+	3150 1100 4750 1100
 Wire Wire Line
-	3100 1000 4700 1000
+	3150 1000 4750 1000
 Wire Wire Line
 	6850 4950 9350 4950
 Wire Wire Line
@@ -893,18 +952,6 @@ Wire Wire Line
 Wire Wire Line
 	7950 4350 7950 4150
 Wire Wire Line
-	1100 1100 750  1100
-Wire Wire Line
-	1100 1300 850  1300
-Wire Wire Line
-	850  1300 850  1500
-Wire Wire Line
-	800  3100 800  2900
-Wire Wire Line
-	800  2900 1050 2900
-Wire Wire Line
-	700  2700 1050 2700
-Wire Wire Line
 	8600 3250 8750 3250
 Wire Wire Line
 	8750 3250 8750 2350
@@ -914,43 +961,94 @@ Wire Wire Line
 	9000 4350 7950 4350
 Wire Wire Line
 	9000 3550 9000 4350
-Text HLabel 9700 1300 0    60   Input ~ 0
-AVCC3v3
-Text Label 9800 1300 0    60   ~ 0
-AVCC3v3
 Wire Wire Line
 	9700 1300 10150 1300
-Text Label 7300 2050 0    60   ~ 0
-AVCC3v3
 Wire Wire Line
 	8750 2350 7750 2350
-$Comp
-L GND #PWR070
-U 1 1 5A7E4355
-P 8100 2050
-F 0 "#PWR070" H 8100 2050 30  0001 C CNN
-F 1 "GND" H 8100 1980 30  0001 C CNN
-F 2 "" H 8100 2050 60  0001 C CNN
-F 3 "" H 8100 2050 60  0000 C CNN
-	1    8100 2050
-	-1   0    0    1   
-$EndComp
 Connection ~ 8100 2350
-$Comp
-L C C16
-U 1 1 5A7E43B2
-P 7250 2200
-F 0 "C16" H 7275 2300 50  0000 L CNN
-F 1 "0.1u" H 7275 2100 50  0000 L CNN
-F 2 "custom_components:SM0603_Capa_libcms" H 7288 2050 50  0001 C CNN
-F 3 "" H 7250 2200 50  0000 C CNN
-	1    7250 2200
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	7550 2050 7250 2050
-Text HLabel 9300 3450 2    60   Output ~ 0
-CLK1
 Wire Wire Line
 	8600 3450 9300 3450
+Wire Wire Line
+	700  2750 500  2750
+Wire Wire Line
+	700  2850 500  2850
+Wire Wire Line
+	700  2950 500  2950
+Wire Wire Line
+	1400 1050 1200 1050
+Wire Wire Line
+	1400 1150 1200 1150
+Wire Wire Line
+	1400 1250 1200 1250
+Wire Wire Line
+	1400 1350 1200 1350
+Wire Wire Line
+	1400 1450 1200 1450
+Wire Wire Line
+	1550 1700 1750 1700
+Wire Wire Line
+	1550 1600 1750 1600
+Wire Wire Line
+	1550 1500 1750 1500
+Wire Wire Line
+	1550 1400 1750 1400
+Wire Wire Line
+	1550 1300 1750 1300
+Wire Wire Line
+	1550 1200 1750 1200
+Wire Wire Line
+	1550 1100 1750 1100
+Wire Wire Line
+	1550 1000 1750 1000
+$Comp
+L GND #PWR071
+U 1 1 5AB561BC
+P 1750 4950
+F 0 "#PWR071" H 1750 4950 30  0001 C CNN
+F 1 "GND" H 1750 4880 30  0001 C CNN
+F 2 "" H 1750 4950 60  0001 C CNN
+F 3 "" H 1750 4950 60  0000 C CNN
+	1    1750 4950
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR072
+U 1 1 5AB561FA
+P 1750 4850
+F 0 "#PWR072" H 1750 4850 30  0001 C CNN
+F 1 "GND" H 1750 4780 30  0001 C CNN
+F 2 "" H 1750 4850 60  0001 C CNN
+F 3 "" H 1750 4850 60  0000 C CNN
+	1    1750 4850
+	0    1    1    0   
+$EndComp
+$Comp
+L GND #PWR073
+U 1 1 5AB56238
+P 1750 4750
+F 0 "#PWR073" H 1750 4750 30  0001 C CNN
+F 1 "GND" H 1750 4680 30  0001 C CNN
+F 2 "" H 1750 4750 60  0001 C CNN
+F 3 "" H 1750 4750 60  0000 C CNN
+	1    1750 4750
+	0    1    1    0   
+$EndComp
+Text Label 1600 1700 0    60   ~ 0
+R3
+Text Label 1600 1600 0    60   ~ 0
+F0
+Text Label 1600 1500 0    60   ~ 0
+F1
+Text Label 1600 1400 0    60   ~ 0
+F2
+Text Label 1600 1300 0    60   ~ 0
+F3
+Text Label 1600 1200 0    60   ~ 0
+R0
+Text Label 1600 1100 0    60   ~ 0
+R1
+Text Label 1600 1000 0    60   ~ 0
+R2
 $EndSCHEMATC

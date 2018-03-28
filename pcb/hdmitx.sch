@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 4
 Title "CPS2_digiAV"
-Date "2018-02-15"
+Date "2018-03-22"
 Rev "2.0"
 Comp ""
 Comment1 ""
