@@ -1,7 +1,7 @@
 //
-// Copyright (C) 2015-2016  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
-// This file is part of Open Source Scan Converter project.
+// This file is part of CPS2 Digital AV Interface project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

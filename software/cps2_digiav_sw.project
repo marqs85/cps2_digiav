@@ -32,23 +32,10 @@
   <Dependencies Name="Release"/>
   <VirtualDirectory Name="sys_controller">
     <File Name="sys_controller/av_controller.c"/>
-    <VirtualDirectory Name="it6613">
-      <File Name="sys_controller/it6613/it6613_drv.c"/>
-      <File Name="sys_controller/it6613/HDMI_TX.c"/>
-      <File Name="sys_controller/it6613/HDMI_TX.h"/>
-      <File Name="sys_controller/it6613/it6613.c"/>
-      <File Name="sys_controller/it6613/it6613_drv.h"/>
-      <File Name="sys_controller/it6613/hdmitx_nios2.c"/>
-      <File Name="sys_controller/it6613/EDID.c"/>
-      <File Name="sys_controller/it6613/it6613_sys.h"/>
-      <File Name="sys_controller/it6613/HDMI_COMMON.h"/>
-      <File Name="sys_controller/it6613/hdmitx.h"/>
-      <File Name="sys_controller/it6613/it6613.h"/>
-      <File Name="sys_controller/it6613/it6613_sys.c"/>
-      <File Name="sys_controller/it6613/edid.h"/>
-      <File Name="sys_controller/it6613/typedef.h"/>
-    </VirtualDirectory>
     <File Name="sys_controller/sysconfig.h"/>
+    <VirtualDirectory Name="si5351">
+      <File Name="sys_controller/si5351/si5351_regs.h"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <GlobalSettings>

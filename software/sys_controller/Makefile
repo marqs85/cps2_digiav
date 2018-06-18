@@ -143,12 +143,6 @@ ELF := av_controller.elf
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += av_controller.c
-C_SRCS += it6613/EDID.c
-C_SRCS += it6613/HDMI_TX.c
-C_SRCS += it6613/hdmitx_nios2.c
-C_SRCS += it6613/it6613.c
-C_SRCS += it6613/it6613_drv.c
-C_SRCS += it6613/it6613_sys.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -189,7 +183,7 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../sys_controller_bsp/
 
 # List of application specific include directories, library directories and library names
-APP_INCLUDE_DIRS := ./ it6613
+APP_INCLUDE_DIRS := ./ si5351
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 
