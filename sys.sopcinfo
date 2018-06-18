@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="sys" kind="sys" version="1.0" fabric="QSYS">
  <!-- Format version 17.1 590 (Future versions may contain additional information.) -->
- <!-- 2018.01.09.21:01:09 -->
+ <!-- 2018.06.14.20:29:46 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1515524469</value>
+  <value>1528997385</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -444,7 +444,7 @@ parameters are a RESULT of the module parameters. -->
  <module
    name="i2c_opencores_0"
    kind="i2c_opencores"
-   version="17.0"
+   version="17.1"
    path="i2c_opencores_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
@@ -10062,7 +10062,7 @@ parameters are a RESULT of the module parameters. -->
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IModule</subtype>
   <displayName>I2C Master (opencores.org)</displayName>
-  <version>17.0</version>
+  <version>17.1</version>
  </plugin>
  <plugin>
   <instanceCount>8</instanceCount>

@@ -1,7 +1,7 @@
 //
-// Copyright (C) 2016-2017  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
-// This file is part of CPS2_digiav project.
+// This file is part of CPS2 Digital AV Interface project.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-//`define TESTPATTERN
-
 module cps2_digiav(
     input [3:0] R_in,
     input [3:0] G_in,
@@ -27,6 +25,8 @@ module cps2_digiav(
     input VSYNC_in,
     input HSYNC_in,
     input PCLK2x_in,
+    input MCLK_SI,
+    input PCLK_SI,
     input I2S_BCK,
     input I2S_WS,
     input I2S_DATA,
@@ -49,9 +49,17 @@ module cps2_digiav(
     //output HDMI_TX_I2S_MCLK
 );
 
-wire reset_n;
-wire [2:0] pclk_lock;
-wire [2:0] pll_lock_lost;
+reg reset_n = 1'b0;
+reg [3:0] reset_n_ctr;
+
+reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
+reg HSYNC_in_L, VSYNC_in_L;
+
+reg sg_reset_n_L, sg_reset_n_LL;
+reg sg_hsync_ref_L, sg_hsync_ref_LL;
+reg sg_vsync_ref_L, sg_vsync_ref_LL;
+
+
 wire [31:0] h_info, v_info, x_info;
 
 wire [7:0] R_out, G_out, B_out;
@@ -61,23 +69,21 @@ wire PCLK_out;
 wire DE_out;
 
 wire clk25, pclk_5x;
-wire pclk_ext = clk25;
 
 wire I2S_WS_2x;
 wire I2S_DATA_2x;
-wire I2S_BCK_OUT;
+wire I2S_BCK_out;
 wire [7:0] clkcnt_out;
 
-wire [10:0] hcnt_videogen, vcnt_videogen;
-wire HSYNC_videogen, VSYNC_videogen, DE_videogen;
-wire PCLK_videogen;
+wire [11:0] hcnt_sg;
+wire [10:0] vcnt_sg;
+wire [8:0] hcnt_sg_lbuf;
+wire [5:0] vcnt_sg_lbuf;
+wire HSYNC_sg, VSYNC_sg, DE_sg;
 
 wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
 
-
-reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
-reg HSYNC_in_L, VSYNC_in_L;
 
 // Latch inputs syncronized to PCLKx2_in (negedge)
 always @(negedge PCLK2x_in or negedge reset_n)
@@ -99,8 +105,12 @@ begin
     end
 end
 
-
-assign reset_n = 1'b1;
+always @(clk25) begin
+    if (reset_n_ctr == 4'hf)
+        reset_n <= 1'b1;
+    else
+        reset_n_ctr <= reset_n_ctr + 1'b1;
+end
 
 //assign HDMI_TX_RST_N = reset_n;
 assign HDMI_TX_DE = DE_out;
@@ -108,12 +118,21 @@ assign HDMI_TX_PCLK = PCLK_out;
 assign HDMI_TX_HS = HSYNC_out;
 assign HDMI_TX_VS = VSYNC_out;
 assign HDMI_TX_I2S_DATA = I2S_DATA_2x;
-assign HDMI_TX_I2S_BCK = I2S_BCK_OUT;
+assign HDMI_TX_I2S_BCK = I2S_BCK_out;
 assign HDMI_TX_I2S_WS = I2S_WS_2x;
 //assign HDMI_TX_I2S_MCLK = 0;
 assign HDMI_TX_RD = R_out;
 assign HDMI_TX_GD = G_out;
 assign HDMI_TX_BD = B_out;
+
+always @(posedge PCLK_SI) begin
+    sg_reset_n_L <= x_info[31];
+    sg_reset_n_LL <= sg_reset_n_L;
+    sg_hsync_ref_L <= HSYNC_in_L;
+    sg_hsync_ref_LL <= sg_hsync_ref_L;
+    sg_vsync_ref_L <= VSYNC_in_L;
+    sg_vsync_ref_LL <= sg_vsync_ref_L;
+end
 
 sys sys_inst(
     .clk_clk                            (clk25),
@@ -127,39 +146,32 @@ sys sys_inst(
 );
 
 scanconverter scanconverter_inst (
-    .reset_n        (reset_n),
-    .HSYNC_in       (HSYNC_in_L),
-    .VSYNC_in       (VSYNC_in_L),
     .PCLK_in        (PCLK2x_in),
-    .pclk_5x        (pclk_5x),
-    .pclk_ext       (PCLK_videogen),
-    .hcnt_ext       (hcnt_videogen),
-    .vcnt_ext       (vcnt_videogen),
-    .HSYNC_ext      (HSYNC_videogen),
-    .VSYNC_ext      (VSYNC_videogen),
-    .DE_ext         (DE_videogen),
+    .PCLK_ext       (PCLK_SI),
+    .reset_n        (reset_n),
     .R_in           (R_in_L),
     .G_in           (G_in_L),
     .B_in           (B_in_L),
     .F_in           (F_in_L),
+    .HSYNC_in       (HSYNC_in_L),
+    .VSYNC_in       (VSYNC_in_L),
+    .hcnt_ext       (hcnt_sg[10:0]),
+    .vcnt_ext       (vcnt_sg),
+    .hcnt_ext_lbuf  (hcnt_sg_lbuf),
+    .vcnt_ext_lbuf  (vcnt_sg_lbuf),
+    .HSYNC_ext      (HSYNC_sg),
+    .VSYNC_ext      (VSYNC_sg),
+    .DE_ext         (DE_sg),
     .h_info         (h_info),
     .v_info         (v_info),
     .x_info         (x_info),
-`ifdef TESTPATTERN
-    .R_out          (),
-    .G_out          (),
-    .B_out          (),
-`else
+    .PCLK_out       (PCLK_out),
     .R_out          (R_out),
     .G_out          (G_out),
     .B_out          (B_out),
-`endif
     .HSYNC_out      (HSYNC_out),
     .VSYNC_out      (VSYNC_out),
-    .PCLK_out       (PCLK_out),
-    .DE_out         (DE_out),
-    .pclk_lock      (pclk_lock),
-    .pll_lock_lost  (pll_lock_lost)
+    .DE_out         (DE_out)
 );
 
 pll_pclk pll_pclk_inst (
@@ -169,36 +181,28 @@ pll_pclk pll_pclk_inst (
     .locked ( )
 );
 
-videogen vg0 (
-    .clk25          (pclk_ext),
-    .reset_n        (reset_n),
-    .HSYNC_in       (HSYNC_in_L),
-    .VSYNC_in       (VSYNC_in_L),
-    .HSYNC_out      (HSYNC_videogen),
-    .VSYNC_out      (VSYNC_videogen),
-    .PCLK_out       (PCLK_videogen),
-    .ENABLE_out     (DE_videogen),
-    .H_cnt          (hcnt_videogen),
-    .V_cnt          (vcnt_videogen),
-`ifdef TESTPATTERN
-    .R_out          (R_out),
-    .G_out          (G_out),
-    .B_out          (B_out)
-`else
-    .R_out          (),
-    .G_out          (),
-    .B_out          ()
-`endif
+syncgen u_sg (
+    .PCLK           (PCLK_SI),
+    .reset_n        (sg_reset_n_LL),
+    .HSYNC_ref      (sg_hsync_ref_LL),
+    .VSYNC_ref      (sg_vsync_ref_LL),
+    .HSYNC_out      (HSYNC_sg),
+    .VSYNC_out      (VSYNC_sg),
+    .DE_out         (DE_sg),
+    .hcnt           (hcnt_sg),
+    .vcnt           (vcnt_sg),
+    .hcnt_lbuf      (hcnt_sg_lbuf),
+    .vcnt_lbuf      (vcnt_sg_lbuf)
 );
 
 i2s_upsampler upsampler0 (
     .reset_n        (reset_n),
     .I2S_BCK        (I2S_BCK),
-    .I2S_BCK_OUT    (I2S_BCK_OUT),
     .I2S_WS         (I2S_WS),
     .I2S_DATA       (I2S_DATA),
-    .I2S_WS_2x      (I2S_WS_2x),
-    .I2S_DATA_2x    (I2S_DATA_2x),
+    .I2S_BCK_out    (I2S_BCK_out),
+    .I2S_WS_out     (I2S_WS_2x),
+    .I2S_DATA_out   (I2S_DATA_2x),
     .clkcnt_out     (clkcnt_out)
 );
 

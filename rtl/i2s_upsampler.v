@@ -25,11 +25,14 @@ module i2s_upsampler (
     input I2S_BCK,
     input I2S_WS,
     input I2S_DATA,
-    output I2S_BCK_OUT,
-    output reg I2S_WS_2x,
-    output reg I2S_DATA_2x,
+    output I2S_BCK_out,
+    output reg I2S_WS_out,
+    output reg I2S_DATA_out,
     output reg [7:0] clkcnt_out
 );
+
+reg I2S_WS_2x;
+reg I2S_DATA_2x;
 
 reg I2S_WS_prev;
 reg [2:0] sample_idx;
@@ -66,7 +69,7 @@ reg dbg_fifo_unf /* synthesis noprune */;
 
 wire I2S_BCK_proc;
 
-// I2S_BCK_OUT = (4/5)*I2S_BCK = 4MHz
+// I2S_BCK_out = (4/5)*I2S_BCK = 4MHz
 pll_i2s pll_i2s_inst (
     .inclk0(I2S_BCK),
     .c0(I2S_BCK_proc),
@@ -217,15 +220,22 @@ begin
     end
 end
 
+// launch outputs ar negative edge
+always @(negedge I2S_BCK_proc)
+begin
+    I2S_WS_out <= I2S_WS_2x;
+    I2S_DATA_out <= I2S_DATA_2x;
+end
+
 `ifdef I2S_CLK_GATING
 always @(negedge I2S_BCK_proc)
 begin
     clken_l <= clken;
 end
 
-assign I2S_BCK_OUT = (I2S_BCK_proc & clken_l);
+assign I2S_BCK_out = (I2S_BCK_proc & clken_l);
 `else
-assign I2S_BCK_OUT = I2S_BCK_proc;
+assign I2S_BCK_out = I2S_BCK_proc;
 `endif
 
 endmodule
