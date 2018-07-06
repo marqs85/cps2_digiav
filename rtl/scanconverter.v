@@ -25,12 +25,6 @@
 `define HSYNC_POL               `LO
 `define VSYNC_POL               `LO
 
-`define V_MULTMODE_EXT          3'd0
-`define V_MULTMODE_2X           3'd1
-`define V_MULTMODE_3X           3'd2
-`define V_MULTMODE_4X           3'd3
-`define V_MULTMODE_5X           3'd4
-
 `define SCANLINES_OFF           2'h0
 `define SCANLINES_H             2'h1
 `define SCANLINES_V             2'h2
@@ -62,8 +56,6 @@ module scanconverter (
     input HSYNC_ext,
     input VSYNC_ext,
     input DE_ext,
-    input [31:0] h_info,
-    input [31:0] v_info,
     input [31:0] x_info,
     output PCLK_out,
     output reg [7:0] R_out,
@@ -81,12 +73,11 @@ wire linebuf_rdclock;
 //RGB signals&registers: 4 bits per component + 4 bit fade
 wire [3:0] R_act, G_act, B_act, F_act;
 wire [3:0] R_lbuf, G_lbuf, B_lbuf, F_lbuf;
-reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L, R_in_LL, G_in_LL, B_in_LL, F_in_LL, R_1x, G_1x, B_1x, F_1x;
+reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
 reg [7:0] R_pp1, G_pp1, B_pp1, R_pp2, G_pp2, B_pp2, R_pp3, G_pp3, B_pp3, R_pp4, G_pp4, B_pp4;
 
 //H+V syncs + data enable signals&registers
 wire HSYNC_act, VSYNC_act, DE_act;
-reg HSYNC_1x, VSYNC_1x, DE_1x;
 reg HSYNC_in_L, HSYNC_pp2, HSYNC_pp3, HSYNC_pp4;
 reg VSYNC_in_L, VSYNC_pp2, VSYNC_pp3, VSYNC_pp4;
 reg DE_pp2, DE_pp3, DE_pp4;
@@ -96,9 +87,7 @@ reg frame_change, line_change;
 
 //H+V counters
 wire [11:0] linebuf_hoffset; //Offset for line (max. 2047 pixels), MSB indicates which line is read/written
-wire [11:0] hcnt_act;
 reg [11:0] hcnt_1x;
-wire [10:0] vcnt_act;
 reg [10:0] vcnt_1x;
 
 //other counters
@@ -112,18 +101,8 @@ reg [2:0] line_out_idx_5x;
 reg [23:0] warn_h_unstable, warn_pll_lock_lost, warn_pll_lock_lost_3x;
 reg mask_enable_pp1, mask_enable_pp2, mask_enable_pp3, mask_enable_pp4;
 
-
-reg [10:0] H_ACTIVE;    //max. 2047
-reg [9:0] H_AVIDSTART;  //max. 1023
-reg [10:0] V_ACTIVE;    //max. 2047
-reg [6:0] V_AVIDSTART;  //max. 127
-reg [7:0] H_SYNCLEN;
-reg [2:0] V_SYNCLEN;
 reg [1:0] V_SCANLINEMODE;
 reg [4:0] V_SCANLINEID;
-reg [2:0] V_MULTMODE;
-reg [7:0] V_MASK;
-reg [7:0] H_MASK;
 reg [3:0] X_MASK_BR;
 reg [7:0] X_SCANLINESTR;
 
@@ -184,8 +163,6 @@ always @(*) begin
         DE_act = DE_ext;
         linebuf_hoffset = ((6*{2'b00, hcnt_ext})/5)-((6*`EXT_H_AVIDSTART)/5);
         line_id_act = {2'b0, vcnt_ext[0]};
-        hcnt_act = hcnt_ext;
-        vcnt_act = vcnt_ext;
 end
 
 //wire [9:0] linebuf_rdaddr = (linebuf_hoffset-H_AVIDSTART-96)>>1;
@@ -210,7 +187,6 @@ always @(posedge PCLK_out)
 begin
     line_id_pp1 <= line_id_act;
     col_id_pp1 <= col_id_act;
-    //mask_enable_pp1 <= ((hcnt_act < H_AVIDSTART+H_MASK) | (hcnt_act >= H_AVIDSTART+H_ACTIVE-H_MASK) | (vcnt_act < V_AVIDSTART+V_MASK) | (vcnt_act >= V_AVIDSTART+V_ACTIVE-V_MASK));
     mask_enable_pp1 <= 0;
 
     HSYNC_pp2 <= HSYNC_act;
@@ -254,7 +230,6 @@ begin
         vcnt_1x <= 0;
         line_idx <= 0;
         frame_change <= 1'b0;
-        V_MULTMODE <= 0;
     end else begin
         if (`HSYNC_LEADING_EDGE) begin
             hcnt_1x <= 0;
@@ -279,19 +254,6 @@ begin
 
         if (frame_change) begin
             //Read configuration data from CPU
-            V_MULTMODE <= `V_MULTMODE_EXT;    // Line multiply mode
-
-            H_SYNCLEN <= 20;
-            H_AVIDSTART <= h_info[20:11];
-            H_ACTIVE <= h_info[10:0];
-
-            V_SYNCLEN <= 3;
-            V_AVIDSTART <= v_info[17:11];
-            V_ACTIVE <= v_info[10:0];
-
-            H_MASK <= h_info[28:21];
-            V_MASK <= v_info[25:18];
-
             V_SCANLINEMODE <= x_info[1:0];
             X_SCANLINESTR <= ((x_info[5:2]+8'h01)<<4)-1'b1;
             V_SCANLINEID <= x_info[10:6];
@@ -304,20 +266,6 @@ begin
         F_in_L <= F_in;
         HSYNC_in_L <= HSYNC_in;
         VSYNC_in_L <= VSYNC_in;
-
-        // Add one delay stage to match linebuf delay
-        R_in_LL <= R_in_L;
-        G_in_LL <= G_in_L;
-        B_in_LL <= B_in_L;
-        F_in_LL <= F_in_L;
-
-        R_1x <= R_in_LL;
-        G_1x <= G_in_LL;
-        B_1x <= B_in_LL;
-        F_1x <= F_in_LL;
-        HSYNC_1x <= (hcnt_1x < H_SYNCLEN) ? `HSYNC_POL : ~`HSYNC_POL;
-        VSYNC_1x <= (vcnt_1x < V_SYNCLEN) ? `VSYNC_POL : ~`VSYNC_POL;
-        DE_1x <= ((hcnt_1x >= H_AVIDSTART) & (hcnt_1x < H_AVIDSTART+H_ACTIVE)) & ((vcnt_1x >= V_AVIDSTART) & (vcnt_1x < V_AVIDSTART+V_ACTIVE));
     end
 end
 

@@ -34,19 +34,15 @@
 #define PB1_BIT             (1<<31)
 
 typedef struct {
-    alt_u32 lm_mode;
-    alt_u32 h_active;
-    alt_u32 h_avidstart;
-    alt_u32 h_mask;
-    alt_u32 v_active;
-    alt_u32 v_avidstart;
-    alt_u32 v_mask;
+    alt_u32 v_startpos;
+    alt_u32 v_refoffset;
+    alt_u32 sl_enable;
     alt_u32 sl_str;
     alt_u32 sl_mask;
 } mode_config_t;
 
-const mode_config_t fpga_480p = {.lm_mode=1, .h_active=640, .h_avidstart=144, .h_mask=0, .v_active=480, .v_avidstart=29, .v_mask=10, .sl_str=15, .sl_mask=1};
-const mode_config_t fpga_1080p = {.lm_mode=0, .h_active=960, .h_avidstart=38, .h_mask=0, .v_active=216, .v_avidstart=29, .v_mask=0, .sl_str=15, .sl_mask=3};
+mode_config_t fpga_480p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=1};
+mode_config_t fpga_1080p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=1};
 
 #define ADV7513_BASE (0x72>>1)
 
@@ -123,6 +119,11 @@ void init_adv() {
     adv7513_writereg(0x03, 0x00);
     adv7513_writereg(0x0A, 0x00);
     adv7513_writereg(0x0C, 0x84);
+
+    adv7513_writereg(0x4A, 0xC0);
+    adv7513_writereg(0x55, 0x02);
+    adv7513_writereg(0x57, 0x08);
+    adv7513_writereg(0x4A, 0x80);
 }
 
 // Initialize hardware
@@ -163,10 +164,10 @@ int init_hw()
     return 0;
 }
 
-void program_mode(const mode_config_t *mode_ptr, int sl_enable) {
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (mode_ptr->h_mask<<21)|(mode_ptr->h_avidstart<<11)|mode_ptr->h_active);
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, (mode_ptr->v_mask<<18)|(mode_ptr->v_avidstart<<11)|mode_ptr->v_active);
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (mode_ptr->lm_mode<<31)|(mode_ptr->sl_mask<<6)|(mode_ptr->sl_str<<2)|sl_enable);
+void program_mode(mode_config_t *mode_ptr) {
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, 0);
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, (mode_ptr->v_refoffset<<4)|mode_ptr->v_startpos);
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (1<<31)|(mode_ptr->sl_mask<<6)|(mode_ptr->sl_str<<2)|mode_ptr->sl_enable);
 }
 
 int main()
@@ -174,9 +175,8 @@ int main()
     alt_u8 rd;
     alt_u32 btn_vec, btn_vec_prev=0;
     alt_u32 lines;
-    alt_u32 lm_mode = 0;
-    alt_u32 sl_enable = 0;
-    const mode_config_t *mode_ptr = &fpga_480p;
+    alt_u32 x_info;
+    mode_config_t *mode_ptr = &fpga_1080p;
 
     int init_stat;
 
@@ -194,23 +194,26 @@ int main()
 
     alt_u32 ncts;
 
-    program_mode(mode_ptr, sl_enable);
+    program_mode(mode_ptr);
 
     while(1) {
 
         btn_vec = ~IORD_ALTERA_AVALON_PIO_DATA(PIO_0_BASE) & PB_MASK;
 
         if ((btn_vec_prev == 0) && btn_vec) {
-            if (btn_vec & PB0_BIT)
-                sl_enable ^= 1;
-            if (btn_vec & PB1_BIT) {
-                lm_mode ^= 1;
-                mode_ptr = lm_mode ? &fpga_480p : &fpga_1080p;
-                //TX_SetPixelRepetition(!lm_mode, 0);
-                //HDMITX_SetAVIInfoFrame(HDMI_Unkown, 0, 0, 0, 0);
+            if (btn_vec & PB0_BIT) {
+                mode_ptr->sl_enable ^= 1;
+                program_mode(mode_ptr);
             }
-
-            program_mode(mode_ptr, sl_enable);
+            if (btn_vec & PB1_BIT) {
+                mode_ptr->v_startpos = (mode_ptr->v_startpos + 1) % 9;
+                mode_ptr->v_refoffset = 5*mode_ptr->v_startpos;
+                program_mode(mode_ptr);
+                usleep(20000);
+                x_info = IORD_ALTERA_AVALON_PIO_DATA(PIO_3_BASE);
+                IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (x_info & ~(1<<31)));
+                IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, x_info);
+            }
         }
 
         rd = adv7513_readreg(0x9e);

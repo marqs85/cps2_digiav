@@ -24,6 +24,8 @@ module syncgen (
     input reset_n,
     input HSYNC_ref,
     input VSYNC_ref,
+    input [31:0] h_info,
+    input [31:0] v_info,
     output reg HSYNC_out,
     output reg VSYNC_out,
     output reg DE_out,
@@ -49,8 +51,9 @@ parameter h_ctr_max = 3;
 parameter v_ctr_max = 4;
 
 parameter H_STARTPOS = 464-48;
-parameter V_STARTPOS = 0;
 
+reg [3:0] V_STARTPOS;
+reg [5:0] V_REFOFFSET;
 
 reg [2:0] h_ctr, v_ctr;
 
@@ -107,7 +110,7 @@ begin
         VSYNC_out <= 0;
     end else begin
         if (v_leadedge == 1'b1) begin
-            vcnt <= 1054;
+            vcnt <= 1054-V_REFOFFSET;
         end else if (hcnt == H_TOTAL-1) begin
             // Vsync counter
             if (vcnt < V_TOTAL-1 )
@@ -132,6 +135,14 @@ begin
             // Vsync signal
             VSYNC_out <= (vcnt < V_SYNCLEN) ? 0 : 1;
         end
+    end
+end
+
+// Read config
+always @(posedge PCLK) begin
+    if (VSYNC_ref == 1'b0) begin
+        V_STARTPOS <= v_info[3:0];
+        V_REFOFFSET <= v_info[9:4];
     end
 end
 
