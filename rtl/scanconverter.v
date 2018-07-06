@@ -269,7 +269,7 @@ begin
             end else begin
                 vcnt_1x <= vcnt_1x + 1'b1;
                 
-                if ((vcnt_1x == 29) || (line_idx == `NUM_LINE_BUFFERS-1))
+                if ((vcnt_1x == 24) || (line_idx == `NUM_LINE_BUFFERS-1))
                     line_idx <= 0;
                 else
                     line_idx <= line_idx + 1'b1;

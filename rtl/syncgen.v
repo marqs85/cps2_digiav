@@ -48,8 +48,8 @@ parameter   Y_START     =   V_SYNCLEN + V_BACKPORCH;
 parameter h_ctr_max = 3;
 parameter v_ctr_max = 4;
 
-parameter H_STARTPOS = 464;
-parameter V_STARTPOS = 39;
+parameter H_STARTPOS = 464-48;
+parameter V_STARTPOS = 0;
 
 
 reg [2:0] h_ctr, v_ctr;
@@ -107,7 +107,7 @@ begin
         VSYNC_out <= 0;
     end else begin
         if (v_leadedge == 1'b1) begin
-            vcnt <= 1040;
+            vcnt <= 1054;
         end else if (hcnt == H_TOTAL-1) begin
             // Vsync counter
             if (vcnt < V_TOTAL-1 )
