@@ -53,6 +53,8 @@ module scanconverter (
     input [10:0] vcnt_ext,
     input [8:0] hcnt_ext_lbuf,
     input [5:0] vcnt_ext_lbuf,
+    input [2:0] hctr_ext,
+    input [2:0] vctr_ext,
     input HSYNC_ext,
     input VSYNC_ext,
     input DE_ext,
@@ -162,7 +164,8 @@ always @(*) begin
         VSYNC_act = VSYNC_ext;
         DE_act = DE_ext;
         linebuf_hoffset = ((6*{2'b00, hcnt_ext})/5)-((6*`EXT_H_AVIDSTART)/5);
-        line_id_act = {2'b0, vcnt_ext[0]};
+        line_id_act = vctr_ext;
+        col_id_act = hctr_ext;
 end
 
 //wire [9:0] linebuf_rdaddr = (linebuf_hoffset-H_AVIDSTART-96)>>1;

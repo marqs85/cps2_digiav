@@ -79,6 +79,7 @@ wire [11:0] hcnt_sg;
 wire [10:0] vcnt_sg;
 wire [8:0] hcnt_sg_lbuf;
 wire [5:0] vcnt_sg_lbuf;
+wire [2:0] hctr_sg, vctr_sg;
 wire HSYNC_sg, VSYNC_sg, DE_sg;
 
 wire BTN_volminus_debounced;
@@ -159,6 +160,8 @@ scanconverter scanconverter_inst (
     .vcnt_ext       (vcnt_sg),
     .hcnt_ext_lbuf  (hcnt_sg_lbuf),
     .vcnt_ext_lbuf  (vcnt_sg_lbuf),
+    .hctr_ext       (hctr_sg),
+    .vctr_ext       (vctr_sg),
     .HSYNC_ext      (HSYNC_sg),
     .VSYNC_ext      (VSYNC_sg),
     .DE_ext         (DE_sg),
@@ -192,7 +195,9 @@ syncgen u_sg (
     .hcnt           (hcnt_sg),
     .vcnt           (vcnt_sg),
     .hcnt_lbuf      (hcnt_sg_lbuf),
-    .vcnt_lbuf      (vcnt_sg_lbuf)
+    .vcnt_lbuf      (vcnt_sg_lbuf),
+    .h_ctr          (hctr_sg),
+    .v_ctr          (vctr_sg),
 );
 
 i2s_upsampler upsampler0 (

@@ -42,7 +42,7 @@ typedef struct {
 } mode_config_t;
 
 mode_config_t fpga_480p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=1};
-mode_config_t fpga_1080p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=1};
+mode_config_t fpga_1080p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=0x3};
 
 #define ADV7513_BASE (0x72>>1)
 

@@ -32,7 +32,9 @@ module syncgen (
     output reg [11:0] hcnt, //max. 4096
     output reg [10:0] vcnt, //max. 2048
     output reg [8:0] hcnt_lbuf,
-    output reg [5:0] vcnt_lbuf
+    output reg [5:0] vcnt_lbuf,
+    output reg [2:0] h_ctr,
+    output reg [2:0] v_ctr
 );
 
 parameter   H_SYNCLEN       =   44;
@@ -54,8 +56,6 @@ parameter H_STARTPOS = 464-48;
 
 reg [3:0] V_STARTPOS;
 reg [5:0] V_REFOFFSET;
-
-reg [2:0] h_ctr, v_ctr;
 
 reg prev_hs, prev_vs;
 reg v_leadedge, v_leadedge_synced;
