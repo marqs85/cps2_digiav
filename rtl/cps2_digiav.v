@@ -178,7 +178,6 @@ scanconverter scanconverter_inst (
 pll_pclk pll_pclk_inst (
     .inclk0 ( PCLK2x_in ),
     .c0 ( clk25 ),
-    .c1 ( pclk_5x ),
     .locked ( )
 );
 

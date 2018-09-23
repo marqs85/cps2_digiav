@@ -83,11 +83,11 @@ pll_i2s pll_i2s_inst (
 always @(posedge I2S_BCK or negedge reset_n)
 begin
     if (!reset_n) begin
-            samplebuf_l_ctr <= 0;
-            samplebuf_r_ctr <= 0;
-            I2S_WS_prev <= 0;
-            sample_idx <= 0;
-            clkcnt <= 0;
+        samplebuf_l_ctr <= 0;
+        samplebuf_r_ctr <= 0;
+        I2S_WS_prev <= 0;
+        sample_idx <= 0;
+        clkcnt <= 0;
     end else begin
         if ((I2S_WS_prev == 1'b1) && (I2S_WS == 1'b0)) begin
             samplebuf_l_ctr <= 16;
@@ -197,21 +197,14 @@ begin
             sample2x_ctr <= sample2x_ctr + 1'b1;
         end
 
-        if (resample_l_ctr > 0)
-            begin
-                I2S_DATA_2x <= samplebuf_l[resample_idx][resample_l_ctr-1];
-                resample_l_ctr <= resample_l_ctr - 1;
-            end
-        else if (resample_r_ctr > 0)
-            begin
-                I2S_DATA_2x <= samplebuf_r[resample_idx][resample_r_ctr-1];
-                resample_r_ctr <= resample_r_ctr - 1;
-            end
-        else
-            begin
-                I2S_DATA_2x <= 0;
-            end
-            
+        if (resample_l_ctr > 0) begin
+            I2S_DATA_2x <= samplebuf_l[resample_idx][resample_l_ctr-1];
+            resample_l_ctr <= resample_l_ctr - 1;
+        end else if (resample_r_ctr > 0) begin
+            I2S_DATA_2x <= samplebuf_r[resample_idx][resample_r_ctr-1];
+            resample_r_ctr <= resample_r_ctr - 1;
+        end
+
         if ((resample_l_ctr == 1) || (resample_r_ctr == 1))
             clken <= 0;
 
