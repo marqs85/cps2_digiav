@@ -11,8 +11,8 @@ K TTL BUS 3State
 $ENDCMP
 #
 $CMP 74LVC245
-D Octal BUS Transceivers, 3 State out
-K TTL BUS 3State
+D Double Pole Single Throw (DPST) Switch
+K switch dual double-pole single-throw OFF-ON
 $ENDCMP
 #
 #End Doc Library

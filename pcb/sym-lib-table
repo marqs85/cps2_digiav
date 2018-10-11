@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name custom_components)(type Legacy)(uri ${KIPRJMOD}/custom_components.lib)(options "")(descr ""))
+  (lib (name HDMI)(type Legacy)(uri ${KIPRJMOD}/HDMI.lib)(options "")(descr ""))
+)

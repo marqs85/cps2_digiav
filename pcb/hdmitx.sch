@@ -1,44 +1,13 @@
-EESchema Schematic File Version 2
-LIBS:power
-LIBS:device
-LIBS:transistors
-LIBS:conn
-LIBS:linear
-LIBS:regul
-LIBS:74xx
-LIBS:cmos4000
-LIBS:adc-dac
-LIBS:memory
-LIBS:xilinx
-LIBS:microcontrollers
-LIBS:dsp
-LIBS:microchip
-LIBS:analog_switches
-LIBS:motorola
-LIBS:texas
-LIBS:intel
-LIBS:audio
-LIBS:interface
-LIBS:digital-audio
-LIBS:philips
-LIBS:display
-LIBS:cypress
-LIBS:siliconi
-LIBS:opto
-LIBS:atmel
-LIBS:contrib
-LIBS:valves
-LIBS:custom_components
-LIBS:HDMI
+EESchema Schematic File Version 4
 LIBS:cps2_digiav-cache
-EELAYER 25 0
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 4
 Title "CPS2_digiAV"
-Date "2018-04-19"
-Rev "2.0"
+Date "2018-10-18"
+Rev "2.1"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -46,7 +15,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L HDMI_CONN J4
+L custom_components:HDMI_CONN J4
 U 1 1 54FF6BC9
 P 8600 3450
 F 0 "J4" H 8850 3050 50  0000 C CNN
@@ -120,7 +89,7 @@ R7
 Text HLabel 1800 1900 0    60   Input ~ 0
 PCLK
 $Comp
-L C C74
+L Device:C C74
 U 1 1 5501E4DA
 P 750 6250
 F 0 "C74" H 750 6350 40  0000 L CNN
@@ -131,7 +100,7 @@ F 3 "~" H 750 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Ferrite_Bead FB1
+L Device:Ferrite_Bead FB1
 U 1 1 5501ED08
 P 6100 6500
 F 0 "FB1" V 5950 6550 60  0000 C CNN
@@ -142,7 +111,7 @@ F 3 "~" H 6100 6500 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR05
+L power:GND #PWR05
 U 1 1 5501ED58
 P 750 6100
 F 0 "#PWR05" H 750 6100 30  0001 C CNN
@@ -153,7 +122,7 @@ F 3 "" H 750 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C80
+L Device:C C80
 U 1 1 5501F454
 P 2950 6250
 F 0 "C80" H 2950 6350 40  0000 L CNN
@@ -164,7 +133,7 @@ F 3 "~" H 2950 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR06
+L power:GND #PWR06
 U 1 1 5501F462
 P 2950 6100
 F 0 "#PWR06" H 2950 6100 30  0001 C CNN
@@ -175,7 +144,7 @@ F 3 "" H 2950 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C77
+L Device:C C77
 U 1 1 5501F48F
 P 2450 6250
 F 0 "C77" H 2450 6350 40  0000 L CNN
@@ -186,7 +155,7 @@ F 3 "~" H 2450 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Ferrite_Bead FB2
+L Device:Ferrite_Bead FB2
 U 1 1 5501F495
 P 5450 6800
 F 0 "FB2" V 5300 6900 60  0000 C CNN
@@ -197,7 +166,7 @@ F 3 "~" H 5450 6800 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR07
+L power:GND #PWR07
 U 1 1 5501F49D
 P 2450 6100
 F 0 "#PWR07" H 2450 6100 30  0001 C CNN
@@ -208,7 +177,7 @@ F 3 "" H 2450 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C85
+L Device:C C85
 U 1 1 5501F5E4
 P 7150 6350
 F 0 "C85" H 7150 6450 40  0000 L CNN
@@ -219,7 +188,7 @@ F 3 "~" H 7150 6350 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C84
+L Device:C C84
 U 1 1 5501F60B
 P 4850 6350
 F 0 "C84" H 4850 6450 40  0000 L CNN
@@ -230,7 +199,7 @@ F 3 "~" H 4850 6350 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C82
+L Device:C C82
 U 1 1 5501F614
 P 3000 6950
 F 0 "C82" H 3000 7050 40  0000 L CNN
@@ -241,7 +210,7 @@ F 3 "~" H 3000 6950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C75
+L Device:C C75
 U 1 1 5501F631
 P 1200 7100
 F 0 "C75" H 1200 7200 40  0000 L CNN
@@ -252,7 +221,7 @@ F 3 "~" H 1200 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C69
+L Device:C C69
 U 1 1 5501F63A
 P 4300 6950
 F 0 "C69" H 4300 7050 40  0000 L CNN
@@ -263,7 +232,7 @@ F 3 "~" H 4300 6950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C73
+L Device:C C73
 U 1 1 5501F643
 P 4550 6950
 F 0 "C73" H 4550 7050 40  0000 L CNN
@@ -274,7 +243,7 @@ F 3 "~" H 4550 6950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C86
+L Device:C C86
 U 1 1 5501F64D
 P 6500 6950
 F 0 "C86" H 6500 7050 40  0000 L CNN
@@ -285,7 +254,7 @@ F 3 "~" H 6500 6950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C83
+L Device:C C83
 U 1 1 5501F681
 P 4550 6350
 F 0 "C83" H 4550 6450 40  0000 L CNN
@@ -296,7 +265,7 @@ F 3 "~" H 4550 6350 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C79
+L Device:C C79
 U 1 1 5501F68A
 P 5100 6350
 F 0 "C79" H 5100 6450 40  0000 L CNN
@@ -307,7 +276,7 @@ F 3 "~" H 5100 6350 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C78
+L Device:C C78
 U 1 1 5501F8C0
 P 2700 6250
 F 0 "C78" H 2700 6350 40  0000 L CNN
@@ -318,7 +287,7 @@ F 3 "~" H 2700 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR08
+L power:GND #PWR08
 U 1 1 5501F8CC
 P 2700 6100
 F 0 "#PWR08" H 2700 6100 30  0001 C CNN
@@ -329,7 +298,7 @@ F 3 "" H 2700 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L C C81
+L Device:C C81
 U 1 1 5501F95D
 P 3200 6250
 F 0 "C81" H 3200 6350 40  0000 L CNN
@@ -340,7 +309,7 @@ F 3 "~" H 3200 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR09
+L power:GND #PWR09
 U 1 1 5501F963
 P 3200 6100
 F 0 "#PWR09" H 3200 6100 30  0001 C CNN
@@ -351,7 +320,7 @@ F 3 "" H 3200 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR010
+L power:GND #PWR010
 U 1 1 5501FA6A
 P 7850 4150
 F 0 "#PWR010" H 7850 4150 30  0001 C CNN
@@ -378,7 +347,7 @@ TXC+
 Text Label 6950 3600 0    60   ~ 0
 TXC-
 $Comp
-L GND #PWR011
+L power:GND #PWR011
 U 1 1 5501FBCF
 P 7850 2650
 F 0 "#PWR011" H 7850 2650 30  0001 C CNN
@@ -389,7 +358,7 @@ F 3 "" H 7850 2650 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR012
+L power:GND #PWR012
 U 1 1 5501FBD5
 P 7850 2950
 F 0 "#PWR012" H 7850 2950 30  0001 C CNN
@@ -400,7 +369,7 @@ F 3 "" H 7850 2950 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR013
+L power:GND #PWR013
 U 1 1 5501FBDB
 P 7850 3250
 F 0 "#PWR013" H 7850 3250 30  0001 C CNN
@@ -411,7 +380,7 @@ F 3 "" H 7850 3250 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR014
+L power:GND #PWR014
 U 1 1 5501FBE1
 P 7850 3550
 F 0 "#PWR014" H 7850 3550 30  0001 C CNN
@@ -427,7 +396,7 @@ DVDD3V3
 Text Label 10500 1000 0    60   ~ 0
 DVDD3V3
 $Comp
-L TLV70018_SOT23-5 U15
+L Regulator_Linear:TLV70018_SOT23-5 U15
 U 1 1 5502F816
 P 9950 5600
 F 0 "U15" H 9700 5800 40  0000 C CNN
@@ -438,7 +407,7 @@ F 3 "" H 9950 5600 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C87
+L Device:C C87
 U 1 1 5502F81C
 P 9350 5700
 F 0 "C87" H 9350 5800 40  0000 L CNN
@@ -449,7 +418,7 @@ F 3 "~" H 9350 5700 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C89
+L Device:C C89
 U 1 1 5502F822
 P 10500 5700
 F 0 "C89" H 10500 5800 40  0000 L CNN
@@ -460,7 +429,7 @@ F 3 "~" H 10500 5700 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR015
+L power:GND #PWR015
 U 1 1 5502F828
 P 9950 5900
 F 0 "#PWR015" H 9950 5900 30  0001 C CNN
@@ -477,7 +446,7 @@ max. 55mA
 Text Notes 9750 5350 0    60   ~ 0
 max. 200mA
 $Comp
-L GND #PWR016
+L power:GND #PWR016
 U 1 1 55040DCB
 P 6500 7100
 F 0 "#PWR016" H 6500 7100 30  0001 C CNN
@@ -488,7 +457,7 @@ F 3 "" H 6500 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR017
+L power:GND #PWR017
 U 1 1 55040DDD
 P 7150 6200
 F 0 "#PWR017" H 7150 6200 30  0001 C CNN
@@ -499,7 +468,7 @@ F 3 "" H 7150 6200 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR018
+L power:GND #PWR018
 U 1 1 55040EFE
 P 4850 6200
 F 0 "#PWR018" H 4850 6200 30  0001 C CNN
@@ -510,7 +479,7 @@ F 3 "" H 4850 6200 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR019
+L power:GND #PWR019
 U 1 1 55040F04
 P 4550 6200
 F 0 "#PWR019" H 4550 6200 30  0001 C CNN
@@ -521,7 +490,7 @@ F 3 "" H 4550 6200 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR020
+L power:GND #PWR020
 U 1 1 55040FC8
 P 4300 7100
 F 0 "#PWR020" H 4300 7100 30  0001 C CNN
@@ -532,7 +501,7 @@ F 3 "" H 4300 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR021
+L power:GND #PWR021
 U 1 1 55040FCE
 P 4550 7100
 F 0 "#PWR021" H 4550 7100 30  0001 C CNN
@@ -543,7 +512,7 @@ F 3 "" H 4550 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR022
+L power:GND #PWR022
 U 1 1 550410F9
 P 1200 7250
 F 0 "#PWR022" H 1200 7250 30  0001 C CNN
@@ -554,7 +523,7 @@ F 3 "" H 1200 7250 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR023
+L power:GND #PWR023
 U 1 1 550410FF
 P 5100 6200
 F 0 "#PWR023" H 5100 6200 30  0001 C CNN
@@ -565,7 +534,7 @@ F 3 "" H 5100 6200 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR024
+L power:GND #PWR024
 U 1 1 55041105
 P 3000 7100
 F 0 "#PWR024" H 3000 7100 30  0001 C CNN
@@ -576,7 +545,7 @@ F 3 "" H 3000 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Ferrite_Bead FB4
+L Device:Ferrite_Bead FB4
 U 1 1 5501F45A
 P 2250 6950
 F 0 "FB4" V 2100 6950 60  0000 C CNN
@@ -587,7 +556,7 @@ F 3 "~" H 2250 6950 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L PWR_FLAG #FLG025
+L power:PWR_FLAG #FLG025
 U 1 1 5507737D
 P 2250 6400
 F 0 "#FLG025" H 2250 6495 30  0001 C CNN
@@ -598,7 +567,7 @@ F 3 "" H 2250 6400 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L PWR_FLAG #FLG026
+L power:PWR_FLAG #FLG026
 U 1 1 55077394
 P 2700 6800
 F 0 "#FLG026" H 2700 6895 30  0001 C CNN
@@ -609,7 +578,7 @@ F 3 "" H 2700 6800 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L PWR_FLAG #FLG027
+L power:PWR_FLAG #FLG027
 U 1 1 550773A0
 P 5400 6500
 F 0 "#FLG027" H 5400 6595 30  0001 C CNN
@@ -630,7 +599,7 @@ max. 55mA (AVCC18)
 Text Notes 11800 3550 0    60   ~ 0
 max. 127mA (DVDD18)
 $Comp
-L R R41
+L Device:R R41
 U 1 1 5653050C
 P 7550 4500
 F 0 "R41" V 7630 4500 50  0000 C CNN
@@ -641,7 +610,7 @@ F 3 "" H 7550 4500 30  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR028
+L power:GND #PWR028
 U 1 1 5653059A
 P 7550 4650
 F 0 "#PWR028" H 7550 4650 30  0001 C CNN
@@ -654,7 +623,7 @@ $EndComp
 Text Label 7300 4350 0    60   ~ 0
 HPD
 $Comp
-L R R46
+L Device:R R46
 U 1 1 5686A65C
 P 6550 3800
 F 0 "R46" V 6630 3800 50  0000 C CNN
@@ -665,7 +634,7 @@ F 3 "" H 6550 3800 30  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L R R45
+L Device:R R45
 U 1 1 5686A73A
 P 5950 3900
 F 0 "R45" V 6030 3900 50  0000 C CNN
@@ -680,7 +649,7 @@ DDCSCL
 Text Label 5450 4050 0    60   ~ 0
 DDCSDA
 $Comp
-L Fuse_Small F2
+L Device:Fuse_Small F2
 U 1 1 5686BBED
 P 6500 4250
 F 0 "F2" H 6460 4310 50  0000 L CNN
@@ -694,10 +663,10 @@ Text HLabel 10450 1150 0    60   Input ~ 0
 5V
 Text Label 10600 1150 0    60   ~ 0
 5V
-Text Label 6200 4250 0    60   ~ 0
+Text Label 5550 4250 0    60   ~ 0
 5V
 $Comp
-L PWR_FLAG #FLG029
+L power:PWR_FLAG #FLG029
 U 1 1 56874505
 P 7050 4250
 F 0 "#FLG029" H 7050 4345 30  0001 C CNN
@@ -720,7 +689,7 @@ I2S_WS
 Text HLabel 1800 1600 0    60   Input ~ 0
 I2S_BCK
 $Comp
-L ADV7513 U1
+L HDMI:ADV7513 U1
 U 1 1 5A38E9E6
 P 3750 6300
 F 0 "U1" H 3750 6450 50  0000 C CNN
@@ -733,7 +702,7 @@ F 5 "1.0" H 3050 6850 50  0001 C CNN "Version"
 	1    0    0    -1  
 $EndComp
 $Comp
-L ADV7513 U1
+L HDMI:ADV7513 U1
 U 2 1 5A38EC28
 P 2950 850
 F 0 "U1" H 2950 1000 50  0000 C CNN
@@ -768,7 +737,7 @@ DDCSDA
 Text Label 4200 3600 0    60   ~ 0
 HPD
 $Comp
-L Ferrite_Bead FB3
+L Device:Ferrite_Bead FB3
 U 1 1 5A3CCA28
 P 1550 6400
 F 0 "FB3" V 1350 6400 60  0000 C CNN
@@ -779,7 +748,7 @@ F 3 "~" H 1550 6400 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L C C11
+L Device:C C11
 U 1 1 5A3CCDC1
 P 2700 7100
 F 0 "C11" H 2700 7200 40  0000 L CNN
@@ -790,7 +759,7 @@ F 3 "~" H 2700 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR030
+L power:GND #PWR030
 U 1 1 5A3CD357
 P 2700 7250
 F 0 "#PWR030" H 2700 7250 30  0001 C CNN
@@ -801,7 +770,7 @@ F 3 "" H 2700 7250 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C10
+L Device:C C10
 U 1 1 5A3CF584
 P 2050 6250
 F 0 "C10" H 2050 6350 40  0000 L CNN
@@ -812,7 +781,7 @@ F 3 "~" H 2050 6250 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR031
+L power:GND #PWR031
 U 1 1 5A3CF649
 P 2050 6100
 F 0 "#PWR031" H 2050 6100 30  0001 C CNN
@@ -823,7 +792,7 @@ F 3 "" H 2050 6100 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR032
+L power:GND #PWR032
 U 1 1 5A3D1D20
 P 3200 7100
 F 0 "#PWR032" H 3200 7100 30  0001 C CNN
@@ -834,7 +803,7 @@ F 3 "" H 3200 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C12
+L Device:C C12
 U 1 1 5A3D2490
 P 4950 6950
 F 0 "C12" H 4950 7050 40  0000 L CNN
@@ -845,7 +814,7 @@ F 3 "~" H 4950 6950 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR033
+L power:GND #PWR033
 U 1 1 5A3D27C1
 P 4950 7100
 F 0 "#PWR033" H 4950 7100 30  0001 C CNN
@@ -856,7 +825,7 @@ F 3 "" H 4950 7100 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L C C13
+L Device:C C13
 U 1 1 5A3D3C08
 P 5700 6350
 F 0 "C13" H 5700 6450 40  0000 L CNN
@@ -867,7 +836,7 @@ F 3 "~" H 5700 6350 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L GND #PWR034
+L power:GND #PWR034
 U 1 1 5A3D3C9F
 P 5700 6200
 F 0 "#PWR034" H 5700 6200 30  0001 C CNN
@@ -878,7 +847,7 @@ F 3 "" H 5700 6200 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L PWR_FLAG #FLG035
+L power:PWR_FLAG #FLG035
 U 1 1 5A3D7F6F
 P 4800 6800
 F 0 "#FLG035" H 4800 6895 30  0001 C CNN
@@ -893,7 +862,7 @@ DVDD1V8
 Text Label 1750 6950 2    60   ~ 0
 DVDD3V3
 $Comp
-L R R3
+L Device:R R3
 U 1 1 5A3E6438
 P 4200 3900
 F 0 "R3" V 4280 3900 50  0000 C CNN
@@ -904,7 +873,7 @@ F 3 "" H 4200 3900 30  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR036
+L power:GND #PWR036
 U 1 1 5A3E686A
 P 4200 4050
 F 0 "#PWR036" H 4200 4050 30  0001 C CNN
@@ -915,7 +884,7 @@ F 3 "" H 4200 4050 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RClamp0524P D2
+L custom_components:RClamp0524P D2
 U 1 1 5A45A154
 P 7500 2800
 F 0 "D2" H 7500 3150 60  0000 C CNN
@@ -926,7 +895,7 @@ F 3 "" H 7550 2850 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L RClamp0524P D3
+L custom_components:RClamp0524P D3
 U 1 1 5A45A34F
 P 7500 3400
 F 0 "D3" H 7500 3050 60  0000 C CNN
@@ -937,7 +906,7 @@ F 3 "" H 7550 3450 60  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR037
+L power:GND #PWR037
 U 1 1 5A460B12
 P 6900 2800
 F 0 "#PWR037" H 6900 2800 30  0001 C CNN
@@ -948,7 +917,7 @@ F 3 "" H 6900 2800 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR038
+L power:GND #PWR038
 U 1 1 5A460BB9
 P 6900 3400
 F 0 "#PWR038" H 6900 3400 30  0001 C CNN
@@ -959,7 +928,7 @@ F 3 "" H 6900 3400 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR039
+L power:GND #PWR039
 U 1 1 5A7FEA92
 P 1950 1050
 F 0 "#PWR039" H 1950 1050 30  0001 C CNN
@@ -970,7 +939,7 @@ F 3 "" H 1950 1050 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR040
+L power:GND #PWR040
 U 1 1 5A7FF1E9
 P 1950 4950
 F 0 "#PWR040" H 1950 4950 30  0001 C CNN
@@ -981,7 +950,7 @@ F 3 "" H 1950 4950 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR041
+L power:GND #PWR041
 U 1 1 5A7FF57D
 P 1950 950
 F 0 "#PWR041" H 1950 950 30  0001 C CNN
@@ -992,7 +961,7 @@ F 3 "" H 1950 950 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR042
+L power:GND #PWR042
 U 1 1 5A7FF5FD
 P 1950 1300
 F 0 "#PWR042" H 1950 1300 30  0001 C CNN
@@ -1003,7 +972,7 @@ F 3 "" H 1950 1300 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR043
+L power:GND #PWR043
 U 1 1 5A7FF67D
 P 1950 1400
 F 0 "#PWR043" H 1950 1400 30  0001 C CNN
@@ -1014,7 +983,7 @@ F 3 "" H 1950 1400 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L GND #PWR044
+L power:GND #PWR044
 U 1 1 5A7FF6FD
 P 1950 1500
 F 0 "#PWR044" H 1950 1500 30  0001 C CNN
@@ -1025,7 +994,7 @@ F 3 "" H 1950 1500 60  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L R R5
+L Device:R R5
 U 1 1 5A800262
 P 1300 4950
 F 0 "R5" V 1380 4950 50  0000 C CNN
@@ -1066,7 +1035,7 @@ Wire Wire Line
 	10250 5500 10400 5500
 Connection ~ 9650 5550
 Wire Wire Line
-	9650 5500 9650 5600
+	9650 5500 9650 5550
 Wire Wire Line
 	7700 3650 7850 3650
 Wire Wire Line
@@ -1096,9 +1065,9 @@ Wire Wire Line
 Wire Wire Line
 	7700 2600 7700 2550
 Wire Wire Line
-	6900 3400 7650 3400
+	6900 3400 7350 3400
 Wire Wire Line
-	6900 2800 7650 2800
+	6900 2800 7350 2800
 Connection ~ 5950 4050
 Wire Wire Line
 	3950 3750 4200 3750
@@ -1106,17 +1075,17 @@ Wire Wire Line
 	5600 6800 6500 6800
 Connection ~ 4800 6800
 Wire Wire Line
-	4300 6800 5300 6800
+	4300 6800 4550 6800
 Connection ~ 5400 6500
 Wire Wire Line
-	4300 6500 5950 6500
+	4300 6500 4550 6500
 Wire Wire Line
-	2700 6800 3200 6800
+	2700 6800 3000 6800
 Wire Wire Line
 	2700 6950 2700 6800
 Connection ~ 2250 6400
 Wire Wire Line
-	1700 6400 3200 6400
+	1700 6400 1850 6400
 Connection ~ 2950 6400
 Connection ~ 2700 6400
 Connection ~ 2450 6400
@@ -1126,7 +1095,7 @@ Wire Wire Line
 Connection ~ 4550 6500
 Connection ~ 4300 6500
 Wire Wire Line
-	4300 6400 4300 6600
+	4300 6400 4300 6500
 Connection ~ 4850 6500
 Connection ~ 5100 6500
 Connection ~ 5700 6500
@@ -1139,10 +1108,10 @@ Wire Wire Line
 Connection ~ 3200 6500
 Connection ~ 3200 6600
 Wire Wire Line
-	3200 6400 3200 6700
+	3200 6400 3200 6500
 Connection ~ 3000 6800
 Wire Wire Line
-	2400 6950 2700 6950
+	2400 6950 2500 6950
 Wire Wire Line
 	1200 6950 2100 6950
 Wire Wire Line
@@ -1175,7 +1144,7 @@ Wire Wire Line
 Wire Wire Line
 	1800 5250 1950 5250
 Wire Wire Line
-	1150 5100 1950 5100
+	1150 5100 1300 5100
 Wire Wire Line
 	1800 4750 1950 4750
 Wire Wire Line
@@ -1242,31 +1211,29 @@ Connection ~ 9950 5900
 Wire Wire Line
 	9350 5900 9350 5850
 Wire Wire Line
-	9350 5900 10500 5900
+	9350 5900 9950 5900
 Wire Wire Line
 	10500 5900 10500 5850
 Connection ~ 10500 5550
 Connection ~ 7050 4250
 Wire Wire Line
-	6600 4250 7850 4250
+	6600 4250 7050 4250
 Connection ~ 6550 3950
 Wire Wire Line
 	6550 3650 6550 3500
 Wire Wire Line
 	5950 3600 5950 3750
 Wire Wire Line
-	6400 4250 6100 4250
-Wire Wire Line
 	10450 1150 10900 1150
 Wire Wire Line
-	5450 4050 7850 4050
+	5450 4050 5950 4050
 Wire Wire Line
-	6100 3950 7850 3950
+	6100 3950 6550 3950
 Connection ~ 7550 4350
 Wire Wire Line
-	7250 4350 7850 4350
+	7250 4350 7550 4350
 Wire Wire Line
-	8750 5550 9650 5550
+	8750 5550 9350 5550
 Wire Notes Line
 	8400 4300 8400 4200
 Wire Notes Line
@@ -1276,28 +1243,28 @@ Wire Notes Line
 Wire Notes Line
 	8400 4200 8950 4200
 Wire Wire Line
-	10400 5550 10700 5550
+	10400 5550 10500 5550
 Connection ~ 9350 5550
 Wire Wire Line
 	10900 1000 10450 1000
 Wire Wire Line
-	6900 3600 7700 3600
+	6900 3600 7350 3600
 Wire Wire Line
-	6900 3500 7700 3500
+	6900 3500 7350 3500
 Wire Wire Line
-	6900 3300 7700 3300
+	6900 3300 7350 3300
 Wire Wire Line
-	6900 3200 7700 3200
+	6900 3200 7350 3200
 Wire Wire Line
-	6900 3000 7750 3000
+	6900 3000 7350 3000
 Wire Wire Line
-	6900 2900 7700 2900
+	6900 2900 7350 2900
 Wire Wire Line
-	6900 2700 7700 2700
+	6900 2700 7350 2700
 Wire Wire Line
-	6900 2600 7700 2600
+	6900 2600 7350 2600
 $Comp
-L GND #PWR045
+L power:GND #PWR045
 U 1 1 5A802186
 P 3950 4000
 F 0 "#PWR045" H 3950 4000 30  0001 C CNN
@@ -1343,4 +1310,115 @@ Text Label 550  4800 0    60   ~ 0
 DVDD3V3_FILT_DVDD_3V
 Connection ~ 7350 2800
 Connection ~ 7350 3400
+Wire Wire Line
+	1300 5100 1950 5100
+Wire Wire Line
+	7350 2700 7650 2700
+Wire Wire Line
+	7650 2700 7700 2700
+Wire Wire Line
+	7650 3600 7700 3600
+Wire Wire Line
+	7350 3600 7650 3600
+Wire Wire Line
+	7350 3500 7650 3500
+Wire Wire Line
+	7650 3500 7700 3500
+Wire Wire Line
+	7650 3300 7700 3300
+Wire Wire Line
+	7350 3300 7650 3300
+Wire Wire Line
+	7350 3200 7650 3200
+Wire Wire Line
+	7650 3200 7700 3200
+Wire Wire Line
+	7650 3000 7750 3000
+Wire Wire Line
+	7350 3000 7650 3000
+Wire Wire Line
+	7350 2900 7650 2900
+Wire Wire Line
+	7650 2900 7700 2900
+Wire Wire Line
+	7350 2600 7650 2600
+Wire Wire Line
+	7650 2600 7700 2600
+Wire Wire Line
+	9650 5550 9650 5600
+Wire Wire Line
+	5950 4050 7850 4050
+Wire Wire Line
+	4800 6800 4950 6800
+Wire Wire Line
+	5400 6500 5700 6500
+Wire Wire Line
+	2250 6400 2450 6400
+Wire Wire Line
+	2950 6400 3200 6400
+Wire Wire Line
+	2700 6400 2950 6400
+Wire Wire Line
+	2450 6400 2700 6400
+Wire Wire Line
+	2050 6400 2250 6400
+Wire Wire Line
+	4550 6500 4850 6500
+Wire Wire Line
+	4300 6500 4300 6600
+Wire Wire Line
+	4850 6500 5100 6500
+Wire Wire Line
+	5100 6500 5400 6500
+Wire Wire Line
+	5700 6500 5900 6500
+Wire Wire Line
+	4550 6800 4800 6800
+Wire Wire Line
+	4950 6800 5200 6800
+Wire Wire Line
+	3200 6500 3200 6600
+Wire Wire Line
+	3200 6600 3200 6700
+Wire Wire Line
+	3000 6800 3200 6800
+Wire Wire Line
+	9950 5900 10500 5900
+Wire Wire Line
+	10500 5550 10700 5550
+Wire Wire Line
+	7050 4250 7850 4250
+Wire Wire Line
+	6550 3950 7850 3950
+Wire Wire Line
+	7550 4350 7850 4350
+Wire Wire Line
+	9350 5550 9650 5550
+Wire Wire Line
+	1850 6400 2050 6400
+Wire Wire Line
+	5900 6500 5950 6500
+Wire Wire Line
+	5200 6800 5300 6800
+Wire Wire Line
+	2500 6950 2700 6950
+Wire Wire Line
+	7350 2800 7650 2800
+Wire Wire Line
+	7350 3400 7650 3400
+$Comp
+L Device:D_Schottky D4
+U 1 1 5BBFB469
+P 6050 4250
+F 0 "D4" H 6050 4150 50  0000 C CNN
+F 1 "ZHCS400TA" H 6050 4350 50  0000 C CNN
+F 2 "custom_components:SOD-323_Handsoldering" H 6050 4250 50  0001 C CNN
+F 3 "~" H 6050 4250 50  0001 C CNN
+	1    6050 4250
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5450 4250 5900 4250
+Wire Wire Line
+	6200 4250 6400 4250
 $EndSCHEMATC
