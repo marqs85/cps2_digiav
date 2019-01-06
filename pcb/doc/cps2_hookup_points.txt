@@ -1,46 +1,25 @@
 7S - PAL (BGSA5):
-pin 6: HSYNC
-pin 7: VSYNC
+pin 6: HS
+pin 7: VS
 pin 10: GND
 
 9S - OSC (16MHZ):
-: PCLKx2
+: C1
 : GND
-note: use coax cable
+note 1: use coax cable
+note 2: add a jumper wire between C1 and C2 pads on cps2_digiav board
 
 10J - TDA1543:
-pin 1: I2S_BCK
-pin 2: I2S_WS
-pin 3: I2S_DATA
+pin 1: BCK
+pin 2: WS
+pin 3: DAT
 pin 4: GND
 
-4D - M5M5178P-45:
-pin 19: G3
-pin 18: G2
-pin 17: G1
-pin 16: G0
-pin 15: B3
-pin 13: B2
-pin 12: B1
-pin 11: B0
-pin 14: GND
-
-5D - M5M5178P-45:
-pin 19: F3
-pin 18: F2
-pin 17: F1
-pin 16: F0
-pin 15: R3
-pin 13: R2
-pin 12: R1
-pin 11: R0
-pin 14: GND
-
 ~1A - SW3:
-corner pin nearest letter 'N': btn_vol-
+corner pin nearest letter 'N': vol-
 
 ~1A - SW2:
-corner pin nearest letter 'P': btn_vol+
+corner pin nearest letter 'P': vol+
 
 various places, e.g. some CCX caps:
 : 5V
