@@ -1,6 +1,7 @@
 ### Clocks ###
 
 create_clock -period 147MHz -name clk_1080p [get_ports PCLK_SI]
+create_clock -period 24.576MHz -name mclk [get_ports MCLK_SI]
 create_clock -period 16MHz -name clk16 [get_ports PCLK2x_in]
 create_clock -period 5MHz -name clk5 [get_ports I2S_BCK]
 
@@ -36,7 +37,8 @@ set_clock_groups -exclusive \
 -group {clk5 i2s_clkout} \
 -group {clk16} \
 -group {clk_1080p} \
--group {clk25}
+-group {clk25} \
+-group {mclk}
 
 set_false_path -from [get_clocks i2s_clkout] -to [get_clocks clk5]
 

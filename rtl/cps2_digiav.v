@@ -68,7 +68,8 @@ wire VSYNC_out;
 wire PCLK_out;
 wire DE_out;
 
-wire clk25, pclk_5x;
+wire v_change;
+wire clk25;
 
 wire I2S_WS_2x;
 wire I2S_DATA_2x;
@@ -80,7 +81,7 @@ wire [10:0] vcnt_sg;
 wire [8:0] hcnt_sg_lbuf;
 wire [5:0] vcnt_sg_lbuf;
 wire [2:0] hctr_sg, vctr_sg;
-wire HSYNC_sg, VSYNC_sg, DE_sg;
+wire HSYNC_sg, VSYNC_sg, DE_sg, mask_enable_sg;
 
 wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
@@ -127,7 +128,7 @@ assign HDMI_TX_GD = G_out;
 assign HDMI_TX_BD = B_out;
 
 always @(posedge PCLK_SI) begin
-    sg_reset_n_L <= x_info[31];
+    sg_reset_n_L <= x_info[31] & ~v_change;
     sg_reset_n_LL <= sg_reset_n_L;
     sg_hsync_ref_L <= HSYNC_in_L;
     sg_hsync_ref_LL <= sg_hsync_ref_L;
@@ -162,9 +163,11 @@ scanconverter scanconverter_inst (
     .vcnt_ext_lbuf  (vcnt_sg_lbuf),
     .hctr_ext       (hctr_sg),
     .vctr_ext       (vctr_sg),
+    .v_change       (v_change),
     .HSYNC_ext      (HSYNC_sg),
     .VSYNC_ext      (VSYNC_sg),
     .DE_ext         (DE_sg),
+    .mask_enable_ext(mask_enable_sg),
     .x_info         (x_info),
     .PCLK_out       (PCLK_out),
     .R_out          (R_out),
@@ -195,6 +198,7 @@ syncgen u_sg (
     .vcnt           (vcnt_sg),
     .hcnt_lbuf      (hcnt_sg_lbuf),
     .vcnt_lbuf      (vcnt_sg_lbuf),
+    .mask_enable    (mask_enable_sg),
     .h_ctr          (hctr_sg),
     .v_ctr          (vctr_sg),
 );

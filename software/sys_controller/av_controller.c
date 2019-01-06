@@ -28,21 +28,21 @@
 #include "si5351_regs.h"
 
 
-#define LO_MASK             0x000007ff
 #define PB_MASK             (3<<30)
 #define PB0_BIT             (1<<30)
 #define PB1_BIT             (1<<31)
 
 typedef struct {
-    alt_u32 v_startpos;
-    alt_u32 v_refoffset;
-    alt_u32 sl_enable;
-    alt_u32 sl_str;
-    alt_u32 sl_mask;
+    const alt_u16 v_initline_ref;
+    alt_u8 v_offset;
+    alt_u8 v_mult;
+    alt_u8 sl_enable;
+    alt_u8 sl_str;
+    alt_u8 sl_mask;
 } mode_config_t;
 
-mode_config_t fpga_480p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=1};
-mode_config_t fpga_1080p = {.v_startpos=0, .v_refoffset=0, .sl_enable=0, .sl_str=15, .sl_mask=0x3};
+mode_config_t fpga_480p = {.v_initline_ref=524, .v_offset=0, .v_mult=2, .sl_enable=0, .sl_str=15, .sl_mask=1};
+mode_config_t fpga_1080p = {.v_initline_ref=1054, .v_offset=4, .v_mult=5, .sl_enable=0, .sl_str=15, .sl_mask=0x3};
 
 #define ADV7513_BASE (0x72>>1)
 
@@ -94,10 +94,14 @@ void init_si5351() {
 }
 
 void init_adv() {
+    // Wait until display is detected
     while ((adv7513_readreg(0x42) & 0x70) != 0x70) ;
+
+    // Power up TX
     adv7513_writereg(0x41, 0x10);
     //adv7513_writereg(0xd6, 0xc0);
 
+    // Setup fixed registers
     adv7513_writereg(0x98, 0x03);
     adv7513_writereg(0x9A, 0xE0);
     adv7513_writereg(0x9C, 0x30);
@@ -107,23 +111,34 @@ void init_adv() {
     adv7513_writereg(0xE0, 0xD0);
     adv7513_writereg(0xF9, 0x00);
 
-    adv7513_writereg(0x15, 0x20);
-    adv7513_writereg(0x16, 0x00);
+    // Setup audio format
+    adv7513_writereg(0x12, 0x20); // disable copyright protection
+    adv7513_writereg(0x13, 0x20); // set category code
+    adv7513_writereg(0x14, 0x02); // 16-bit audio
+    adv7513_writereg(0x15, 0x20); // 48kHz audio Fs, 24-bit RGB
 
+    // Input video format
+    adv7513_writereg(0x16, 0x30); // RGB 8bpc
+    adv7513_writereg(0x17, 0x02); // 16:9 aspect
+
+    // HDMI output without HDCP
     adv7513_writereg(0xAF, 0x06);
 
+    // No clock delay (?)
     adv7513_writereg(0xBA, 0x60);
 
+    // Audio regeneration settings
     adv7513_writereg(0x01, 0x00);
     adv7513_writereg(0x02, 0x18);
-    adv7513_writereg(0x03, 0x00);
-    adv7513_writereg(0x0A, 0x00);
-    adv7513_writereg(0x0C, 0x84);
+    adv7513_writereg(0x03, 0x00); // N=6144
+    //adv7513_writereg(0x0A, 0x00);
+    adv7513_writereg(0x0C, 0x04); // I2S0 input
 
-    adv7513_writereg(0x4A, 0xC0);
-    adv7513_writereg(0x55, 0x02);
-    adv7513_writereg(0x57, 0x08);
-    adv7513_writereg(0x4A, 0x80);
+    // Setup InfoFrame
+    adv7513_writereg(0x4A, 0xC0); // Enable InfoFrame modify
+    adv7513_writereg(0x55, 0x02); // No overscan
+    adv7513_writereg(0x57, 0x08); // Full-range RGB
+    adv7513_writereg(0x4A, 0x80); // Disable InfoFrame modify
 }
 
 // Initialize hardware
@@ -164,10 +179,19 @@ int init_hw()
     return 0;
 }
 
-void program_mode(mode_config_t *mode_ptr) {
+void program_mode(mode_config_t *mode_ptr, int resync) {
+    alt_u32 x_info;
+
     IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, 0);
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, (mode_ptr->v_refoffset<<4)|mode_ptr->v_startpos);
+    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, ((mode_ptr->v_initline_ref-(mode_ptr->v_mult*mode_ptr->v_offset))<<4)|mode_ptr->v_offset);
     IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (1<<31)|(mode_ptr->sl_mask<<6)|(mode_ptr->sl_str<<2)|mode_ptr->sl_enable);
+
+    if (resync) {
+        usleep(20000);
+        x_info = IORD_ALTERA_AVALON_PIO_DATA(PIO_3_BASE);
+        IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (x_info & ~(1<<31)));
+        IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, x_info);
+    }
 }
 
 int main()
@@ -175,7 +199,7 @@ int main()
     alt_u8 rd;
     alt_u32 btn_vec, btn_vec_prev=0;
     alt_u32 lines;
-    alt_u32 x_info;
+    alt_u32 ncts;
     mode_config_t *mode_ptr = &fpga_1080p;
 
     int init_stat;
@@ -189,12 +213,7 @@ int main()
         while (1) {}
     }
 
-    /*TX_enable(1);
-    SetupAudio(1);*/
-
-    alt_u32 ncts;
-
-    program_mode(mode_ptr);
+    program_mode(mode_ptr, 1);
 
     while(1) {
 
@@ -203,16 +222,11 @@ int main()
         if ((btn_vec_prev == 0) && btn_vec) {
             if (btn_vec & PB0_BIT) {
                 mode_ptr->sl_enable ^= 1;
-                program_mode(mode_ptr);
+                program_mode(mode_ptr, 0);
             }
             if (btn_vec & PB1_BIT) {
-                mode_ptr->v_startpos = (mode_ptr->v_startpos + 1) % 9;
-                mode_ptr->v_refoffset = 5*mode_ptr->v_startpos;
-                program_mode(mode_ptr);
-                usleep(20000);
-                x_info = IORD_ALTERA_AVALON_PIO_DATA(PIO_3_BASE);
-                IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (x_info & ~(1<<31)));
-                IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, x_info);
+                mode_ptr->v_offset = (mode_ptr->v_offset + 1) % 9;
+                program_mode(mode_ptr, 1);
             }
         }
 
@@ -223,15 +237,13 @@ int main()
         }
 
 #ifdef DEBUG
-        /*ncts = 0;
-        Switch_HDMITX_Bank(1);
-        //rd = read_it2(0xc5);
-        //printf("osclock: 0x%x\n", rd);
-        ncts |= read_it2(0x35) >> 4;
-        ncts |= read_it2(0x36) << 4;
-        ncts |= read_it2(0x37) << 12;
-        printf("NCTS: %u\n", ncts);
-        printf("btnvec: 0x%x\n", btn_vec);*/
+        ncts = 0;
+        ncts |= (adv7513_readreg(0x04) & 0xf) << 16;
+        ncts |= adv7513_readreg(0x05) << 8;
+        ncts |= adv7513_readreg(0x06);
+        printf("NCTS: %lu\n", ncts);
+
+        //printf("btnvec: 0x%x\n", btn_vec);
 
         /*rd = adv7513_readreg(0x9e);
         printf("ADV7513 PLL status(0x%x)\n", rd);*/
