@@ -17,6 +17,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+//`define I2S_UPSAMPLE_2X
+
 module cps2_digiav(
     input [3:0] R_in,
     input [3:0] G_in,
@@ -203,7 +205,8 @@ syncgen u_sg (
     .v_ctr          (vctr_sg),
 );
 
-i2s_upsampler upsampler0 (
+`ifdef I2S_UPSAMPLE_2X
+i2s_upsampler_2x upsampler0 (
     .reset_n        (reset_n),
     .I2S_BCK        (I2S_BCK),
     .I2S_WS         (I2S_WS),
@@ -213,6 +216,18 @@ i2s_upsampler upsampler0 (
     .I2S_DATA_out   (I2S_DATA_2x),
     .clkcnt_out     (clkcnt_out)
 );
+`else
+i2s_upsampler_asrc upsampler0 (
+    .AMCLK_i        (MCLK_SI),
+    .nARST          (reset_n),
+    .ASCLK_i        (I2S_BCK),
+    .ASDATA_i       (I2S_DATA),
+    .ALRCLK_i       (I2S_WS),
+    .ASCLK_o        (I2S_BCK_out),
+    .ASDATA_o       (I2S_DATA_2x),
+    .ALRCLK_o       (I2S_WS_2x)
+);
+`endif
 
 btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb0 (
     .i_clk          (clk25),

@@ -114,7 +114,7 @@ void init_adv() {
     // Setup audio format
     adv7513_writereg(0x12, 0x20); // disable copyright protection
     adv7513_writereg(0x13, 0x20); // set category code
-    adv7513_writereg(0x14, 0x02); // 16-bit audio
+    adv7513_writereg(0x14, 0x0B); // 24-bit audio
     adv7513_writereg(0x15, 0x20); // 48kHz audio Fs, 24-bit RGB
 
     // Input video format

@@ -20,7 +20,7 @@
 `define I2S_CLK_GATING
 `define DEBUG
 
-module i2s_upsampler (
+module i2s_upsampler_2x (
     input reset_n,
     input I2S_BCK,
     input I2S_WS,
@@ -53,8 +53,8 @@ reg [4:0] resample_l_ctr;
 reg [4:0] resample_r_ctr;
 
 reg [7:0] clkcnt;
+reg [5:0] clken_ctr;
 reg clken;
-reg clken_l;
 
 `ifdef DEBUG
 reg [7:0] bck_ctr;
@@ -155,16 +155,19 @@ begin
         resample_l_ctr <= 0;
         resample_r_ctr <= 0;
         resample_idx <= 3'd4;
-        clken <= 0;
+        clken_ctr <= 0;
     end else begin
         if ((sample2x_ctr == 0) || (sample2x_ctr == 83)) begin
             I2S_WS_2x <= 1'b0;
             resample_l_ctr <= 16;
-            clken <= 1;
+            clken_ctr <= 32;
         end else if ((sample2x_ctr == 42) || (sample2x_ctr == (42+83))) begin
             I2S_WS_2x <= 1'b1;
             resample_r_ctr <= 16;
-            clken <= 1;
+            clken_ctr <= 32;
+        end else begin
+            if (clken_ctr > 0)
+                clken_ctr <= clken_ctr - 1'b1;
         end
 
         if (sample_idx_LL < resample_idx)
@@ -205,9 +208,6 @@ begin
             resample_r_ctr <= resample_r_ctr - 1;
         end
 
-        if ((resample_l_ctr == 1) || (resample_r_ctr == 1))
-            clken <= 0;
-
         sample_idx_L <= sample_idx;
         sample_idx_LL <= sample_idx_L;
     end
@@ -223,10 +223,10 @@ end
 `ifdef I2S_CLK_GATING
 always @(negedge I2S_BCK_proc)
 begin
-    clken_l <= clken;
+    clken <= (clken_ctr > 0) ? 1'b1 : 1'b0;
 end
 
-assign I2S_BCK_out = (I2S_BCK_proc & clken_l);
+assign I2S_BCK_out = (I2S_BCK_proc & clken);
 `else
 assign I2S_BCK_out = I2S_BCK_proc;
 `endif

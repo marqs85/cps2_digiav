@@ -1,0 +1,17 @@
+
+WORK > DEFAULT
+DEFAULT:          ./libraries/work/            
+work:             ./libraries/work/            
+altera_ver:       ./libraries/altera_ver/      
+lpm_ver:          ./libraries/lpm_ver/         
+sgate_ver:        ./libraries/sgate_ver/       
+altera_mf_ver:    ./libraries/altera_mf_ver/   
+altera_lnsim_ver: ./libraries/altera_lnsim_ver/
+cyclone10lp_ver:  ./libraries/cyclone10lp_ver/ 
+altera:           ./libraries/altera/          
+lpm:              ./libraries/lpm/             
+sgate:            ./libraries/sgate/           
+altera_mf:        ./libraries/altera_mf/       
+altera_lnsim:     ./libraries/altera_lnsim/    
+cyclone10lp:      ./libraries/cyclone10lp/     
+LIBRARY_SCAN = TRUE

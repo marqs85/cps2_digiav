@@ -135,22 +135,29 @@ set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO
 set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name ENABLE_SIGNALTAP OFF
-set_global_assignment -name USE_SIGNALTAP_FILE output_files/stp1.stp
+set_global_assignment -name USE_SIGNALTAP_FILE output_files/cps2.stp
 set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
 set_global_assignment -name ENABLE_LOGIC_ANALYZER_INTERFACE OFF
 set_location_assignment PIN_23 -to MCLK_SI
 set_location_assignment PIN_24 -to PCLK_SI
+
+set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
 set_global_assignment -name VERILOG_FILE rtl/syncgen.v
 set_global_assignment -name VERILOG_FILE rtl/btn_debounce.v
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
 set_global_assignment -name SDC_FILE cps2_digiav.sdc
 set_global_assignment -name QIP_FILE rtl/linebuf.qip
 set_global_assignment -name VERILOG_FILE rtl/timescale.v
-set_global_assignment -name QSYS_FILE sys.qsys
 set_global_assignment -name VERILOG_FILE rtl/scanconverter.v
-set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_2x.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_tx_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_rx_asrc.v
 set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
 set_global_assignment -name QIP_FILE rtl/pll_i2s.qip
 set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
 set_global_assignment -name QIP_FILE rtl/pll_pclk.qip
+set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
+set_global_assignment -name SIP_FILE rtl/fir_2ch_audio.sip
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
