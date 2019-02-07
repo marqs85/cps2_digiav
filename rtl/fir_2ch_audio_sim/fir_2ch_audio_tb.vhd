@@ -36,9 +36,9 @@ entity fir_2ch_audio_tb is
     constant CHANSPERPHYIN_c          : natural := 2;
     constant CHANSPERPHYOUT_c         : natural := 2;
     constant LOG2_CHANSPERPHYOUT_c    : natural := 1;
-    constant TDM_FACTOR_c             : natural := 32;
+    constant TDM_FACTOR_c             : natural := 16;
     constant INVERSE_TDM_FACTOR_c     : natural := 1;
-    constant INVALID_CYCLES_c         : natural := 30;
+    constant INVALID_CYCLES_c         : natural := 14;
     constant INTERP_FACTOR_c          : natural := 1;
     constant TOTAL_INCHANS_ALLOWED    : natural := PHYSCHANIN_c * CHANSPERPHYIN_c;
     constant TOTAL_OUTCHANS_ALLOWED   : natural := PHYSCHANOUT_c * CHANSPERPHYOUT_c;

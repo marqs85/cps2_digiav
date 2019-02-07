@@ -188,6 +188,7 @@ i2s_tx_asrc i2s_tx(
   .APSDATA_LEFT_i(APDATA_INT[1]),
   .APSDATA_RIGHT_i(APDATA_INT[0]),
   .APDATA_VALID_i(APDATA_INT_VALID),
+  .downsample_2x(1'b1),
   .I2S_BCK(ASCLK_o),
   .I2S_DATA(ASDATA_o),
   .I2S_WS(ALRCLK_o)

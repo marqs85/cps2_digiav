@@ -95,7 +95,7 @@ void init_si5351() {
 
 void init_adv() {
     // Wait until display is detected
-    while ((adv7513_readreg(0x42) & 0x70) != 0x70) ;
+    while ((adv7513_readreg(0x42) & 0x60) != 0x60) ;
 
     // Power up TX
     adv7513_writereg(0x41, 0x10);
@@ -230,23 +230,24 @@ int main()
             }
         }
 
-        rd = adv7513_readreg(0x9e);
         if (!(adv7513_readreg(0x42) & 0x20)) {
             printf("Re-init ADV7513\n");
             init_adv();
         }
 
 #ifdef DEBUG
+        static int loop_ctr = 0;
         ncts = 0;
         ncts |= (adv7513_readreg(0x04) & 0xf) << 16;
         ncts |= adv7513_readreg(0x05) << 8;
         ncts |= adv7513_readreg(0x06);
-        printf("NCTS: %lu\n", ncts);
+        rd = !!(adv7513_readreg(0x9e) & (1<<4));
 
-        //printf("btnvec: 0x%x\n", btn_vec);
-
-        /*rd = adv7513_readreg(0x9e);
-        printf("ADV7513 PLL status(0x%x)\n", rd);*/
+        if ((loop_ctr++ % 100) == 0) {
+            printf("NCTS: %lu\n", ncts);
+            printf("btnvec: 0x%lx\n", btn_vec>>30);
+            printf("PLL lock: %u\n", rd);
+        }
 #endif
         btn_vec_prev = btn_vec;
 

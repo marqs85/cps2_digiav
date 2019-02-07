@@ -11,7 +11,7 @@ OutFullFracWidth : 0
 nChans : 16 
 nTaps : 16 
 clockRate : 24.576 
-inRate : 0.768 
+inRate : 1.536 
 interpN : 1 
 decimN : 16 
 busDataWidth : 16 

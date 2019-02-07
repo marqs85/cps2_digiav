@@ -16,7 +16,7 @@
 -- ---------------------------------------------------------------------------
 
 -- VHDL created from fir_2ch_audio_0002_rtl_core
--- VHDL created on Thu Jan 24 23:54:55 2019
+-- VHDL created on Sun Feb  3 13:51:57 2019
 
 
 library IEEE;

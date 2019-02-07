@@ -211,6 +211,8 @@ begin
     HSYNC_pp4 <= HSYNC_pp3;
     VSYNC_pp4 <= VSYNC_pp3;
     DE_pp4 <= DE_pp3;
+    line_id_pp4 <= line_id_pp3;
+    col_id_pp4 <= col_id_pp3;
     mask_enable_pp4 <= mask_enable_pp3;
 
     R_pp5 <= apply_scanlines(V_SCANLINEMODE, R_pp4, X_SCANLINESTR, V_SCANLINEID, line_id_pp4, col_id_pp4);

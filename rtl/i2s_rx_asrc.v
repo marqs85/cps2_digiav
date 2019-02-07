@@ -29,7 +29,7 @@ module i2s_rx_asrc (
 );
 
 parameter I2S_DATA_BITS = 16;
-parameter MCLK_DIVIDER = 32; // must be power of 2
+parameter MCLK_DIVIDER = 16; // must be power of 2
 
 reg I2S_WS_prev;
 

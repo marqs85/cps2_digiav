@@ -73,7 +73,7 @@ endmodule
 // Retrieval info: 	<generic name="inputChannelNum" value="2" />
 // Retrieval info: 	<generic name="clockRate" value="24.576" />
 // Retrieval info: 	<generic name="clockSlack" value="0" />
-// Retrieval info: 	<generic name="inputRate" value="0.768" />
+// Retrieval info: 	<generic name="inputRate" value="1.536" />
 // Retrieval info: 	<generic name="coeffReload" value="false" />
 // Retrieval info: 	<generic name="baseAddress" value="0" />
 // Retrieval info: 	<generic name="readWriteMode" value="read_write" />
