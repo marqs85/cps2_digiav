@@ -62,10 +62,11 @@ wire DE_out;
 
 wire clk25, pclk_5x;
 wire pclk_ext = clk25;
+wire MCLK_SI;
 
 wire I2S_WS_2x;
 wire I2S_DATA_2x;
-wire I2S_BCK_OUT;
+wire I2S_BCK_out;
 wire [7:0] clkcnt_out;
 
 wire [10:0] hcnt_videogen, vcnt_videogen;
@@ -108,7 +109,7 @@ assign HDMI_TX_PCLK = PCLK_out;
 assign HDMI_TX_HS = HSYNC_out;
 assign HDMI_TX_VS = VSYNC_out;
 assign HDMI_TX_I2S_DATA = I2S_DATA_2x;
-assign HDMI_TX_I2S_BCK = I2S_BCK_OUT;
+assign HDMI_TX_I2S_BCK = I2S_BCK_out;
 assign HDMI_TX_I2S_WS = I2S_WS_2x;
 assign HDMI_TX_I2S_MCLK = 0;
 assign HDMI_TX_RD = R_out;
@@ -169,6 +170,12 @@ pll_pclk pll_pclk_inst (
     .locked ( )
 );
 
+pll_pclk_hdtv pll_pclk_hdtv_inst (
+    .inclk0 ( PCLK2x_in ),
+    .c0 ( MCLK_SI ),
+    .locked ()
+);
+
 videogen vg0 (
     .clk25          (pclk_ext),
     .reset_n        (reset_n),
@@ -191,16 +198,29 @@ videogen vg0 (
 `endif
 );
 
-i2s_upsampler upsampler0 (
+`ifdef I2S_UPSAMPLE_2X
+i2s_upsampler_2x upsampler0 (
     .reset_n        (reset_n),
     .I2S_BCK        (I2S_BCK),
-    .I2S_BCK_OUT    (I2S_BCK_OUT),
     .I2S_WS         (I2S_WS),
     .I2S_DATA       (I2S_DATA),
-    .I2S_WS_2x      (I2S_WS_2x),
-    .I2S_DATA_2x    (I2S_DATA_2x),
+    .I2S_BCK_out    (I2S_BCK_out),
+    .I2S_WS_out     (I2S_WS_2x),
+    .I2S_DATA_out   (I2S_DATA_2x),
     .clkcnt_out     (clkcnt_out)
 );
+`else
+i2s_upsampler_asrc upsampler0 (
+    .AMCLK_i        (MCLK_SI),
+    .nARST          (reset_n),
+    .ASCLK_i        (I2S_BCK),
+    .ASDATA_i       (I2S_DATA),
+    .ALRCLK_i       (I2S_WS),
+    .ASCLK_o        (I2S_BCK_out),
+    .ASDATA_o       (I2S_DATA_2x),
+    .ALRCLK_o       (I2S_WS_2x)
+);
+`endif
 
 btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb0 (
     .i_clk          (clk25),

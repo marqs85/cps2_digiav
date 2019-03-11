@@ -554,7 +554,7 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock)
     Instance[0].TMDSClock = VideoPixelClock ;
     BYTE fs = AUDFS_48KHz;
     Instance[0].bAudFs = fs;
-    Instance[0].bOutputAudioMode = B_AUDFMT_STD_I2S|B_AUDFMT_NO_DELAY_TO_WS|B_AUDFMT_FALL_EDGE_SAMPLE_WS;
+    Instance[0].bOutputAudioMode = B_AUDFMT_32BIT_I2S;
     BYTE AudioEnable = (0x1 & ~(M_AUD_SWL|B_SPDIFTC)) | M_AUD_16BIT;
 
 
@@ -574,7 +574,7 @@ BOOL EnableAudioOutputHDMI(ULONG VideoPixelClock)
     HDMITX_WriteI2C_Byte(REG_TX_AUD0CHST_CHTNUM,0);
     HDMITX_WriteI2C_Byte(REG_TX_AUDCHST_CA_FS,0xC0|fs); // choose clock
     fs = ~fs; // OFS is the one's complement of FS
-    HDMITX_WriteI2C_Byte(REG_TX_AUDCHST_OFS_WL,(fs<<4)|AUD_SWL_16); // 16 bit Audio
+    HDMITX_WriteI2C_Byte(REG_TX_AUDCHST_OFS_WL,(fs<<4)|AUD_SWL_24); // 24 bit Audio
 
     Switch_HDMITX_Bank(0);
     HDMITX_WriteI2C_Byte(REG_TX_AUDIO_CTRL0,AudioEnable);

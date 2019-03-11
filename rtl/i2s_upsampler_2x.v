@@ -20,16 +20,19 @@
 `define I2S_CLK_GATING
 `define DEBUG
 
-module i2s_upsampler (
+module i2s_upsampler_2x (
     input reset_n,
     input I2S_BCK,
     input I2S_WS,
     input I2S_DATA,
-    output I2S_BCK_OUT,
-    output reg I2S_WS_2x,
-    output reg I2S_DATA_2x,
+    output I2S_BCK_out,
+    output reg I2S_WS_out,
+    output reg I2S_DATA_out,
     output reg [7:0] clkcnt_out
 );
+
+reg I2S_WS_2x;
+reg I2S_DATA_2x;
 
 reg I2S_WS_prev;
 reg [2:0] sample_idx;
@@ -50,8 +53,8 @@ reg [4:0] resample_l_ctr;
 reg [4:0] resample_r_ctr;
 
 reg [7:0] clkcnt;
+reg [5:0] clken_ctr;
 reg clken;
-reg clken_l;
 
 `ifdef DEBUG
 reg [7:0] bck_ctr;
@@ -66,7 +69,7 @@ reg dbg_fifo_unf /* synthesis noprune */;
 
 wire I2S_BCK_proc;
 
-// I2S_BCK_OUT = (4/5)*I2S_BCK = 4MHz
+// I2S_BCK_out = (4/5)*I2S_BCK = 4MHz
 pll_i2s pll_i2s_inst (
     .inclk0(I2S_BCK),
     .c0(I2S_BCK_proc),
@@ -80,11 +83,11 @@ pll_i2s pll_i2s_inst (
 always @(posedge I2S_BCK or negedge reset_n)
 begin
     if (!reset_n) begin
-            samplebuf_l_ctr <= 0;
-            samplebuf_r_ctr <= 0;
-            I2S_WS_prev <= 0;
-            sample_idx <= 0;
-            clkcnt <= 0;
+        samplebuf_l_ctr <= 0;
+        samplebuf_r_ctr <= 0;
+        I2S_WS_prev <= 0;
+        sample_idx <= 0;
+        clkcnt <= 0;
     end else begin
         if ((I2S_WS_prev == 1'b1) && (I2S_WS == 1'b0)) begin
             samplebuf_l_ctr <= 16;
@@ -152,16 +155,19 @@ begin
         resample_l_ctr <= 0;
         resample_r_ctr <= 0;
         resample_idx <= 3'd4;
-        clken <= 0;
+        clken_ctr <= 0;
     end else begin
         if ((sample2x_ctr == 0) || (sample2x_ctr == 83)) begin
             I2S_WS_2x <= 1'b0;
             resample_l_ctr <= 16;
-            clken <= 1;
+            clken_ctr <= 32;
         end else if ((sample2x_ctr == 42) || (sample2x_ctr == (42+83))) begin
             I2S_WS_2x <= 1'b1;
             resample_r_ctr <= 16;
-            clken <= 1;
+            clken_ctr <= 32;
+        end else begin
+            if (clken_ctr > 0)
+                clken_ctr <= clken_ctr - 1'b1;
         end
 
         if (sample_idx_LL < resample_idx)
@@ -194,38 +200,35 @@ begin
             sample2x_ctr <= sample2x_ctr + 1'b1;
         end
 
-        if (resample_l_ctr > 0)
-            begin
-                I2S_DATA_2x <= samplebuf_l[resample_idx][resample_l_ctr-1];
-                resample_l_ctr <= resample_l_ctr - 1;
-            end
-        else if (resample_r_ctr > 0)
-            begin
-                I2S_DATA_2x <= samplebuf_r[resample_idx][resample_r_ctr-1];
-                resample_r_ctr <= resample_r_ctr - 1;
-            end
-        else
-            begin
-                I2S_DATA_2x <= 0;
-            end
-            
-        if ((resample_l_ctr == 1) || (resample_r_ctr == 1))
-            clken <= 0;
+        if (resample_l_ctr > 0) begin
+            I2S_DATA_2x <= samplebuf_l[resample_idx][resample_l_ctr-1];
+            resample_l_ctr <= resample_l_ctr - 1;
+        end else if (resample_r_ctr > 0) begin
+            I2S_DATA_2x <= samplebuf_r[resample_idx][resample_r_ctr-1];
+            resample_r_ctr <= resample_r_ctr - 1;
+        end
 
         sample_idx_L <= sample_idx;
         sample_idx_LL <= sample_idx_L;
     end
 end
 
+// launch outputs ar negative edge
+always @(negedge I2S_BCK_proc)
+begin
+    I2S_WS_out <= I2S_WS_2x;
+    I2S_DATA_out <= I2S_DATA_2x;
+end
+
 `ifdef I2S_CLK_GATING
 always @(negedge I2S_BCK_proc)
 begin
-    clken_l <= clken;
+    clken <= (clken_ctr > 0) ? 1'b1 : 1'b0;
 end
 
-assign I2S_BCK_OUT = (I2S_BCK_proc & clken_l);
+assign I2S_BCK_out = (I2S_BCK_proc & clken);
 `else
-assign I2S_BCK_OUT = I2S_BCK_proc;
+assign I2S_BCK_out = I2S_BCK_proc;
 `endif
 
 endmodule

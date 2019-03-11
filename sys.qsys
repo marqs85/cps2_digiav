@@ -193,7 +193,7 @@
    type="conduit"
    dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
- <module name="clk_0" kind="clock_source" version="17.0" enabled="1">
+ <module name="clk_0" kind="clock_source" version="17.1" enabled="1">
   <parameter name="clockFrequency" value="25000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
@@ -207,7 +207,7 @@
  <module
    name="jtag_uart_0"
    kind="altera_avalon_jtag_uart"
-   version="17.0"
+   version="17.1"
    enabled="1">
   <parameter name="allowMultipleConnections" value="false" />
   <parameter name="avalonSpec" value="2.0" />
@@ -226,7 +226,7 @@
  <module
    name="nios2_gen2_0"
    kind="altera_nios2_gen2"
-   version="17.0"
+   version="17.1"
    enabled="1">
   <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="1" />
   <parameter name="AUTO_CLK_RESET_DOMAIN" value="1" />
@@ -408,7 +408,7 @@
  <module
    name="onchip_memory2_0"
    kind="altera_avalon_onchip_memory2"
-   version="17.0"
+   version="17.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
   <parameter name="autoInitializationFileName">$${FILENAME}_onchip_memory2_0</parameter>
@@ -437,7 +437,7 @@
   <parameter name="useShallowMemBlocks" value="false" />
   <parameter name="writable" value="true" />
  </module>
- <module name="pio_0" kind="altera_avalon_pio" version="17.0" enabled="1">
+ <module name="pio_0" kind="altera_avalon_pio" version="17.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -451,7 +451,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
  </module>
- <module name="pio_1" kind="altera_avalon_pio" version="17.0" enabled="1">
+ <module name="pio_1" kind="altera_avalon_pio" version="17.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -465,7 +465,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
  </module>
- <module name="pio_2" kind="altera_avalon_pio" version="17.0" enabled="1">
+ <module name="pio_2" kind="altera_avalon_pio" version="17.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -479,7 +479,7 @@
   <parameter name="simDrivenValue" value="0" />
   <parameter name="width" value="32" />
  </module>
- <module name="pio_3" kind="altera_avalon_pio" version="17.0" enabled="1">
+ <module name="pio_3" kind="altera_avalon_pio" version="17.1" enabled="1">
   <parameter name="bitClearingEdgeCapReg" value="false" />
   <parameter name="bitModifyingOutReg" value="false" />
   <parameter name="captureEdge" value="false" />
@@ -495,7 +495,7 @@
  </module>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="jtag_uart_0.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -504,7 +504,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="i2c_opencores_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
@@ -513,7 +513,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="nios2_gen2_0.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -522,7 +522,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="pio_0.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -531,7 +531,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="onchip_memory2_0.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -540,7 +540,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="pio_1.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -549,7 +549,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="pio_2.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -558,7 +558,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.data_master"
    end="pio_3.s1">
   <parameter name="arbitrationPriority" value="1" />
@@ -567,7 +567,7 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.instruction_master"
    end="nios2_gen2_0.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
@@ -576,65 +576,65 @@
  </connection>
  <connection
    kind="avalon"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.instruction_master"
    end="onchip_memory2_0.s1">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x4000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection kind="clock" version="17.0" start="clk_0.clk" end="jtag_uart_0.clk" />
- <connection kind="clock" version="17.0" start="clk_0.clk" end="pio_0.clk" />
- <connection kind="clock" version="17.0" start="clk_0.clk" end="nios2_gen2_0.clk" />
- <connection kind="clock" version="17.0" start="clk_0.clk" end="pio_1.clk" />
- <connection kind="clock" version="17.0" start="clk_0.clk" end="pio_2.clk" />
- <connection kind="clock" version="17.0" start="clk_0.clk" end="pio_3.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="jtag_uart_0.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="pio_0.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="nios2_gen2_0.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="pio_1.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="pio_2.clk" />
+ <connection kind="clock" version="17.1" start="clk_0.clk" end="pio_3.clk" />
  <connection
    kind="clock"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk"
    end="onchip_memory2_0.clk1" />
  <connection
    kind="clock"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk"
    end="i2c_opencores_0.clock" />
  <connection
    kind="interrupt"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.irq"
    end="i2c_opencores_0.interrupt_sender">
   <parameter name="irqNumber" value="1" />
  </connection>
  <connection
    kind="interrupt"
-   version="17.0"
+   version="17.1"
    start="nios2_gen2_0.irq"
    end="jtag_uart_0.irq">
   <parameter name="irqNumber" value="0" />
  </connection>
  <connection
    kind="reset"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk_reset"
    end="i2c_opencores_0.clock_reset" />
  <connection
    kind="reset"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk_reset"
    end="nios2_gen2_0.reset" />
  <connection
    kind="reset"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk_reset"
    end="jtag_uart_0.reset" />
- <connection kind="reset" version="17.0" start="clk_0.clk_reset" end="pio_0.reset" />
- <connection kind="reset" version="17.0" start="clk_0.clk_reset" end="pio_1.reset" />
- <connection kind="reset" version="17.0" start="clk_0.clk_reset" end="pio_2.reset" />
- <connection kind="reset" version="17.0" start="clk_0.clk_reset" end="pio_3.reset" />
+ <connection kind="reset" version="17.1" start="clk_0.clk_reset" end="pio_0.reset" />
+ <connection kind="reset" version="17.1" start="clk_0.clk_reset" end="pio_1.reset" />
+ <connection kind="reset" version="17.1" start="clk_0.clk_reset" end="pio_2.reset" />
+ <connection kind="reset" version="17.1" start="clk_0.clk_reset" end="pio_3.reset" />
  <connection
    kind="reset"
-   version="17.0"
+   version="17.1"
    start="clk_0.clk_reset"
    end="onchip_memory2_0.reset1" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />

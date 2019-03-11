@@ -4,9 +4,12 @@ create_clock -period 16MHz -name clk16 [get_ports PCLK2x_in]
 create_clock -period 5MHz -name clk5 [get_ports I2S_BCK]
 
 #derive_pll_clocks
-create_generated_clock -source {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 5 -multiply_by 4 -duty_cycle 50.00 -name i2s_clkout {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|clk[0]}
+#create_generated_clock -source {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 5 -multiply_by 4 -duty_cycle 50.00 -name i2s_clkout {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|clk[0]}
 create_generated_clock -source {pll_pclk_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 16 -multiply_by 25 -duty_cycle 50.00 -name clk25 {pll_pclk_inst|altpll_component|auto_generated|pll1|clk[0]}
 create_generated_clock -source {pll_pclk_inst|altpll_component|auto_generated|pll1|inclk[0]} -multiply_by 5 -duty_cycle 50.00 -name pclk_5x {pll_pclk_inst|altpll_component|auto_generated|pll1|clk[1]}
+create_generated_clock -source {pll_pclk_hdtv_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 28 -multiply_by 43 -duty_cycle 50.00 -name mclk {pll_pclk_hdtv_inst|altpll_component|auto_generated|pll1|clk[0]}
+
+create_generated_clock -source {pll_pclk_hdtv_inst|altpll_component|auto_generated|pll1|clk[0]} -divide_by 8 -multiply_by 1 -duty_cycle 50.00 -name i2s_clkout {i2s_upsampler_asrc:upsampler0|i2s_tx_asrc:i2s_tx|mclk_div_ctr[1]}
 derive_clock_uncertainty
 
 
@@ -20,7 +23,7 @@ set i2s_inputs [get_ports {I2S_WS I2S_DATA}]
 set_input_delay -clock clk5 -min 0 $i2s_inputs
 set_input_delay -clock clk5 -max 1.5 $i2s_inputs
 
-set_input_delay -clock clk16 0 [get_ports {sda scl HDMI_TX_INT_N BTN*}]
+set_input_delay -clock clk16 0 [get_ports {sda HDMI_TX_INT_N BTN*}]
 
 set critoutputs_hdmi {HDMI_TX_RD* HDMI_TX_GD* HDMI_TX_BD* HDMI_TX_DE HDMI_TX_HS HDMI_TX_VS}
 set i2soutputs_hdmi {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS HDMI_TX_I2S_MCLK}
@@ -35,7 +38,8 @@ set_false_path -to [remove_from_collection [all_outputs] "$critoutputs_hdmi $i2s
 set_clock_groups -exclusive \
 -group {clk5 i2s_clkout} \
 -group {clk16 pclk_5x} \
--group {clk25}
+-group {clk25} \
+-group {mclk}
 
 set_false_path -from [get_clocks i2s_clkout] -to [get_clocks clk5]
 set_false_path -from [get_clocks pclk_5x] -to [get_clocks clk16]

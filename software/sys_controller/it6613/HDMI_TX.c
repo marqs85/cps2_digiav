@@ -315,10 +315,15 @@ bool HDMITX_DevLoopProc()
 void HDMITX_SetAudioInfoFrame(BYTE bAudioDwSampling)
 {
     Audio_InfoFrame AudioInfo;
+    int i;
 
     AudioInfo.info.Type = AUDIO_INFOFRAME_TYPE;
     AudioInfo.info.Ver = AUDIO_INFOFRAME_VER;
     AudioInfo.info.Len = AUDIO_INFOFRAME_LEN;
+
+    for (i=0; i<AUDIO_INFOFRAME_LEN; i++) {
+        AudioInfo.pktbyte.AUD_DB[i] = 0;
+    }
 
     AudioInfo.info.AudioChannelCount = 1; // 2 channels
     AudioInfo.info.AudioCodingType = 1; // PCM
