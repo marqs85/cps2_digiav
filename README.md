@@ -8,19 +8,18 @@ cps2_digiav is an add-on for Capcom CP System II arcade board which enables digi
 Features (current)
 --------------------------
 * framelocked 1080p@59.64Hz output with max. 40 scanline latency
-* 16bit/48kHz audio output
+* 24bit/48kHz audio output
 
 TODO
 --------------------------
 * OSD/UI
 * resolution select
 * more scanline options
-* audio ASRC on FPGA
 * settings store / profiles
 
 Installation
 --------------------------
-The add-on board can be installed inside of CPS2 A-board. The following additional parts are required:
+The add-on [PCB](https://oshpark.com/shared_projects/fxG9hou9) can be installed inside of CPS2 A-board. The following additional parts are required:
 
 * 2pcs [BCS-105-L-D-PE-BE](http://www.mouser.com/ProductDetail/samtec/bcs-105-l-d-pe-be/?qs=0lQeLiL1qyYLg7p66ONHhg%3d%3d) sockets
 * 2pcs 2x5 U-type pin headers

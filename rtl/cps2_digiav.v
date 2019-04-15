@@ -109,7 +109,7 @@ begin
     end
 end
 
-always @(clk25) begin
+always @(posedge clk25) begin
     if (reset_n_ctr == 4'hf)
         reset_n <= 1'b1;
     else
