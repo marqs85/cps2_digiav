@@ -86,6 +86,9 @@ inline void si5351_writereg(alt_u8 regaddr, alt_u8 data)
 void init_si5351() {
     int i;
 
+    // Wait until Si5351 initialization is complete
+    while ((si5351_readreg(0x00) & 0x80) == 0x80) ;
+
     for (i=0; i<SI5351C_REVB_REG_CONFIG_NUM_REGS; i++)
         si5351_writereg(si5351c_revb_registers[i].address, si5351c_revb_registers[i].value);
 
@@ -150,15 +153,6 @@ int init_hw()
     // reset syncgen etc.
     IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, 0x0);
     usleep(200000);
-
-    retval = si5351_readreg(0x00);
-    if ( retval == 0xff) {
-        printf("Error: could not read from Si5351 (0x%x)\n", retval);
-        return -2;
-    } else if (retval >> 7) {
-        printf("Error: Si5351 not ready\n");
-        return -3;
-    }
 
     printf("Init Si5351\n");
     init_si5351();
