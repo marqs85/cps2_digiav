@@ -139,7 +139,7 @@ i2s_rx_asrc i2s_rx_u(
     end
   end
 
-  wire [23:0] source_data;
+  wire signed [23:0] source_data;
   wire source_valid, source_sop, source_eop, source_channel;
 
   fir_2ch_audio fir_2ch_audio_u(
@@ -163,7 +163,7 @@ i2s_rx_asrc i2s_rx_u(
 
   always @(posedge AMCLK_i) begin
     if (source_valid)
-      APDATA_INT[source_sop] <= {source_data, 4'h0};
+      APDATA_INT[source_sop] <= source_data;
 
     if (source_valid & source_eop)
       APDATA_INT_VALID <= 1'b1;

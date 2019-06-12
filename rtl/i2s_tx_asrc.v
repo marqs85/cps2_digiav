@@ -43,7 +43,7 @@ reg [$clog2(I2S_DATA_BITS):0] r_ctr;
 reg I2S_BCK_prev;
 reg div2x_ctr, skip_sample;
 
-assign I2S_WS = ~mclk_div_ctr[WS_TOGGLE_BIT];
+assign I2S_WS = mclk_div_ctr[WS_TOGGLE_BIT];
 assign I2S_BCK = mclk_div_ctr[BCK_TOGGLE_BIT];
 
 wire shift_edge = ((I2S_BCK_prev == 1'b1) && (I2S_BCK == 1'b0));

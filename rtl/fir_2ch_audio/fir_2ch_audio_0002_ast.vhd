@@ -11,9 +11,9 @@ entity fir_2ch_audio_0002_ast is
         INWIDTH             : integer := 16;
         OUT_WIDTH_UNTRIMMED : integer := 30;
         BANKINWIDTH         : integer := 0;
-        REM_LSB_BIT_g       : integer := 0;
+        REM_LSB_BIT_g       : integer := 2;
         REM_LSB_TYPE_g      : string := "trunc";
-        REM_MSB_BIT_g       : integer := 10;
+        REM_MSB_BIT_g       : integer := 4;
         REM_MSB_TYPE_g      : string := "sat";
         PHYSCHANIN          : integer := 1;
         PHYSCHANOUT         : integer := 1;

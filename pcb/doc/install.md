@@ -1,6 +1,13 @@
+A-board signal reference
+--------------------------
+[List of hookup points](./cps2_hookup_points.txt)
+
+![](cps2_hookup_points.jpg)
+
+
 Step 1: clock and sync signals
 --------------------------
-Clock is available on bottom side of A-board. Extract 16MHz clock (C1) below the oscillator as shown in the image below. It's mandatory to use a coax cable to avoid stability issues caused by noise. Horizontal and vertical sync signals can be extracted from 7S - PAL (BGSA5) as described in cps2_hookup_points.txt.
+Clock is available on bottom side of A-board. Extract 16MHz clock (C1) below the oscillator as shown in the image below. It's mandatory to use a coax cable to avoid stability issues caused by noise. Horizontal and vertical sync signals can be extracted from 7S - PAL (BGSA5) as shown in signal reference.
 
 ![](install-1.jpg)
 
@@ -8,7 +15,7 @@ Clock is available on bottom side of A-board. Extract 16MHz clock (C1) below the
 Step 2: RGB, audio, power and button signals
 --------------------------
 
-2pcs U-shaped 2x5 headers are used to tap RGB signals from M5M RAM chips as shown in the image below. Audio is extracted from 10J - TDA1543 as described in cps2_hookup_points.txt and power can be easily taken e.g. from empty CCX cap footprints. Vol- and vol+ signals are taken from respective buttons as described in the hookup document.
+2pcs U-shaped 2x5 headers are used to tap RGB signals from M5M RAM chips as shown in the image below. Audio is extracted from 10J - TDA1543 as shown in signal reference and power can be easily taken e.g. from empty CCX cap footprints. Vol- and vol+ signals are taken from respective buttons as shown in signal reference.
 
 ![](install-2.jpg)
 

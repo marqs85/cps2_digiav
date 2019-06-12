@@ -13,7 +13,7 @@ module fir_2ch_audio (
 		input  wire [1:0]  ast_sink_error,     //                        .error
 		input  wire        ast_sink_sop,       //                        .startofpacket
 		input  wire        ast_sink_eop,       //                        .endofpacket
-		output wire [19:0] ast_source_data,    // avalon_streaming_source.data
+		output wire [23:0] ast_source_data,    // avalon_streaming_source.data
 		output wire        ast_source_valid,   //                        .valid
 		output wire [1:0]  ast_source_error,   //                        .error
 		output wire        ast_source_sop,     //                        .startofpacket
@@ -102,9 +102,9 @@ endmodule
 // Retrieval info: 	<generic name="karatsuba" value="false" />
 // Retrieval info: 	<generic name="outType" value="int" />
 // Retrieval info: 	<generic name="outMSBRound" value="sat" />
-// Retrieval info: 	<generic name="outMsbBitRem" value="10" />
+// Retrieval info: 	<generic name="outMsbBitRem" value="4" />
 // Retrieval info: 	<generic name="outLSBRound" value="trunc" />
-// Retrieval info: 	<generic name="outLsbBitRem" value="0" />
+// Retrieval info: 	<generic name="outLsbBitRem" value="2" />
 // Retrieval info: 	<generic name="bankCount" value="1" />
 // Retrieval info: 	<generic name="bankDisplay" value="0" />
 // Retrieval info: </instance>

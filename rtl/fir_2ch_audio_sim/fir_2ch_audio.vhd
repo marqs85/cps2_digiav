@@ -25,7 +25,7 @@ entity fir_2ch_audio is
     ast_sink_sop : in STD_LOGIC;
     ast_sink_eop : in STD_LOGIC;
     ast_sink_error : in STD_LOGIC_VECTOR(1 downto 0);
-    ast_source_data : out STD_LOGIC_VECTOR(20 * 1*1 - 1 downto 0);
+    ast_source_data : out STD_LOGIC_VECTOR(24 * 1*1 - 1 downto 0);
     ast_source_valid : out STD_LOGIC;
     ast_source_sop : out STD_LOGIC;
     ast_source_eop : out STD_LOGIC;
@@ -46,7 +46,7 @@ architecture syn of fir_2ch_audio is
     ast_sink_sop : in STD_LOGIC;
     ast_sink_eop : in STD_LOGIC;
     ast_sink_error : in STD_LOGIC_VECTOR(1 downto 0);
-    ast_source_data : out STD_LOGIC_VECTOR(1*20 * 1 - 1 downto 0);
+    ast_source_data : out STD_LOGIC_VECTOR(1*24 * 1 - 1 downto 0);
     ast_source_ready : in STD_LOGIC;
     ast_source_valid : out STD_LOGIC;
     ast_source_sop : out STD_LOGIC;

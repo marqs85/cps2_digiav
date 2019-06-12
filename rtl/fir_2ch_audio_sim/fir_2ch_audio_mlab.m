@@ -13,7 +13,7 @@
 %Input Data Width: 16
 %Interpolation Factor: 1
 %Decimation Factor: 16
-%FIR Width (Full Calculation Width Before Output Width Adjust) :20
+%FIR Width (Full Calculation Width Before Output Width Adjust) :24
 %-----------------------------------------------------------------------------------------------------------
 %MegaWizard Scaled Coefficient Values
 
@@ -21,12 +21,12 @@ function  output = fir_2ch_audio_mlab(stimulation, bank);
  coef_matrix_in= [12,30,11,-55,-89,25,284,511,511,284,25,-89,-55,11,30,12];
  INTER_FACTOR  = 1;
  DECI_FACTOR  =  16;
- MSB_RM  = 10;
+ MSB_RM  = 4;
  MSB_TYPE  = 1;
- LSB_RM  = 0;
+ LSB_RM  = 2;
  LSB_TYPE  = 0;
- FIR_WIDTH  = 20 + MSB_RM + LSB_RM;
- OUT_WIDTH  = 20 ;  %20
+ FIR_WIDTH  = 24 + MSB_RM + LSB_RM;
+ OUT_WIDTH  = 24 ;  %24
  DATA_WIDTH = 16;
 
   
