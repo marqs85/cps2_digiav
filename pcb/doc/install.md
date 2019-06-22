@@ -22,13 +22,13 @@ Step 2: RGB, audio, power and button signals
 Step 3: Preparation of cps2_digiav board
 --------------------------
 
-Solder BCS-105-L-D-PE-BE sockets on their places and trim down pin metals underside the PCB. Bridge SMD jumpers J3, J5 and J6 on top side of the PCB.
+Solder BCS-105-L-D-PE-BE sockets on their places and trim down pin metals underside the PCB. Bridge SMD jumpers J3, J5 and J6 on top side of cps2_digiav PCB.
 
 
 Step 4: Board installation
 --------------------------
 
-Place the add-on board on top of the CPS2 board so that the sockets are aligned to headers. Connect all signal & power wires, and add a jumper wire between C1 and C2 pads.
+Place the add-on board on top of the CPS2 board so that the sockets are aligned to headers. Connect all signal & power wires, and add a jumper wire between cps2_digiav C1 and C2 pads.
 
 ![](install-3.jpg)
 
