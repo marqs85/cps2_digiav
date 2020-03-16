@@ -1,5 +1,5 @@
 
-# (C) 2001-2019 Altera Corporation. All rights reserved.
+# (C) 2001-2020 Altera Corporation. All rights reserved.
 # Your use of Altera Corporation's design tools, logic functions and 
 # other software and tools, and its AMPP partner logic functions, and 
 # any output files any of the foregoing (including device programming 
@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 17.1 590 linux 2019.06.12.20:04:23
+# ACDS 19.1 670 linux 2020.02.10.20:05:49
 
 # ----------------------------------------
 # ncsim - auto-generated simulation script
@@ -106,12 +106,12 @@
 # within the Quartus project, and generate a unified
 # script which supports all the Altera IP within the design.
 # ----------------------------------------
-# ACDS 17.1 590 linux 2019.06.12.20:04:23
+# ACDS 19.1 670 linux 2020.02.10.20:05:49
 # ----------------------------------------
 # initialize variables
 TOP_LEVEL_NAME="fir_2ch_audio"
 QSYS_SIMDIR="./../"
-QUARTUS_INSTALL_DIR="/usr/local/altera_lite/17.1/quartus/"
+QUARTUS_INSTALL_DIR="/usr/local/altera_lite/19.1/quartus/"
 SKIP_FILE_COPY=0
 SKIP_DEV_COM=0
 SKIP_COM=0

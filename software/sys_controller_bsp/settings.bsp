@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jun 12, 2019 8:42:09 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1560361329977</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>./</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Feb 10, 2020 8:08:14 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1581358094162</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>/home/markus/Code/cps2_digiav/software/sys_controller_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../sys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>

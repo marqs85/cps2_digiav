@@ -125,7 +125,7 @@ architecture sync_reg of dspba_sync_reg is
     -- For TimeQuest this means: identify these flip-flops as synchronizer to enable automatic MTBF analysis
     signal sync_regs : bit_array;
     attribute altera_attribute : string;
-    attribute altera_attribute of sync_regs : signal is "-name ADV_NETLIST_OPT_ALLOWED NEVER_ALLOW; -name SYNCHRONIZER_IDENTIFICATION FORCED; -name DONT_MERGE_REGISTER ON; -name PRESERVE_REGISTER ON";
+    attribute altera_attribute of sync_regs : signal is "-name ADV_NETLIST_OPT_ALLOWED NEVER_ALLOW; -name SYNCHRONIZER_IDENTIFICATION FORCED_IF_ASYNCHRONOUS; -name DONT_MERGE_REGISTER ON; -name PRESERVE_REGISTER ON";
 
     signal oclk_enable : std_logic;
 
