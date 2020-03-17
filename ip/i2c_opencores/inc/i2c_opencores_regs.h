@@ -54,6 +54,8 @@
 #define I2C_OPENCORES_CR_WR_OFST             (4)
 #define I2C_OPENCORES_CR_NACK_MSK             (0x8)
 #define I2C_OPENCORES_CR_NACK_OFST            (3)
+#define I2C_OPENCORES_CR_SPIM_MSK             (0x4)
+#define I2C_OPENCORES_CR_SPIM_OFST            (2)
 #define I2C_OPENCORES_CR_IACK_MSK            (0x1)
 #define I2C_OPENCORES_CR_IACK_OFST           (0)
 

@@ -57,8 +57,10 @@
 // I2C registers wishbone addresses
 
 // bitcontroller states
-`define I2C_CMD_NOP   4'b0000
-`define I2C_CMD_START 4'b0001
-`define I2C_CMD_STOP  4'b0010
-`define I2C_CMD_WRITE 4'b0100
-`define I2C_CMD_READ  4'b1000
+`define I2C_CMD_NOP     6'b000000
+`define I2C_CMD_START   6'b000001
+`define I2C_CMD_STOP    6'b000010
+`define I2C_CMD_WRITE   6'b000100
+`define I2C_CMD_READ    6'b001000
+`define SPI_CMD_WRITE   6'b010000
+`define SPI_CMD_READ    6'b100000

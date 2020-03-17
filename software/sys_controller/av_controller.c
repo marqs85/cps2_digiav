@@ -24,190 +24,133 @@
 #include "altera_avalon_pio_regs.h"
 #include "i2c_opencores.h"
 #include "sysconfig.h"
-
-#include "si5351_regs.h"
-
+#include "adv7513.h"
+#include "si5351.h"
+#include "sc_config_regs.h"
+#include "video_modes.h"
+#include "avconfig.h"
 
 #define PB_MASK             (3<<30)
 #define PB0_BIT             (1<<30)
 #define PB1_BIT             (1<<31)
 
-typedef struct {
-    const alt_u16 v_initline_ref;
-    alt_u8 v_offset;
-    alt_u8 v_mult;
-    alt_u8 sl_enable;
-    alt_u8 sl_str;
-    alt_u8 sl_mask;
-} mode_config_t;
+#define ADV7513_MAIN_BASE 0x72
+#define ADV7513_EDID_BASE 0x7e
+#define ADV7513_PKTMEM_BASE 0x70
+#define ADV7513_CEC_BASE 0x78
 
-mode_config_t fpga_480p = {.v_initline_ref=524, .v_offset=0, .v_mult=2, .sl_enable=0, .sl_str=15, .sl_mask=1};
-mode_config_t fpga_1080p = {.v_initline_ref=1054, .v_offset=4, .v_mult=5, .sl_enable=0, .sl_str=15, .sl_mask=0x3};
+#define SI5351_BASE (0xC0>>1)
 
-#define ADV7513_BASE (0x72>>1)
+si5351_dev si_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
+                     .i2c_addr = SI5351_BASE,
+                     .xtal_freq = 0LU};
 
-inline alt_u32 adv7513_readreg(alt_u8 regaddr)
+adv7513_dev advtx_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
+                         .main_base = ADV7513_MAIN_BASE,
+                         .edid_base = ADV7513_EDID_BASE,
+                         .pktmem_base = ADV7513_PKTMEM_BASE,
+                         .cec_base = ADV7513_CEC_BASE};
+
+volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
+
+
+void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf)
 {
-    //Phase 1
-    I2C_start(I2CA_BASE, ADV7513_BASE, 0);
-    I2C_write(I2CA_BASE, regaddr, 0);
+    h_in_config_reg h_in_config = {.data=0x00000000};
+    h_in_config2_reg h_in_config2 = {.data=0x00000000};
+    v_in_config_reg v_in_config = {.data=0x00000000};
+    misc_config_reg misc_config = {.data=0x00000000};
+    sl_config_reg sl_config = {.data=0x00000000};
+    sl_config2_reg sl_config2 = {.data=0x00000000};
+    h_out_config_reg h_out_config = {.data=0x00000000};
+    h_out_config2_reg h_out_config2 = {.data=0x00000000};
+    v_out_config_reg v_out_config = {.data=0x00000000};
+    v_out_config2_reg v_out_config2 = {.data=0x00000000};
+    xy_out_config_reg xy_out_config = {.data=0x00000000};
 
-    //Phase 2
-    I2C_start(I2CA_BASE, ADV7513_BASE, 1);
-    return I2C_read(I2CA_BASE,1);
-}
+    // Set input params
+    h_in_config.h_synclen = vm_in->timings.h_synclen;
+    h_in_config.h_backporch = vm_in->timings.h_backporch;
+    h_in_config.h_active = vm_in->timings.h_active;
+    h_in_config2.h_total = vm_in->timings.h_total;
+    v_in_config.v_synclen = vm_in->timings.v_synclen;
+    v_in_config.v_backporch = vm_in->timings.v_backporch;
+    v_in_config.v_active = vm_in->timings.v_active;
 
-inline void adv7513_writereg(alt_u8 regaddr, alt_u8 data)
-{
-    I2C_start(I2CA_BASE, ADV7513_BASE, 0);
-    I2C_write(I2CA_BASE, regaddr, 0);
-    I2C_write(I2CA_BASE, data, 1);
-}
+    // Set output params
+    h_out_config.h_synclen = vm_out->timings.h_synclen;
+    h_out_config.h_backporch = vm_out->timings.h_backporch;
+    h_out_config.h_active = vm_out->timings.h_active;
+    h_out_config.x_rpt = vm_conf->x_rpt;
+    h_out_config2.h_total = vm_out->timings.h_total;
+    h_out_config2.x_offset = vm_conf->x_offset;
+    h_out_config2.x_skip = vm_conf->x_skip;
+    v_out_config.v_synclen = vm_out->timings.v_synclen;
+    v_out_config.v_backporch = vm_out->timings.v_backporch;
+    v_out_config.v_active = vm_out->timings.v_active;
+    v_out_config.y_rpt = vm_conf->y_rpt;
+    v_out_config2.v_total = vm_out->timings.v_total;
+    v_out_config2.v_startline = vm_conf->framesync_line;
+    v_out_config2.y_offset = vm_conf->y_offset;
 
-inline alt_u32 si5351_readreg(alt_u8 regaddr)
-{
-    //Phase 1
-    I2C_start(I2CA_BASE, SI5351_BASE, 0);
-    I2C_write(I2CA_BASE, regaddr, 0);
+    xy_out_config.x_size = vm_conf->x_size;
+    xy_out_config.y_size = vm_conf->y_size;
+    xy_out_config.y_start_lb = vm_conf->linebuf_startline;
 
-    //Phase 2
-    I2C_start(I2CA_BASE, SI5351_BASE, 1);
-    return I2C_read(I2CA_BASE,1);
-}
-
-inline void si5351_writereg(alt_u8 regaddr, alt_u8 data)
-{
-    I2C_start(I2CA_BASE, SI5351_BASE, 0);
-    I2C_write(I2CA_BASE, regaddr, 0);
-    I2C_write(I2CA_BASE, data, 1);
-}
-
-
-void init_si5351() {
-    int i;
-
-    // Wait until Si5351 initialization is complete
-    while ((si5351_readreg(0x00) & 0x80) == 0x80) ;
-
-    for (i=0; i<SI5351C_REVB_REG_CONFIG_NUM_REGS; i++)
-        si5351_writereg(si5351c_revb_registers[i].address, si5351c_revb_registers[i].value);
-
-    printf("Waiting PLL lock\n");
-    while ((si5351_readreg(0x00) & (1<<4)) != 0x00) ;
-}
-
-void init_adv() {
-    // Wait until display is detected
-    while ((adv7513_readreg(0x42) & 0x60) != 0x60) ;
-
-    // Power up TX
-    adv7513_writereg(0x41, 0x10);
-    //adv7513_writereg(0xd6, 0xc0);
-
-    // Setup fixed registers
-    adv7513_writereg(0x98, 0x03);
-    adv7513_writereg(0x9A, 0xE0);
-    adv7513_writereg(0x9C, 0x30);
-    adv7513_writereg(0x9D, 0x01);
-    adv7513_writereg(0xA2, 0xA4);
-    adv7513_writereg(0xA3, 0xA4);
-    adv7513_writereg(0xE0, 0xD0);
-    adv7513_writereg(0xF9, 0x00);
-
-    // Setup audio format
-    adv7513_writereg(0x12, 0x20); // disable copyright protection
-    adv7513_writereg(0x13, 0x20); // set category code
-    adv7513_writereg(0x14, 0x0B); // 24-bit audio
-    adv7513_writereg(0x15, 0x20); // 48kHz audio Fs, 24-bit RGB
-
-    // Input video format
-    adv7513_writereg(0x16, 0x30); // RGB 8bpc
-    adv7513_writereg(0x17, 0x02); // 16:9 aspect
-
-    // HDMI output without HDCP
-    adv7513_writereg(0xAF, 0x06);
-
-    // No clock delay (?)
-    adv7513_writereg(0xBA, 0x60);
-
-    // Audio regeneration settings
-    adv7513_writereg(0x01, 0x00);
-    adv7513_writereg(0x02, 0x18);
-    adv7513_writereg(0x03, 0x00); // N=6144
-    //adv7513_writereg(0x0A, 0x00);
-    adv7513_writereg(0x0C, 0x04); // I2S0 input
-
-    // Setup InfoFrame
-    adv7513_writereg(0x4A, 0xC0); // Enable InfoFrame modify
-    adv7513_writereg(0x55, 0x02); // No overscan
-    adv7513_writereg(0x57, 0x08); // Full-range RGB
-    adv7513_writereg(0x4A, 0x80); // Disable InfoFrame modify
+    sc->h_in_config = h_in_config;
+    sc->h_in_config2 = h_in_config2;
+    sc->v_in_config = v_in_config;
+    sc->misc_config = misc_config;
+    sc->sl_config = sl_config;
+    sc->sl_config2 = sl_config2;
+    sc->h_out_config = h_out_config;
+    sc->h_out_config2 = h_out_config2;
+    sc->v_out_config = v_out_config;
+    sc->v_out_config2 = v_out_config2;
+    sc->xy_out_config = xy_out_config;
 }
 
 // Initialize hardware
 int init_hw()
 {
-    alt_u8 retval;
-    I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ,400000);
+    I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ, 400000);
 
-    // reset syncgen etc.
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, 0x0);
-    usleep(200000);
+    // init HDMI TX
+    adv7513_init(&advtx_dev, 1);
 
-    printf("Init Si5351\n");
-    init_si5351();
+    // Init Si5351C
+    si5351_init(&si_dev);
 
-    // deassert syncgen reset
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (1<<31));
-
-    retval = adv7513_readreg(0x00);
-
-    if ( retval != 0x13) {
-        printf("Error: could not read from ADV7513 (0x%x)\n", retval);
-        return -1;
-    }
-
-    printf("Init ADV7513\n");
-    init_adv();
+    set_default_avconfig(1);
 
     return 0;
 }
 
-void program_mode(mode_config_t *mode_ptr, int resync) {
-    alt_u32 x_info;
-
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, 0);
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_2_BASE, ((mode_ptr->v_initline_ref-(mode_ptr->v_mult*mode_ptr->v_offset))<<4)|mode_ptr->v_offset);
-    IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (1<<31)|(mode_ptr->sl_mask<<6)|(mode_ptr->sl_str<<2)|mode_ptr->sl_enable);
-
-    if (resync) {
-        usleep(20000);
-        x_info = IORD_ALTERA_AVALON_PIO_DATA(PIO_3_BASE);
-        IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, (x_info & ~(1<<31)));
-        IOWR_ALTERA_AVALON_PIO_DATA(PIO_3_BASE, x_info);
-    }
-}
-
 int main()
 {
-    alt_u8 rd;
-    alt_u32 btn_vec, btn_vec_prev=0;
-    alt_u32 lines;
-    alt_u32 ncts;
-    mode_config_t *mode_ptr = &fpga_1080p;
+    int ret, init_mode=1;
+    status_t status;
+    mode_data_t vmode_in, vmode_out;
+    vm_mult_config_t vm_conf;
+    avconfig_t *cur_avconfig;
+    lm_conf_t *cur_lm_conf;
+    si5351_ms_config_t mclk_cfg = {6565, 111, 125, 36, 0, 0, 0, 0, 0};
 
-    int init_stat;
+    uint32_t btn_vec, btn_vec_prev=0;
 
-    init_stat = init_hw();
+    ret = init_hw();
 
-    if (init_stat >= 0) {
+    if (ret == 0) {
         printf("### cps2_digiAV INIT OK ###\n\n");
     } else {
-        printf("Init error  %d", init_stat);
+        printf("Init error  %d", ret);
         while (1) {}
     }
 
-    program_mode(mode_ptr, 1);
+    // configure audio MCLK
+    si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, &mclk_cfg);
+
+    cur_avconfig = get_current_avconfig();
 
     while(1) {
 
@@ -215,35 +158,34 @@ int main()
 
         if ((btn_vec_prev == 0) && btn_vec) {
             if (btn_vec & PB0_BIT) {
-                mode_ptr->sl_enable ^= 1;
-                program_mode(mode_ptr, 0);
+                step_lm_conf(1);
             }
             if (btn_vec & PB1_BIT) {
-                mode_ptr->v_offset = (mode_ptr->v_offset + 1) % 9;
-                program_mode(mode_ptr, 1);
+                step_lm_conf(0);
             }
         }
 
-        if (!(adv7513_readreg(0x42) & 0x20)) {
-            printf("Re-init ADV7513\n");
-            init_adv();
+        status = update_avconfig();
+
+        if ((status == MODE_CHANGE) || init_mode) {
+            cur_lm_conf = select_lm_conf(cur_avconfig->lm_conf_idx);
+            get_mode(512, 262, cur_lm_conf, &vm_conf, &vmode_in, &vmode_out);
+            printf("Mode %s selected\n", vmode_out.name);
+
+            if (vmode_out.si_pclk_mult != 0)
+                si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, 16000000UL, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
+            else
+                si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
+
+            update_sc_config(&vmode_in, &vmode_out, &vm_conf);
+            adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
         }
 
-#ifdef DEBUG
-        static int loop_ctr = 0;
-        ncts = 0;
-        ncts |= (adv7513_readreg(0x04) & 0xf) << 16;
-        ncts |= adv7513_readreg(0x05) << 8;
-        ncts |= adv7513_readreg(0x06);
-        rd = !!(adv7513_readreg(0x9e) & (1<<4));
+        adv7513_check_hpd_power(&advtx_dev);
+        adv7513_update_config(&advtx_dev, &cur_avconfig->adv7513_cfg);
 
-        if ((loop_ctr++ % 100) == 0) {
-            printf("NCTS: %lu\n", ncts);
-            printf("btnvec: 0x%lx\n", btn_vec>>30);
-            printf("PLL lock: %u\n", rd);
-        }
-#endif
         btn_vec_prev = btn_vec;
+        init_mode = 0;
 
         usleep(WAITLOOP_SLEEP_US);
     }

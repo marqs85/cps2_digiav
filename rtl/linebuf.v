@@ -101,7 +101,7 @@ module linebuf (
 		altsyncram_component.numwords_b = 20480,
 		altsyncram_component.operation_mode = "DUAL_PORT",
 		altsyncram_component.outdata_aclr_b = "NONE",
-		altsyncram_component.outdata_reg_b = "CLOCK1",
+		altsyncram_component.outdata_reg_b = "UNREGISTERED",
 		altsyncram_component.power_up_uninitialized = "FALSE",
 		altsyncram_component.widthad_a = 15,
 		altsyncram_component.widthad_b = 15,
@@ -150,7 +150,7 @@ endmodule
 // Retrieval info: PRIVATE: MIFfilename STRING ""
 // Retrieval info: PRIVATE: OPERATION_MODE NUMERIC "2"
 // Retrieval info: PRIVATE: OUTDATA_ACLR_B NUMERIC "0"
-// Retrieval info: PRIVATE: OUTDATA_REG_B NUMERIC "1"
+// Retrieval info: PRIVATE: OUTDATA_REG_B NUMERIC "0"
 // Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_MIXED_PORTS NUMERIC "2"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "3"
@@ -186,7 +186,7 @@ endmodule
 // Retrieval info: CONSTANT: NUMWORDS_B NUMERIC "20480"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "DUAL_PORT"
 // Retrieval info: CONSTANT: OUTDATA_ACLR_B STRING "NONE"
-// Retrieval info: CONSTANT: OUTDATA_REG_B STRING "CLOCK1"
+// Retrieval info: CONSTANT: OUTDATA_REG_B STRING "UNREGISTERED"
 // Retrieval info: CONSTANT: POWER_UP_UNINITIALIZED STRING "FALSE"
 // Retrieval info: CONSTANT: WIDTHAD_A NUMERIC "15"
 // Retrieval info: CONSTANT: WIDTHAD_B NUMERIC "15"
@@ -207,4 +207,10 @@ endmodule
 // Retrieval info: CONNECT: @data_a 0 0 16 0 data 0 0 16 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 16 0 @q_b 0 0 16 0
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL linebuf_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf

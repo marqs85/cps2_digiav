@@ -67,14 +67,17 @@
 //
 
 // synopsys translate_off
-`include "timescale.v"
+//`include "timescale.v"
 // synopsys translate_on
 
 `include "i2c_master_defines.v"
 
 module i2c_master_byte_ctrl (
-	clk, rst, nReset, ena, clk_cnt, start, stop, read, write, ack_in, din,
-	cmd_ack, ack_out, dout, i2c_busy, i2c_al, scl_i, scl_o, scl_oen, sda_i, sda_o, sda_oen );
+	clk, rst, nReset, ena, clk_cnt, start, stop, read, write, ack_in, spi_mode, din,
+	cmd_ack, ack_out, dout, i2c_busy, i2c_al, scl_i, scl_o, scl_oen, sda_i, sda_o, sda_oen, spi_miso );
+
+	// parameters
+	parameter dedicated_spi = 0;
 
 	//
 	// inputs & outputs
@@ -92,6 +95,7 @@ module i2c_master_byte_ctrl (
 	input       read;
 	input       write;
 	input       ack_in;
+    input       spi_mode;
 	input [7:0] din;
 
 	// status outputs
@@ -111,21 +115,26 @@ module i2c_master_byte_ctrl (
 	output sda_o;
 	output sda_oen;
 
+    // SPI MISO
+    input spi_miso;
 
 	//
 	// Variable declarations
 	//
 
 	// statemachine
-	parameter [4:0] ST_IDLE  = 5'b0_0000;
-	parameter [4:0] ST_START = 5'b0_0001;
-	parameter [4:0] ST_READ  = 5'b0_0010;
-	parameter [4:0] ST_WRITE = 5'b0_0100;
-	parameter [4:0] ST_ACK   = 5'b0_1000;
-	parameter [4:0] ST_STOP  = 5'b1_0000;
+	parameter [6:0] ST_IDLE         = 7'b000_0000;
+	parameter [6:0] ST_START        = 7'b000_0001;
+	parameter [6:0] ST_READ         = 7'b000_0010;
+	parameter [6:0] ST_WRITE        = 7'b000_0100;
+	parameter [6:0] ST_ACK          = 7'b000_1000;
+	parameter [6:0] ST_STOP         = 7'b001_0000;
+    parameter [6:0] ST_SPI_READ     = 7'b010_0000;
+    parameter [6:0] ST_SPI_WRITE    = 7'b100_0000;
+    
 
 	// signals for bit_controller
-	reg  [3:0] core_cmd;
+	reg  [5:0] core_cmd;
 	reg        core_txd;
 	wire       core_ack, core_rxd;
 
@@ -143,7 +152,7 @@ module i2c_master_byte_ctrl (
 	//
 
 	// hookup bit_controller
-	i2c_master_bit_ctrl bit_controller (
+	i2c_master_bit_ctrl #(.dedicated_spi(dedicated_spi)) bit_controller (
 		.clk     ( clk      ),
 		.rst     ( rst      ),
 		.nReset  ( nReset   ),
@@ -160,7 +169,8 @@ module i2c_master_byte_ctrl (
 		.scl_oen ( scl_oen  ),
 		.sda_i   ( sda_i    ),
 		.sda_o   ( sda_o    ),
-		.sda_oen ( sda_oen  )
+		.sda_oen ( sda_oen  ),
+        .spi_miso (spi_miso)
 	);
 
 	// generate go-signal
@@ -196,7 +206,7 @@ module i2c_master_byte_ctrl (
 	//
 	// state machine
 	//
-	reg [4:0] c_state; // synopsis enum_state
+	reg [6:0] c_state; // synopsis enum_state
 
 	always @(posedge clk or negedge nReset)
 	  if (!nReset)
@@ -238,13 +248,13 @@ module i2c_master_byte_ctrl (
 	                  end
 	                else if (read)
 	                  begin
-	                      c_state  <= #1 ST_READ;
-	                      core_cmd <= #1 `I2C_CMD_READ;
+	                      c_state  <= #1 spi_mode ? ST_SPI_READ : ST_READ;
+	                      core_cmd <= #1 spi_mode ? `SPI_CMD_READ : `I2C_CMD_READ;
 	                  end
 	                else if (write)
 	                  begin
-	                      c_state  <= #1 ST_WRITE;
-	                      core_cmd <= #1 `I2C_CMD_WRITE;
+	                      c_state  <= #1 spi_mode ? ST_SPI_WRITE : ST_WRITE;
+	                      core_cmd <= #1 spi_mode ? `SPI_CMD_WRITE : `I2C_CMD_WRITE;
 	                  end
 	                else // stop
 	                  begin
@@ -337,6 +347,40 @@ module i2c_master_byte_ctrl (
 
 	                // generate command acknowledge signal
 	                cmd_ack  <= #1 1'b1;
+	            end
+
+	        ST_SPI_WRITE:
+	          if (core_ack)
+	            if (cnt_done)
+	              begin
+	                  c_state  <= #1 ST_IDLE;
+	                  core_cmd <= #1 `I2C_CMD_NOP;
+                      cmd_ack  <= #1 1'b1;
+	              end
+	            else
+	              begin
+	                  c_state  <= #1 ST_SPI_WRITE;   // stay in same state
+	                  core_cmd <= #1 `SPI_CMD_WRITE; // write next bit
+	                  shift    <= #1 1'b1;
+	              end
+
+	        ST_SPI_READ:
+	          if (core_ack)
+	            begin
+	                if (cnt_done)
+	                  begin
+	                      c_state  <= #1 ST_IDLE;
+	                      core_cmd <= #1 `I2C_CMD_NOP;
+                          cmd_ack  <= #1 1'b1;
+	                  end
+	                else
+	                  begin
+	                      c_state  <= #1 ST_SPI_READ;   // stay in same state
+	                      core_cmd <= #1 `SPI_CMD_READ; // read next bit
+	                  end
+
+	                shift    <= #1 1'b1;
+	                core_txd <= #1 ack_in;
 	            end
 
 	      endcase

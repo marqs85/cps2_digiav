@@ -57,20 +57,13 @@ reg [3:0] reset_n_ctr;
 reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
 reg HSYNC_in_L, VSYNC_in_L;
 
-reg sg_reset_n_L, sg_reset_n_LL;
-reg sg_hsync_ref_L, sg_hsync_ref_LL;
-reg sg_vsync_ref_L, sg_vsync_ref_LL;
-
-
-wire [31:0] h_info, v_info, x_info;
-
 wire [7:0] R_out, G_out, B_out;
 wire HSYNC_out;
 wire VSYNC_out;
 wire PCLK_out;
 wire DE_out;
 
-wire v_change;
+wire pll_locked;
 wire clk25;
 
 wire I2S_WS_2x;
@@ -78,43 +71,54 @@ wire I2S_DATA_2x;
 wire I2S_BCK_out;
 wire [7:0] clkcnt_out;
 
-wire [11:0] hcnt_sg;
-wire [10:0] vcnt_sg;
-wire [8:0] hcnt_sg_lbuf;
-wire [5:0] vcnt_sg_lbuf;
-wire [2:0] hctr_sg, vctr_sg;
-wire HSYNC_sg, VSYNC_sg, DE_sg, mask_enable_sg;
+wire [31:0] h_in_config, h_in_config2, v_in_config, h_out_config, h_out_config2, v_out_config, v_out_config2, xy_out_config;
 
 wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
 
 
 // Latch inputs syncronized to PCLKx2_in (negedge)
-always @(negedge PCLK2x_in or negedge reset_n)
+always @(negedge PCLK2x_in)
 begin
-    if (!reset_n) begin
-        R_in_L <= 4'h0;
-        G_in_L <= 4'h0;
-        B_in_L <= 4'h0;
-        F_in_L <= 4'h0;
-        HSYNC_in_L <= 1'b0;
-        VSYNC_in_L <= 1'b0;
-    end else begin
-        R_in_L <= R_in;
-        G_in_L <= G_in;
-        B_in_L <= B_in;
-        F_in_L <= F_in;
-        HSYNC_in_L <= HSYNC_in;
-        VSYNC_in_L <= VSYNC_in;
-    end
+    R_in_L <= R_in;
+    G_in_L <= G_in;
+    B_in_L <= B_in;
+    F_in_L <= F_in;
+    HSYNC_in_L <= HSYNC_in;
+    VSYNC_in_L <= VSYNC_in;
 end
 
-always @(posedge clk25) begin
+always @(posedge PCLK2x_in) begin
     if (reset_n_ctr == 4'hf)
         reset_n <= 1'b1;
-    else
+    else if (pll_locked)
         reset_n_ctr <= reset_n_ctr + 1'b1;
 end
+
+// CPS2 frontend
+wire [15:0] CPS_data_post;
+wire CPS_HSYNC_post, CPS_VSYNC_post, CPS_DE_post;
+wire CPS_fe_frame_change;
+wire [8:0] CPS_fe_xpos, CPS_fe_ypos;
+cps2_frontend u_cps2_frontend ( 
+    .PCLK_i(PCLK2x_in),
+    .R_i(R_in_L),
+    .G_i(G_in_L),
+    .B_i(B_in_L),
+    .F_i(F_in_L),
+    .HSYNC_i(HSYNC_in_L),
+    .VSYNC_i(VSYNC_in_L),
+    .R_o(CPS_data_post[15:12]),
+    .G_o(CPS_data_post[11:8]),
+    .B_o(CPS_data_post[7:4]),
+    .F_o(CPS_data_post[3:0]),
+    .HSYNC_o(CPS_HSYNC_post),
+    .VSYNC_o(CPS_VSYNC_post),
+    .DE_o(CPS_DE_post),
+    .xpos(CPS_fe_xpos),
+    .ypos(CPS_fe_ypos),
+    .frame_change(CPS_fe_frame_change)
+);
 
 //assign HDMI_TX_RST_N = reset_n;
 assign HDMI_TX_DE = DE_out;
@@ -129,80 +133,65 @@ assign HDMI_TX_RD = R_out;
 assign HDMI_TX_GD = G_out;
 assign HDMI_TX_BD = B_out;
 
-always @(posedge PCLK_SI) begin
-    sg_reset_n_L <= x_info[31] & ~v_change;
-    sg_reset_n_LL <= sg_reset_n_L;
-    sg_hsync_ref_L <= HSYNC_in_L;
-    sg_hsync_ref_LL <= sg_hsync_ref_L;
-    sg_vsync_ref_L <= VSYNC_in_L;
-    sg_vsync_ref_LL <= sg_vsync_ref_L;
-end
-
 sys sys_inst(
     .clk_clk                            (clk25),
     .reset_reset_n                      (reset_n),
     .pio_0_ctrl_in_export               ({BTN_volminus_debounced, BTN_volplus_debounced, 30'h0}),
-    .pio_1_h_info_out_export            (h_info),
-    .pio_2_v_info_out_export            (v_info),
-    .pio_3_x_info_out_export            (x_info),
     .i2c_opencores_0_export_scl_pad_io  (scl),
-    .i2c_opencores_0_export_sda_pad_io  (sda)
+    .i2c_opencores_0_export_sda_pad_io  (sda),
+    .sc_config_0_sc_if_sc_status_i          (32'h0),
+    .sc_config_0_sc_if_sc_status2_i         (32'h0),
+    .sc_config_0_sc_if_lt_status_i          (32'h00000000),
+    .sc_config_0_sc_if_h_in_config_o        (h_in_config),
+    .sc_config_0_sc_if_h_in_config2_o       (h_in_config2),
+    .sc_config_0_sc_if_v_in_config_o        (v_in_config),
+    .sc_config_0_sc_if_misc_config_o        (),
+    .sc_config_0_sc_if_sl_config_o          (),
+    .sc_config_0_sc_if_sl_config2_o         (),
+    .sc_config_0_sc_if_h_out_config_o       (h_out_config),
+    .sc_config_0_sc_if_h_out_config2_o      (h_out_config2),
+    .sc_config_0_sc_if_v_out_config_o       (v_out_config),
+    .sc_config_0_sc_if_v_out_config2_o      (v_out_config2),
+    .sc_config_0_sc_if_xy_out_config_o      (xy_out_config),
 );
 
 scanconverter scanconverter_inst (
-    .PCLK_in        (PCLK2x_in),
-    .PCLK_ext       (PCLK_SI),
-    .reset_n        (reset_n),
-    .R_in           (R_in_L),
-    .G_in           (G_in_L),
-    .B_in           (B_in_L),
-    .F_in           (F_in_L),
-    .HSYNC_in       (HSYNC_in_L),
-    .VSYNC_in       (VSYNC_in_L),
-    .hcnt_ext       (hcnt_sg[10:0]),
-    .vcnt_ext       (vcnt_sg),
-    .hcnt_ext_lbuf  (hcnt_sg_lbuf),
-    .vcnt_ext_lbuf  (vcnt_sg_lbuf),
-    .hctr_ext       (hctr_sg),
-    .vctr_ext       (vctr_sg),
-    .v_change       (v_change),
-    .HSYNC_ext      (HSYNC_sg),
-    .VSYNC_ext      (VSYNC_sg),
-    .DE_ext         (DE_sg),
-    .mask_enable_ext(mask_enable_sg),
-    .x_info         (x_info),
-    .PCLK_out       (PCLK_out),
-    .R_out          (R_out),
-    .G_out          (G_out),
-    .B_out          (B_out),
-    .HSYNC_out      (HSYNC_out),
-    .VSYNC_out      (VSYNC_out),
-    .DE_out         (DE_out)
+    .PCLK_CAP_i(PCLK2x_in),
+    .PCLK_OUT_i(PCLK_SI),
+    .reset_n(reset_n),
+    .DATA_i(CPS_data_post),
+    .HSYNC_i(CPS_HSYNC_post),
+    .VSYNC_i(CPS_VSYNC_post),
+    .DE_i(CPS_DE_post),
+    .FID_i(1'b0),
+    .frame_change_i(CPS_fe_frame_change),
+    .xpos_i(CPS_fe_xpos),
+    .ypos_i(CPS_fe_ypos),
+    .h_out_config(h_out_config),
+    .h_out_config2(h_out_config2),
+    .v_out_config(v_out_config),
+    .v_out_config2(v_out_config2),
+    .xy_out_config(xy_out_config),
+    .misc_config(32'h0),
+    .sl_config(32'h0),
+    .sl_config2(32'h0),
+    .testpattern_enable(1'b0),
+    .PCLK_o(PCLK_out),
+    .R_o(R_out),
+    .G_o(G_out),
+    .B_o(B_out),
+    .HSYNC_o(HSYNC_out),
+    .VSYNC_o(VSYNC_out),
+    .DE_o(DE_out),
+    .xpos_o(),
+    .ypos_o(),
+    .resync_strobe()
 );
 
 pll_pclk pll_pclk_inst (
     .inclk0 ( PCLK2x_in ),
     .c0 ( clk25 ),
-    .locked ( )
-);
-
-syncgen u_sg (
-    .PCLK           (PCLK_SI),
-    .reset_n        (sg_reset_n_LL),
-    .HSYNC_ref      (sg_hsync_ref_LL),
-    .VSYNC_ref      (sg_vsync_ref_LL),
-    .h_info         (h_info),
-    .v_info         (v_info),
-    .HSYNC_out      (HSYNC_sg),
-    .VSYNC_out      (VSYNC_sg),
-    .DE_out         (DE_sg),
-    .hcnt           (hcnt_sg),
-    .vcnt           (vcnt_sg),
-    .hcnt_lbuf      (hcnt_sg_lbuf),
-    .vcnt_lbuf      (vcnt_sg_lbuf),
-    .mask_enable    (mask_enable_sg),
-    .h_ctr          (hctr_sg),
-    .v_ctr          (vctr_sg),
+    .locked ( pll_locked )
 );
 
 `ifdef I2S_UPSAMPLE_2X

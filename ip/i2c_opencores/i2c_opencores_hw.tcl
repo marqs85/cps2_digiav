@@ -18,7 +18,7 @@ package require -exact qsys 13.1
 # 
 # module i2c_opencores
 # 
-set_module_property DESCRIPTION "I2C Master Peripheral from opencores.org"
+set_module_property DESCRIPTION "I2C Master Peripheral from opencores.org, plus SPI master (CPOL=1, CPHA=1) functionality using the same bus."
 set_module_property NAME i2c_opencores
 set_module_property VERSION 17.1
 set_module_property INTERNAL false
@@ -53,13 +53,20 @@ add_fileset_file i2c_master_top.v VERILOG PATH i2c_master_top.v
 add_fileset_file i2c_master_defines.v VERILOG PATH i2c_master_defines.v
 add_fileset_file i2c_master_byte_ctrl.v VERILOG PATH i2c_master_byte_ctrl.v
 add_fileset_file i2c_master_bit_ctrl.v VERILOG PATH i2c_master_bit_ctrl.v
-add_fileset_file timescale.v VERILOG PATH timescale.v
+#add_fileset_file timescale.v VERILOG PATH timescale.v
 
 
 # 
 # parameters
 # 
-
+add_parameter dedicated_spi INTEGER 1
+set_parameter_property dedicated_spi DEFAULT_VALUE 0
+set_parameter_property dedicated_spi DISPLAY_NAME "Dedicated SPI mode"
+set_parameter_property dedicated_spi DISPLAY_HINT boolean
+set_parameter_property dedicated_spi TYPE INTEGER
+set_parameter_property dedicated_spi UNITS None
+set_parameter_property dedicated_spi HDL_PARAMETER true
+set_parameter_property dedicated_spi DESCRIPTION "Enables higher speed by always driving clock&data lines (no tristate) and by outputting data on falling clk edge without delay."
 
 # 
 # display items
@@ -109,6 +116,7 @@ set_interface_property export SVD_ADDRESS_GROUP ""
 
 add_interface_port export scl_pad_io export Bidir 1
 add_interface_port export sda_pad_io export Bidir 1
+add_interface_port export spi_miso_pad_i export Input 1
 
 
 # 

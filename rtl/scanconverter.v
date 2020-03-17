@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -17,129 +17,110 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-`include "cps2_defines.v"
-
-`define TRUE                    1'b1
-`define FALSE                   1'b0
-`define HI                      1'b1
-`define LO                      1'b0
-
-`define HSYNC_POL               `LO
-`define VSYNC_POL               `LO
-
-`define SCANLINES_OFF           2'h0
-`define SCANLINES_H             2'h1
-`define SCANLINES_V             2'h2
-
-`define HSYNC_LEADING_EDGE      ((HSYNC_in_L == `HI) & (HSYNC_in == `LO))
-`define VSYNC_LEADING_EDGE      ((VSYNC_in_L == `HI) & (VSYNC_in == `LO))
-
-`define NUM_LINE_BUFFERS        40
-
 module scanconverter (
-    input PCLK_in,
-    input PCLK_ext,
+    input PCLK_CAP_i,
+    input PCLK_OUT_i,
     input reset_n,
-    input [3:0] R_in,
-    input [3:0] G_in,
-    input [3:0] B_in,
-    input [3:0] F_in,
-    input HSYNC_in,
-    input VSYNC_in,
-    input [10:0] hcnt_ext,
-    input [10:0] vcnt_ext,
-    input [8:0] hcnt_ext_lbuf,
-    input [5:0] vcnt_ext_lbuf,
-    input [2:0] hctr_ext,
-    input [2:0] vctr_ext,
-    output reg v_change,
-    input HSYNC_ext,
-    input VSYNC_ext,
-    input DE_ext,
-    input mask_enable_ext,
-    input [31:0] x_info,
-    output PCLK_out,
-    output reg [7:0] R_out,
-    output reg [7:0] G_out,
-    output reg [7:0] B_out,
-    output reg HSYNC_out,
-    output reg VSYNC_out,
-    output reg DE_out
+    input [15:0] DATA_i,
+    input HSYNC_i,
+    input VSYNC_i,
+    input DE_i,
+    input FID_i,
+    input frame_change_i,
+    input [8:0] xpos_i,
+    input [8:0] ypos_i,
+    input [31:0] h_out_config,
+    input [31:0] h_out_config2,
+    input [31:0] v_out_config,
+    input [31:0] v_out_config2,
+    input [31:0] xy_out_config,
+    input [31:0] misc_config,
+    input [31:0] sl_config,
+    input [31:0] sl_config2,
+    input testpattern_enable,
+    output PCLK_o,
+    output reg [7:0] R_o,
+    output reg [7:0] G_o,
+    output reg [7:0] B_o,
+    output reg HSYNC_o,
+    output reg VSYNC_o,
+    output reg DE_o,
+    output reg [10:0] xpos_o,
+    output reg [10:0] ypos_o,
+    output reg resync_strobe
 );
 
-//clock-related signals
-wire pclk_1x;
-wire linebuf_rdclock;
+localparam NUM_LINE_BUFFERS = 40;
 
-//RGB signals&registers: 4 bits per component + 4 bit fade
-wire [3:0] R_act, G_act, B_act, F_act;
-wire [3:0] R_lbuf, G_lbuf, B_lbuf, F_lbuf;
-reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
-reg [7:0] R_pp4, G_pp4, B_pp4, R_pp5, G_pp5, B_pp5;
-reg [3:0] R_pp3, G_pp3, B_pp3, F_pp3;
+wire [8:0] H_SYNCLEN = h_out_config[28:20];
+wire [8:0] H_BACKPORCH = h_out_config[19:11];
+wire [10:0] H_ACTIVE = h_out_config[10:0];
+wire [11:0] H_TOTAL = h_out_config2[11:0];
 
-//H+V syncs + data enable signals&registers
-wire HSYNC_act, VSYNC_act, DE_act;
-reg HSYNC_in_L, HSYNC_pp2, HSYNC_pp3, HSYNC_pp4, HSYNC_pp5;
-reg VSYNC_in_L, VSYNC_pp2, VSYNC_pp3, VSYNC_pp4, VSYNC_pp5;
-reg DE_pp2, DE_pp3, DE_pp4, DE_pp5;
+wire [4:0] V_SYNCLEN = v_out_config[24:20];
+wire [8:0] V_BACKPORCH = v_out_config[19:11];
+wire [10:0] V_ACTIVE = v_out_config[10:0];
+wire [10:0] V_TOTAL = v_out_config2[10:0];
+wire [10:0] V_STARTLINE = v_out_config2[21:11];
 
-//registers indicating line/frame change
-reg frame_change, line_change;
+reg frame_change_sync1_reg, frame_change_sync2_reg, frame_change_prev;
+wire frame_change = frame_change_sync2_reg;
 
-//H+V counters
-reg [11:0] hcnt_1x;
-reg [10:0] vcnt_1x;
+wire [2:0] X_RPT = h_out_config[31:29];
+wire [2:0] Y_RPT = v_out_config[27:25];
 
-//other counters
-wire [2:0] line_id_act, col_id_act;
-reg [2:0] line_id_pp1, line_id_pp2, line_id_pp3, line_id_pp4, col_id_pp1, col_id_pp2, col_id_pp3, col_id_pp4;
-reg [5:0] line_idx;
-reg [1:0] line_out_idx_2x, line_out_idx_3x, line_out_idx_4x;
-reg [2:0] line_out_idx_5x;
-reg [10:0] vmax;
-reg [23:0] warn_h_unstable, warn_pll_lock_lost, warn_pll_lock_lost_3x;
-reg mask_enable_pp2, mask_enable_pp3, mask_enable_pp4, mask_enable_pp5;
+wire [2:0] X_SKIP = h_out_config2[24:22];
 
-reg [1:0] V_SCANLINEMODE;
-reg [4:0] V_SCANLINEID;
-reg [3:0] X_MASK_BR;
-reg [7:0] X_SCANLINESTR;
+wire signed [9:0] X_OFFSET = h_out_config2[21:12];
+wire signed [8:0] Y_OFFSET = v_out_config2[30:22];
+wire signed [5:0] Y_START_LB = xy_out_config[27:22];
 
-assign PCLK_out = PCLK_ext;
+wire [10:0] X_SIZE = xy_out_config[10:0];
+wire [10:0] Y_SIZE = xy_out_config[21:11];
 
-//Scanline generation
-function [7:0] apply_scanlines;
-    input [1:0] mode;
-    input [7:0] data;
-    input [7:0] str;
-    input [4:0] mask;
-    input [2:0] line_id;
-    input [2:0] col_id;
-    begin
-        if ((mode == `SCANLINES_H) && (mask & (5'h1<<line_id)))
-            apply_scanlines = (data > str) ? (data-str) : 8'h00;
-        else if ((mode == `SCANLINES_V) && (5'h0 == col_id))
-            apply_scanlines = (data > str) ? (data-str) : 8'h00;
-        else
-            apply_scanlines = data;
-    end
-    endfunction
+reg [11:0] h_cnt;
+reg [10:0] v_cnt;
 
-//Border masking
-function [7:0] apply_mask;
-    input enable;
-    input [7:0] data;
-    input [3:0] brightness;
-    begin
-        if (enable)
-            apply_mask = {brightness, 4'h0};
-        else
-            apply_mask = data;
-    end
-    endfunction
+reg [10:0] xpos_lb;
+reg [10:0] ypos_lb;
+reg [2:0] x_ctr;
+reg [2:0] y_ctr;
 
-//Fade
+reg [5:0] ypos_i_wraddr;
+reg [8:0] ypos_i_prev;
+reg [8:0] xpos_i_wraddr;
+reg [15:0] DATA_i_wrdata;
+
+reg [15:0] DATA_linebuf_pp3;
+
+reg HSYNC_pp[1:3] /* synthesis ramstyle = "logic" */;
+reg VSYNC_pp[1:3] /* synthesis ramstyle = "logic" */;
+reg DE_pp[1:3] /* synthesis ramstyle = "logic" */;
+reg [10:0] xpos_pp[1:3] /* synthesis ramstyle = "logic" */;
+reg [10:0] ypos_pp[1:3] /* synthesis ramstyle = "logic" */;
+/*reg [7:0] R_pp[4:4]
+reg [7:0] G_pp[4:4]
+reg [7:0] B_pp[4:4]*/
+reg mask_enable_pp[2:3] /* synthesis ramstyle = "logic" */;
+
+assign PCLK_o = PCLK_OUT_i;
+
+wire [14:0] linebuf_wraddr = {ypos_i_wraddr, xpos_i_wraddr};
+wire [14:0] linebuf_rdaddr = {ypos_lb[5:0], xpos_lb[8:0]};
+
+wire [15:0] DATA_linebuf;
+
+linebuf linebuf_rgb (
+    .data(DATA_i_wrdata),
+    .rdaddress(linebuf_rdaddr),
+    .rdclock(PCLK_OUT_i),
+    .wraddress(linebuf_wraddr),
+    .wrclock(PCLK_CAP_i),
+    .wren(DE_i),
+    .q(DATA_linebuf)
+);
+
+// Fade function for CPS1/2
 function [7:0] apply_fade;
     input [3:0] data;
     input [3:0] fade;
@@ -147,137 +128,140 @@ function [7:0] apply_fade;
         //apply_fade = {data, data} >> (3'h7-fade[3:1]);
         apply_fade = {4'h0, data} * ({4'h0, fade} + 8'h2);
     end
-    endfunction
+endfunction
 
-
-//Mux for active data selection
-//
-//Non-critical signals and inactive clock combinations filtered out in SDC
-always @(*) begin
-    R_act = R_lbuf;
-    G_act = G_lbuf;
-    B_act = B_lbuf;
-    F_act = F_lbuf;
-    HSYNC_act = HSYNC_ext;
-    VSYNC_act = VSYNC_ext;
-    DE_act = DE_ext;
-    line_id_act = vctr_ext;
-    col_id_act = hctr_ext;
-end
-
-wire [9:0] linebuf_wraddr = (hcnt_1x>>1)-`CPS2_H_AVIDSTART;
-wire wren = (linebuf_wraddr < `CPS2_H_ACTIVE);
-
-linebuf linebuf_rgb (
-    .data ( {R_in_L, G_in_L, B_in_L, F_in_L} ),
-    .rdaddress ( {vcnt_ext_lbuf, hcnt_ext_lbuf} ),
-    .rdclock ( PCLK_out ),
-    .wraddress( {line_idx, linebuf_wraddr[8:0]} ),
-    .wrclock ( PCLK_in ),
-    .wren ( wren ),
-    .q ( {R_lbuf, G_lbuf, B_lbuf, F_lbuf} )
-);
-
-//Postprocess pipeline
-// h_cnt, v_cnt, line_id, col_id:   0
-// HSYNC, VSYNC, DE:                1
-// RGB:                             2
-always @(posedge PCLK_out)
-begin
-    line_id_pp1 <= line_id_act;
-    col_id_pp1 <= col_id_act;
-
-    HSYNC_pp2 <= HSYNC_act;
-    VSYNC_pp2 <= VSYNC_act;
-    DE_pp2 <= DE_act;
-    line_id_pp2 <= line_id_pp1;
-    col_id_pp2 <= col_id_pp1;
-    mask_enable_pp2 <= mask_enable_ext;
-
-    R_pp3 <= R_act;
-    G_pp3 <= G_act;
-    B_pp3 <= B_act;
-    F_pp3 <= F_act;
-    HSYNC_pp3 <= HSYNC_pp2;
-    VSYNC_pp3 <= VSYNC_pp2;
-    DE_pp3 <= DE_pp2;
-    line_id_pp3 <= line_id_pp2;
-    col_id_pp3 <= col_id_pp2;
-    mask_enable_pp3 <= mask_enable_pp2;
-
-    R_pp4 <= apply_fade(R_pp3, F_pp3);
-    G_pp4 <= apply_fade(G_pp3, F_pp3);
-    B_pp4 <= apply_fade(B_pp3, F_pp3);
-    HSYNC_pp4 <= HSYNC_pp3;
-    VSYNC_pp4 <= VSYNC_pp3;
-    DE_pp4 <= DE_pp3;
-    line_id_pp4 <= line_id_pp3;
-    col_id_pp4 <= col_id_pp3;
-    mask_enable_pp4 <= mask_enable_pp3;
-
-    R_pp5 <= apply_scanlines(V_SCANLINEMODE, R_pp4, X_SCANLINESTR, V_SCANLINEID, line_id_pp4, col_id_pp4);
-    G_pp5 <= apply_scanlines(V_SCANLINEMODE, G_pp4, X_SCANLINESTR, V_SCANLINEID, line_id_pp4, col_id_pp4);
-    B_pp5 <= apply_scanlines(V_SCANLINEMODE, B_pp4, X_SCANLINESTR, V_SCANLINEID, line_id_pp4, col_id_pp4);
-    HSYNC_pp5 <= HSYNC_pp4;
-    VSYNC_pp5 <= VSYNC_pp4;
-    DE_pp5 <= DE_pp4;
-    mask_enable_pp5 <= mask_enable_pp4;
-    
-    R_out <= apply_mask(mask_enable_pp5, R_pp5, X_MASK_BR);
-    G_out <= apply_mask(mask_enable_pp5, G_pp5, X_MASK_BR);
-    B_out <= apply_mask(mask_enable_pp5, B_pp5, X_MASK_BR);
-    HSYNC_out <= HSYNC_pp5;
-    VSYNC_out <= VSYNC_pp5;
-    DE_out <= DE_pp5;
-end
-
-//Buffer the inputs using input pixel clock and generate 1x signals
-always @(posedge PCLK_in or negedge reset_n)
-begin
-    if (!reset_n) begin
-        hcnt_1x <= 0;
-        vcnt_1x <= 0;
-        line_idx <= 0;
-        frame_change <= 1'b0;
-    end else begin
-        if (`HSYNC_LEADING_EDGE) begin
-            hcnt_1x <= 0;
-        end else begin
-            hcnt_1x <= hcnt_1x + 1'b1;
-        end
-
-        if (`HSYNC_LEADING_EDGE) begin
-            if ((VSYNC_in == `LO) & (vcnt_1x > 100)) begin
-                vcnt_1x <= 0;
-                frame_change <= 1'b1;
-                vmax <= vcnt_1x;
-                v_change <= (vcnt_1x == vmax) ? 1'b0 : 1'b1;
-            end else begin
-                vcnt_1x <= vcnt_1x + 1'b1;
-                
-                if ((vcnt_1x == `CPS2_V_AVIDSTART-1) || (line_idx == `NUM_LINE_BUFFERS-1))
-                    line_idx <= 0;
-                else
-                    line_idx <= line_idx + 1'b1;
-            end
-        end else
-            frame_change <= 1'b0;
-
-        if (frame_change) begin
-            //Read configuration data from CPU
-            V_SCANLINEMODE <= x_info[1:0];
-            X_SCANLINESTR <= ((x_info[5:2]+8'h01)<<4)-1'b1;
-            V_SCANLINEID <= x_info[10:6];
-            X_MASK_BR <= 4'h0;
-        end
-            
-        R_in_L <= R_in;
-        G_in_L <= G_in;
-        B_in_L <= B_in;
-        F_in_L <= F_in;
-        HSYNC_in_L <= HSYNC_in;
-        VSYNC_in_L <= VSYNC_in;
+// Linebuffer write address calculation
+always @(posedge PCLK_CAP_i) begin
+    if (ypos_i == 0) begin
+        ypos_i_wraddr <= 0;
+    end else if (ypos_i != ypos_i_prev) begin
+        if (ypos_i_wraddr == NUM_LINE_BUFFERS-1)
+            ypos_i_wraddr <= 0;
+        else
+            ypos_i_wraddr <= ypos_i_wraddr + 1'b1;
     end
+
+    xpos_i_wraddr <= xpos_i;
+    ypos_i_prev <= ypos_i;
+    DATA_i_wrdata <= DATA_i;
+end
+
+
+// Frame change strobe synchronization
+always @(posedge PCLK_OUT_i) begin
+    frame_change_sync1_reg <= frame_change_i;
+    frame_change_sync2_reg <= frame_change_sync1_reg;
+    frame_change_prev <= frame_change_sync2_reg;
+end
+
+// H/V counters
+always @(posedge PCLK_OUT_i) begin
+    // TODO: fix functionality when V_STARTLINE=0
+    if (~frame_change_prev & frame_change & ((v_cnt != V_STARTLINE-1) & (v_cnt != V_STARTLINE))) begin
+        h_cnt <= 0;
+        v_cnt <= V_STARTLINE;
+        resync_strobe <= 1'b1;
+    end else begin
+        if (h_cnt == H_TOTAL-1) begin
+            if (v_cnt == V_TOTAL-1) begin
+                v_cnt <= 0;
+                resync_strobe <= 1'b0;
+            end else begin
+                v_cnt <= v_cnt + 1'b1;
+            end
+            h_cnt <= 0;
+        end else begin
+            h_cnt <= h_cnt + 1'b1;
+        end
+    end
+end
+
+// Postprocess pipeline structure
+// |    0     |    1     |    2    |    3    |
+// |----------|----------|---------|---------|
+// | SYNC/DE  |          |         |         |
+// | X/Y POS  |          |         |         |
+// |          |          | LINEBUF |         |
+// |          |   MASK   |         |         |
+// |          |          |         |  FADE   |
+
+
+// Pipeline stage 0
+always @(posedge PCLK_OUT_i) begin
+    HSYNC_pp[1] <= (h_cnt < H_SYNCLEN) ? 1'b0 : 1'b1;
+    VSYNC_pp[1] <= (v_cnt < V_SYNCLEN) ? 1'b0 : 1'b1;
+    DE_pp[1] <= (h_cnt >= H_SYNCLEN+H_BACKPORCH) & (h_cnt < H_SYNCLEN+H_BACKPORCH+H_ACTIVE) & (v_cnt >= V_SYNCLEN+V_BACKPORCH) & (v_cnt < V_SYNCLEN+V_BACKPORCH+V_ACTIVE);
+
+    if (h_cnt == H_SYNCLEN+H_BACKPORCH) begin
+        if (v_cnt == V_SYNCLEN+V_BACKPORCH) begin
+            ypos_pp[1] <= 0;
+            ypos_lb <= Y_START_LB;
+            y_ctr <= 0;
+        end else begin
+            if (ypos_pp[1] < V_ACTIVE) begin
+                ypos_pp[1] <= ypos_pp[1] + 1'b1;
+            end
+
+            if (y_ctr == Y_RPT) begin
+                if (ypos_lb == NUM_LINE_BUFFERS-1)
+                    ypos_lb <= 0;
+                else
+                    ypos_lb <= ypos_lb + 1'b1;
+                y_ctr <= 0;
+            end else begin
+                y_ctr <= y_ctr + 1'b1;
+            end
+        end
+        xpos_pp[1] <= 0;
+        xpos_lb <= 0;
+        x_ctr <= 0;
+    end else begin
+        if (xpos_pp[1] < H_ACTIVE) begin
+            xpos_pp[1] <= xpos_pp[1] + 1'b1;
+        end
+
+        if (($signed({1'b0, xpos_pp[1]}) >= X_OFFSET)) begin
+            if (x_ctr == X_RPT) begin
+                xpos_lb <= xpos_lb + 1'b1 + X_SKIP;
+                x_ctr <= 0;
+            end else begin
+                x_ctr <= x_ctr + 1'b1;
+            end
+        end
+    end
+end
+
+// Pipeline stages 1-
+integer pp_idx;
+always @(posedge PCLK_OUT_i) begin
+
+    for(pp_idx = 2; pp_idx <= 3; pp_idx = pp_idx+1) begin
+        HSYNC_pp[pp_idx] <= HSYNC_pp[pp_idx-1];
+        VSYNC_pp[pp_idx] <= VSYNC_pp[pp_idx-1];
+        DE_pp[pp_idx] <= DE_pp[pp_idx-1];
+    end
+    for(pp_idx = 2; pp_idx <= 3; pp_idx = pp_idx+1) begin
+        xpos_pp[pp_idx] <= xpos_pp[pp_idx-1];
+        ypos_pp[pp_idx] <= ypos_pp[pp_idx-1];
+    end
+
+    if (($signed({1'b0, xpos_pp[1]}) >= X_OFFSET) & ($signed({1'b0, xpos_pp[1]}) < X_OFFSET+X_SIZE) & ($signed({1'b0, ypos_pp[1]}) >= Y_OFFSET) & ($signed({1'b0, ypos_pp[1]}) < Y_OFFSET+Y_SIZE)) begin
+        mask_enable_pp[2] <= 1'b0;
+    end else begin
+        mask_enable_pp[2] <= 1'b1;
+    end
+    mask_enable_pp[3] <= mask_enable_pp[2];
+
+    DATA_linebuf_pp3 <= DATA_linebuf;
+
+    R_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[15:12], DATA_linebuf_pp3[3:0]));
+    G_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[11:8], DATA_linebuf_pp3[3:0]));
+    B_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[7:4], DATA_linebuf_pp3[3:0]));
+    
+    // Output
+    HSYNC_o <= HSYNC_pp[3];
+    VSYNC_o <= VSYNC_pp[3];
+    DE_o <= DE_pp[3];
 end
 
 endmodule

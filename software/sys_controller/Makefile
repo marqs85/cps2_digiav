@@ -143,6 +143,10 @@ ELF := av_controller.elf
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += av_controller.c
+C_SRCS += video_modes.c
+C_SRCS += avconfig.c
+C_SRCS += ic_drivers/adv7513/adv7513.c
+C_SRCS += ic_drivers/si5351/si5351.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -167,7 +171,7 @@ APP_CFLAGS_DEFINED_SYMBOLS :=
 APP_CFLAGS_UNDEFINED_SYMBOLS :=
 APP_CFLAGS_OPTIMIZATION := -Os
 APP_CFLAGS_DEBUG_LEVEL :=
-APP_CFLAGS_WARNINGS := -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-function
+APP_CFLAGS_WARNINGS := -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-function -Wno-packed-bitfield-compat
 APP_CFLAGS_USER_FLAGS := -fdata-sections -ffunction-sections -fshort-enums -fgnu89-inline
 
 APP_ASFLAGS_USER :=
@@ -183,7 +187,7 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../sys_controller_bsp/
 
 # List of application specific include directories, library directories and library names
-APP_INCLUDE_DIRS := ./ si5351
+APP_INCLUDE_DIRS := ./ ic_drivers/si5351 ic_drivers/adv7513
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 

@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Feb 10, 2020 8:08:14 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1581358094162</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/markus/Code/cps2_digiav/software/sys_controller_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Mar 16, 2020 4:51:14 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1584370274232</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>./</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../sys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
@@ -899,6 +899,12 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
+                <slaveDescriptor>sc_config_0</slaveDescriptor>
+                <addressRange>0x00000000 - 0x0000003F</addressRange>
+                <addressSpan>64</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>onchip_memory2_0</slaveDescriptor>
                 <addressRange>0x00004000 - 0x00007FFF</addressRange>
                 <addressSpan>16384</addressSpan>
@@ -908,24 +914,6 @@
                 <slaveDescriptor>i2c_opencores_0</slaveDescriptor>
                 <addressRange>0x00009000 - 0x0000901F</addressRange>
                 <addressSpan>32</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>pio_3</slaveDescriptor>
-                <addressRange>0x00009020 - 0x0000902F</addressRange>
-                <addressSpan>16</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>pio_2</slaveDescriptor>
-                <addressRange>0x00009030 - 0x0000903F</addressRange>
-                <addressSpan>16</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>pio_1</slaveDescriptor>
-                <addressRange>0x00009040 - 0x0000904F</addressRange>
-                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

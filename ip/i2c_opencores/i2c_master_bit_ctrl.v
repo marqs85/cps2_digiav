@@ -121,7 +121,7 @@
 //
 
 // synopsys translate_off
-`include "timescale.v"
+//`include "timescale.v"
 // synopsys translate_on
 
 `include "i2c_master_defines.v"
@@ -129,8 +129,11 @@
 module i2c_master_bit_ctrl(
 	clk, rst, nReset, 
 	clk_cnt, ena, cmd, cmd_ack, busy, al, din, dout,
-	scl_i, scl_o, scl_oen, sda_i, sda_o, sda_oen
+	scl_i, scl_o, scl_oen, sda_i, sda_o, sda_oen, spi_miso
 	);
+
+	// parameters
+	parameter dedicated_spi = 0;
 
 	//
 	// inputs & outputs
@@ -142,7 +145,7 @@ module i2c_master_bit_ctrl(
 
 	input [15:0] clk_cnt; // clock prescale value
 
-	input  [3:0] cmd;
+	input  [5:0] cmd;
 	output       cmd_ack; // command complete acknowledge
 	reg cmd_ack;
 	output       busy;    // i2c bus busy
@@ -164,6 +167,9 @@ module i2c_master_bit_ctrl(
 	output sda_oen;       // i2c data line output enable (active low)
 	reg sda_oen;
 
+    // SPI MISO
+    input spi_miso;
+    reg spi_rden;
 
 	//
 	// variable declarations
@@ -178,7 +184,7 @@ module i2c_master_bit_ctrl(
 	reg [15:0] cnt;             // clock divider counter (synthesis)
 
 	// state machine variable
-	reg [16:0] c_state;
+	reg [24:0] c_state;
 
 	//
 	// module body
@@ -249,7 +255,7 @@ module i2c_master_bit_ctrl(
 	  else
 	    begin
 	        sSCL <= #1 scl_i;
-	        sSDA <= #1 sda_i;
+	        sSDA <= #1 spi_rden ? spi_miso : sda_i;
 
 	        dSCL <= #1 sSCL;
 	        dSDA <= #1 sSDA;
@@ -294,7 +300,7 @@ module i2c_master_bit_ctrl(
 	  else if (rst)
 	    cmd_stop <= #1 1'b0;
 	  else if (clk_en)
-	    cmd_stop <= #1 cmd == `I2C_CMD_STOP;
+	    cmd_stop <= #1 (cmd & (`I2C_CMD_STOP|`SPI_CMD_WRITE|`SPI_CMD_READ)) != 6'b000000;
 
 	always @(posedge clk or negedge nReset)
 	  if (~nReset)
@@ -313,24 +319,33 @@ module i2c_master_bit_ctrl(
 	// generate statemachine
 
 	// nxt_state decoder
-	parameter [16:0] idle    = 17'b0_0000_0000_0000_0000;
-	parameter [16:0] start_a = 17'b0_0000_0000_0000_0001;
-	parameter [16:0] start_b = 17'b0_0000_0000_0000_0010;
-	parameter [16:0] start_c = 17'b0_0000_0000_0000_0100;
-	parameter [16:0] start_d = 17'b0_0000_0000_0000_1000;
-	parameter [16:0] start_e = 17'b0_0000_0000_0001_0000;
-	parameter [16:0] stop_a  = 17'b0_0000_0000_0010_0000;
-	parameter [16:0] stop_b  = 17'b0_0000_0000_0100_0000;
-	parameter [16:0] stop_c  = 17'b0_0000_0000_1000_0000;
-	parameter [16:0] stop_d  = 17'b0_0000_0001_0000_0000;
-	parameter [16:0] rd_a    = 17'b0_0000_0010_0000_0000;
-	parameter [16:0] rd_b    = 17'b0_0000_0100_0000_0000;
-	parameter [16:0] rd_c    = 17'b0_0000_1000_0000_0000;
-	parameter [16:0] rd_d    = 17'b0_0001_0000_0000_0000;
-	parameter [16:0] wr_a    = 17'b0_0010_0000_0000_0000;
-	parameter [16:0] wr_b    = 17'b0_0100_0000_0000_0000;
-	parameter [16:0] wr_c    = 17'b0_1000_0000_0000_0000;
-	parameter [16:0] wr_d    = 17'b1_0000_0000_0000_0000;
+	parameter [24:0] idle      = 25'b0_0000_0000_0000_0000_0000_0000;
+	parameter [24:0] start_a   = 25'b0_0000_0000_0000_0000_0000_0001;
+	parameter [24:0] start_b   = 25'b0_0000_0000_0000_0000_0000_0010;
+	parameter [24:0] start_c   = 25'b0_0000_0000_0000_0000_0000_0100;
+	parameter [24:0] start_d   = 25'b0_0000_0000_0000_0000_0000_1000;
+	parameter [24:0] start_e   = 25'b0_0000_0000_0000_0000_0001_0000;
+	parameter [24:0] stop_a    = 25'b0_0000_0000_0000_0000_0010_0000;
+	parameter [24:0] stop_b    = 25'b0_0000_0000_0000_0000_0100_0000;
+	parameter [24:0] stop_c    = 25'b0_0000_0000_0000_0000_1000_0000;
+	parameter [24:0] stop_d    = 25'b0_0000_0000_0000_0001_0000_0000;
+	parameter [24:0] rd_a      = 25'b0_0000_0000_0000_0010_0000_0000;
+	parameter [24:0] rd_b      = 25'b0_0000_0000_0000_0100_0000_0000;
+	parameter [24:0] rd_c      = 25'b0_0000_0000_0000_1000_0000_0000;
+	parameter [24:0] rd_d      = 25'b0_0000_0000_0001_0000_0000_0000;
+	parameter [24:0] wr_a      = 25'b0_0000_0000_0010_0000_0000_0000;
+	parameter [24:0] wr_b      = 25'b0_0000_0000_0100_0000_0000_0000;
+	parameter [24:0] wr_c      = 25'b0_0000_0000_1000_0000_0000_0000;
+	parameter [24:0] wr_d      = 25'b0_0000_0001_0000_0000_0000_0000;
+
+    parameter [24:0] spi_rd_a  = 25'b0_0000_0010_0000_0000_0000_0000;
+	parameter [24:0] spi_rd_b  = 25'b0_0000_0100_0000_0000_0000_0000;
+	parameter [24:0] spi_rd_c  = 25'b0_0000_1000_0000_0000_0000_0000;
+	parameter [24:0] spi_rd_d  = 25'b0_0001_0000_0000_0000_0000_0000;
+	parameter [24:0] spi_wr_a  = 25'b0_0010_0000_0000_0000_0000_0000;
+	parameter [24:0] spi_wr_b  = 25'b0_0100_0000_0000_0000_0000_0000;
+	parameter [24:0] spi_wr_c  = 25'b0_1000_0000_0000_0000_0000_0000;
+	parameter [24:0] spi_wr_d  = 25'b1_0000_0000_0000_0000_0000_0000;
 
 	always @(posedge clk or negedge nReset)
 	  if (!nReset)
@@ -340,6 +355,7 @@ module i2c_master_bit_ctrl(
 	        scl_oen <= #1 1'b1;
 	        sda_oen <= #1 1'b1;
 	        sda_chk <= #1 1'b0;
+            spi_rden <= #1 1'b0;
 	    end
 	  else if (rst | al)
 	    begin
@@ -348,6 +364,7 @@ module i2c_master_bit_ctrl(
 	        scl_oen <= #1 1'b1;
 	        sda_oen <= #1 1'b1;
 	        sda_chk <= #1 1'b0;
+            spi_rden <= #1 1'b0;
 	    end
 	  else
 	    begin
@@ -370,6 +387,12 @@ module i2c_master_bit_ctrl(
 
 	                  `I2C_CMD_READ:
 	                     c_state <= #1 rd_a;
+
+	                  `SPI_CMD_WRITE:
+	                     c_state <= #1 spi_wr_a;
+
+	                  `SPI_CMD_READ:
+	                     c_state <= #1 spi_rd_a;
 
 	                  default:
 	                    c_state <= #1 idle;
@@ -522,6 +545,78 @@ module i2c_master_bit_ctrl(
 	                scl_oen <= #1 1'b0; // set SCL low
 	                sda_oen <= #1 din;
 	                sda_chk <= #1 1'b0; // don't check SDA output (SCL low)
+	            end
+
+	            // read (last SPI bit)
+	            spi_rd_a:
+	            begin
+	                c_state <= #1 spi_rd_b;
+	                scl_oen <= #1 1'b0; // set SCL low
+	                sda_oen <= #1 1'b1; // tri-state SDA
+	                sda_chk <= #1 1'b0; // don't check SDA output
+                    spi_rden <= #1 1'b0;    //clear SPI read enable
+	            end
+
+	            spi_rd_b:
+	            begin
+	                c_state <= #1 spi_rd_c;
+	                scl_oen <= #1 1'b0; // keep SCL low
+	                sda_oen <= #1 1'b1; // keep SDA tri-stated
+	                sda_chk <= #1 1'b0; // don't check SDA output
+                    spi_rden <= #1 1'b1;    //set SPI read enable
+	            end
+
+	            spi_rd_c:
+	            begin
+	                c_state <= #1 spi_rd_d;
+	                scl_oen <= #1 1'b1; // set SCL high
+	                sda_oen <= #1 1'b1; // keep SDA tri-stated
+	                sda_chk <= #1 1'b0; // don't check SDA output
+                    spi_rden <= #1 1'b1;    //set SPI read enable
+	            end
+
+	            spi_rd_d:
+	            begin
+	                c_state <= #1 idle;
+	                cmd_ack <= #1 1'b1;
+	                scl_oen <= #1 1'b1; // tri-state SCL
+	                sda_oen <= #1 1'b1; // keep SDA tri-stated
+	                sda_chk <= #1 1'b0; // don't check SDA output
+                    spi_rden <= #1 1'b0;    //clear SPI read enable
+	            end
+
+	            // write (last SPI bit)
+	            spi_wr_a:
+	            begin
+	                c_state <= #1 spi_wr_b;
+	                scl_oen <= #1 1'b0; // set SCL low
+	                sda_oen <= #1 dedicated_spi ? din : 1'b1;  // keep SDA tri-stated by default to avoid generating I2C start condition
+	                sda_chk <= #1 1'b0; // don't check SDA output
+	            end
+
+	            spi_wr_b:
+	            begin
+	                c_state <= #1 spi_wr_c;
+	                scl_oen <= #1 1'b0; // keep SCL low
+	                sda_oen <= #1 din;  // set/keep SDA
+	                sda_chk <= #1 1'b0; // don't check SDA output
+	            end
+
+	            spi_wr_c:
+	            begin
+	                c_state <= #1 spi_wr_d;
+	                scl_oen <= #1 1'b1; // keep SCL high
+	                sda_oen <= #1 din;  // keep SDA
+	                sda_chk <= #1 1'b0; // don't check SDA output
+	            end
+
+	            spi_wr_d:
+	            begin
+	                c_state <= #1 idle;
+	                cmd_ack <= #1 1'b1;
+	                scl_oen <= #1 1'b1; // tri-state SCL
+	                sda_oen <= #1 dedicated_spi ? din : 1'b1;  // tri-state SDA by default to release bus for I2C mode
+	                sda_chk <= #1 1'b0; // don't check SDA output
 	            end
 
 	            default:

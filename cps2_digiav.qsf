@@ -143,13 +143,12 @@ set_location_assignment PIN_24 -to PCLK_SI
 
 
 set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
-set_global_assignment -name VERILOG_FILE rtl/syncgen.v
-set_global_assignment -name VERILOG_FILE rtl/btn_debounce.v
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
 set_global_assignment -name SDC_FILE cps2_digiav.sdc
 set_global_assignment -name QIP_FILE rtl/linebuf.qip
-set_global_assignment -name VERILOG_FILE rtl/timescale.v
+set_global_assignment -name VERILOG_FILE rtl/cps2_frontend.v
 set_global_assignment -name VERILOG_FILE rtl/scanconverter.v
+set_global_assignment -name VERILOG_FILE rtl/btn_debounce.v
 set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_2x.v
 set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
 set_global_assignment -name VERILOG_FILE rtl/i2s_tx_asrc.v

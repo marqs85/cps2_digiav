@@ -69,7 +69,7 @@ int I2C_start(alt_u32 base, alt_u32 add, alt_u32 read)
   IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_STA_MSK | I2C_OPENCORES_CR_WR_MSK );
 
           /* wait for the trnasaction to be over.*/
-  while( IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK);
+  while (IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK) {}
 
          /* now check to see if the address was acknowledged */
    if(IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_RXNACK_MSK)
@@ -119,7 +119,7 @@ alt_u32 I2C_read(alt_u32 base,alt_u32 last)
           IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_RD_MSK );
   }
           /* wait for the trnasaction to be over.*/
-  while( IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK);
+  while (IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK) {}
 
          /* now read the data */
         return (IORD_I2C_OPENCORES_RXR(base));
@@ -152,17 +152,17 @@ alt_u32 I2C_write(alt_u32 base,alt_u8 data, alt_u32 last)
 
   if( last)
   {
-               /* start a read and no ack and stop bit*/
+               /* start a write with ack and stop bit*/
            IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_WR_MSK |
                I2C_OPENCORES_CR_STO_MSK);
   }
   else
   {
-          /* start read*/
+          /* start write with ack */
           IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_WR_MSK );
   }
            /* wait for the trnasaction to be over.*/
-  while( IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK);
+  while (IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK) {}
 
          /* now check to see if the address was acknowledged */
    if(IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_RXNACK_MSK)
@@ -180,4 +180,33 @@ alt_u32 I2C_write(alt_u32 base,alt_u8 data, alt_u32 last)
        return (I2C_ACK);
    }
 
+}
+
+void SPI_read(alt_u32 base, alt_u8 *rdata, int len)
+{
+    int i;
+
+    for (i=0; i<len; i++) {
+        /* start read*/
+        IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_RD_MSK|I2C_OPENCORES_CR_NACK_MSK|I2C_OPENCORES_CR_SPIM_MSK );
+        /* wait for the trnasaction to be over.*/
+        while( IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK);
+        /* now read the data */
+        if (rdata)
+            rdata[i] = IORD_I2C_OPENCORES_RXR(base);
+    }
+}
+
+void SPI_write(alt_u32 base, alt_u8 *wdata, int len)
+{
+    int i;
+
+    for (i=0; i<len; i++) {
+        /* transmit the data*/
+        IOWR_I2C_OPENCORES_TXR(base, wdata[i]);
+        /* start write */
+        IOWR_I2C_OPENCORES_CR(base, I2C_OPENCORES_CR_WR_MSK|I2C_OPENCORES_CR_NACK_MSK|I2C_OPENCORES_CR_SPIM_MSK );
+        /* wait for the trnasaction to be over.*/
+        while( IORD_I2C_OPENCORES_SR(base) & I2C_OPENCORES_SR_TIP_MSK);
+    }
 }

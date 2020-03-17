@@ -1,16 +1,17 @@
 //
 // fixed for 9.1 jan 21 2010 cruben
 //
-`include "timescale.v"
+//`include "timescale.v"
 `include "i2c_master_defines.v"
 
 module i2c_opencores
 (
 	wb_clk_i, wb_rst_i, wb_adr_i, wb_dat_i, wb_dat_o,
 	wb_we_i, wb_stb_i, /*wb_cyc_i,*/ wb_ack_o, wb_inta_o,
-	scl_pad_io, sda_pad_io
+	scl_pad_io, sda_pad_io, spi_miso_pad_i
 );
 
+parameter dedicated_spi = 0;
 
 // Common bus signals
 input        wb_clk_i;		// WISHBONE clock
@@ -30,6 +31,9 @@ output       wb_inta_o; 	// WISHBONE interrupt output
 inout        scl_pad_io;	// I2C clock io
 inout        sda_pad_io;	// I2C data io
 
+// SPI MISO
+input spi_miso_pad_i;
+
 wire        wb_cyc_i;		// WISHBONE cycle input
 // Wire tri-state scl/sda
 wire scl_pad_i;
@@ -39,7 +43,7 @@ wire scl_padoen_o;
 
 assign wb_cyc_i = wb_stb_i;
 assign scl_pad_i = scl_pad_io;
-assign scl_pad_io = scl_padoen_o ? 1'bZ : scl_pad_o;
+assign scl_pad_io = scl_padoen_o ? (dedicated_spi ? 1'b1 : 1'bZ) : scl_pad_o;
 
 wire sda_pad_i;
 wire sda_pad_o;
@@ -47,7 +51,7 @@ wire sda_pad_io;
 wire sda_padoen_o;
 
 assign sda_pad_i = sda_pad_io;
-assign sda_pad_io = sda_padoen_o ? 1'bZ : sda_pad_o;
+assign sda_pad_io = sda_padoen_o ? (dedicated_spi ? 1'b1 : 1'bZ) : sda_pad_o;
 
 // Avalon doesn't have an asynchronous reset
 //  set it to be inactive and just use synchronous reset
@@ -57,7 +61,7 @@ wire arst_i;
 assign arst_i = 1'b1;
 
 // Connect the top level I2C core
-i2c_master_top i2c_master_top_inst
+i2c_master_top #(.dedicated_spi(dedicated_spi)) i2c_master_top_inst
 (
 	.wb_clk_i(wb_clk_i), .wb_rst_i(wb_rst_i), .arst_i(arst_i),
 	
@@ -66,7 +70,8 @@ i2c_master_top i2c_master_top_inst
 	.wb_ack_o(wb_ack_o), .wb_inta_o(wb_inta_o),
 	
 	.scl_pad_i(scl_pad_i), .scl_pad_o(scl_pad_o), .scl_padoen_o(scl_padoen_o),
-	.sda_pad_i(sda_pad_i), .sda_pad_o(sda_pad_o), .sda_padoen_o(sda_padoen_o)
+	.sda_pad_i(sda_pad_i), .sda_pad_o(sda_pad_o), .sda_padoen_o(sda_padoen_o),
+    .spi_miso_pad_i(spi_miso_pad_i)
 );
 
 endmodule

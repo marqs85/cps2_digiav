@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="cps2_digiav_sw" InternalType="" Version="10.0.0">
+<CodeLite_Project Name="cps2_digiav_sw" InternalType="" Version="11000">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
@@ -26,16 +26,38 @@
  }]]]>
     </Plugin>
   </Plugins>
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp]]>
+    </Extensions>
+    <Topleveldir>/home/markus/Code/cps2_digiav/software/sys_controller</Topleveldir>
+  </Reconciliation>
   <Description/>
   <Dependencies/>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>
   <VirtualDirectory Name="sys_controller">
+    <File Name="sys_controller/avconfig.h"/>
+    <File Name="sys_controller/avconfig.c"/>
+    <File Name="sys_controller/video_modes.h"/>
+    <File Name="sys_controller/video_modes.c"/>
+    <VirtualDirectory Name="ic_drivers">
+      <VirtualDirectory Name="si5351">
+        <File Name="sys_controller/ic_drivers/si5351/si5351_regs.h"/>
+        <File Name="sys_controller/ic_drivers/si5351/si5351.h"/>
+        <File Name="sys_controller/ic_drivers/si5351/si5351.c"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="adv7513">
+        <File Name="sys_controller/ic_drivers/adv7513/adv7513_regs.h"/>
+        <File Name="sys_controller/ic_drivers/adv7513/adv7513.h"/>
+        <File Name="sys_controller/ic_drivers/adv7513/adv7513.c"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
     <File Name="sys_controller/av_controller.c"/>
     <File Name="sys_controller/sysconfig.h"/>
-    <VirtualDirectory Name="si5351">
-      <File Name="sys_controller/si5351/si5351_regs.h"/>
-    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
@@ -66,10 +88,9 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <Target Name="compile_image">make mem_init_generate</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make APP_CFLAGS_DEFINED_SYMBOLS="-DNO_I2C_DEBUG -DHDMITX -DDEBUG"</BuildCommand>
+        <BuildCommand>make APP_CFLAGS_DEFINED_SYMBOLS="-DDEBUG"; make mem_init_generate</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
@@ -109,7 +130,7 @@
         <Target Name="compile_image">make mem_init_generate</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make</BuildCommand>
+        <BuildCommand>make; make mem_init_generate</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

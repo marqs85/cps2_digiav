@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Project Name="cps2_digiav_sw_bsp" InternalType="">
+<CodeLite_Project Name="cps2_digiav_sw_bsp" InternalType="" Version="11000">
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
