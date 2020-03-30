@@ -91,17 +91,20 @@ reg [8:0] ypos_i_prev;
 reg [8:0] xpos_i_wraddr;
 reg [15:0] DATA_i_wrdata;
 
-reg [15:0] DATA_linebuf_pp3;
+reg [15:0] DATA_linebuf_pp4;
+reg [4:0] fade_mult_pp4;
 
-reg HSYNC_pp[1:3] /* synthesis ramstyle = "logic" */;
-reg VSYNC_pp[1:3] /* synthesis ramstyle = "logic" */;
-reg DE_pp[1:3] /* synthesis ramstyle = "logic" */;
-reg [10:0] xpos_pp[1:3] /* synthesis ramstyle = "logic" */;
-reg [10:0] ypos_pp[1:3] /* synthesis ramstyle = "logic" */;
+reg HSYNC_pp[1:4] /* synthesis ramstyle = "logic" */;
+reg VSYNC_pp[1:4] /* synthesis ramstyle = "logic" */;
+reg DE_pp[1:4] /* synthesis ramstyle = "logic" */;
+reg [10:0] xpos_pp[1:4] /* synthesis ramstyle = "logic" */;
+reg [10:0] ypos_pp[1:4] /* synthesis ramstyle = "logic" */;
 /*reg [7:0] R_pp[4:4]
 reg [7:0] G_pp[4:4]
 reg [7:0] B_pp[4:4]*/
-reg mask_enable_pp[2:3] /* synthesis ramstyle = "logic" */;
+reg mask_enable_pp[2:4] /* synthesis ramstyle = "logic" */;
+
+reg [10:0] xpos_lb_start;
 
 assign PCLK_o = PCLK_OUT_i;
 
@@ -123,10 +126,11 @@ linebuf linebuf_rgb (
 // Fade function for CPS1/2
 function [7:0] apply_fade;
     input [3:0] data;
-    input [3:0] fade;
+    input [4:0] fade_m;
     begin
         //apply_fade = {data, data} >> (3'h7-fade[3:1]);
-        apply_fade = {4'h0, data} * ({4'h0, fade} + 8'h2);
+        //apply_fade = {4'h0, data} * ({4'h0, fade} + 8'h2);
+        apply_fade = {4'h0, data} * {3'h0, fade_m};
     end
 endfunction
 
@@ -177,13 +181,13 @@ always @(posedge PCLK_OUT_i) begin
 end
 
 // Postprocess pipeline structure
-// |    0     |    1     |    2    |    3    |
-// |----------|----------|---------|---------|
-// | SYNC/DE  |          |         |         |
-// | X/Y POS  |          |         |         |
-// |          |          | LINEBUF |         |
-// |          |   MASK   |         |         |
-// |          |          |         |  FADE   |
+// |    0     |    1     |    2    |    3    |    4    |
+// |----------|----------|---------|---------|---------|
+// | SYNC/DE  |          |         |         |         |
+// | X/Y POS  |          |         |         |         |
+// |          |   MASK   |         |         |         |
+// |          |          | LINEBUF |         |         |
+// |          |          |         |  FADE   |  FADE   |
 
 
 // Pipeline stage 0
@@ -197,6 +201,7 @@ always @(posedge PCLK_OUT_i) begin
             ypos_pp[1] <= 0;
             ypos_lb <= Y_START_LB;
             y_ctr <= 0;
+            xpos_lb_start <= (X_OFFSET < 10'sd0) ? 11'd0 : {1'b0, X_OFFSET};
         end else begin
             if (ypos_pp[1] < V_ACTIVE) begin
                 ypos_pp[1] <= ypos_pp[1] + 1'b1;
@@ -220,7 +225,7 @@ always @(posedge PCLK_OUT_i) begin
             xpos_pp[1] <= xpos_pp[1] + 1'b1;
         end
 
-        if (($signed({1'b0, xpos_pp[1]}) >= X_OFFSET)) begin
+        if (xpos_pp[1] >= xpos_lb_start) begin
             if (x_ctr == X_RPT) begin
                 xpos_lb <= xpos_lb + 1'b1 + X_SKIP;
                 x_ctr <= 0;
@@ -235,12 +240,12 @@ end
 integer pp_idx;
 always @(posedge PCLK_OUT_i) begin
 
-    for(pp_idx = 2; pp_idx <= 3; pp_idx = pp_idx+1) begin
+    for(pp_idx = 2; pp_idx <= 4; pp_idx = pp_idx+1) begin
         HSYNC_pp[pp_idx] <= HSYNC_pp[pp_idx-1];
         VSYNC_pp[pp_idx] <= VSYNC_pp[pp_idx-1];
         DE_pp[pp_idx] <= DE_pp[pp_idx-1];
     end
-    for(pp_idx = 2; pp_idx <= 3; pp_idx = pp_idx+1) begin
+    for(pp_idx = 2; pp_idx <= 4; pp_idx = pp_idx+1) begin
         xpos_pp[pp_idx] <= xpos_pp[pp_idx-1];
         ypos_pp[pp_idx] <= ypos_pp[pp_idx-1];
     end
@@ -250,18 +255,21 @@ always @(posedge PCLK_OUT_i) begin
     end else begin
         mask_enable_pp[2] <= 1'b1;
     end
-    mask_enable_pp[3] <= mask_enable_pp[2];
+    for(pp_idx = 3; pp_idx <= 4; pp_idx = pp_idx+1) begin
+        mask_enable_pp[pp_idx] <= mask_enable_pp[pp_idx-1];
+    end
 
-    DATA_linebuf_pp3 <= DATA_linebuf;
+    DATA_linebuf_pp4 <= DATA_linebuf;
+    fade_mult_pp4 <= {1'b0, DATA_linebuf[3:0]} + 5'h2;
 
-    R_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[15:12], DATA_linebuf_pp3[3:0]));
-    G_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[11:8], DATA_linebuf_pp3[3:0]));
-    B_o <= testpattern_enable ? (xpos_pp[3] ^ ypos_pp[3]) : (mask_enable_pp[3] ? 8'h00 : apply_fade(DATA_linebuf_pp3[7:4], DATA_linebuf_pp3[3:0]));
+    R_o <= testpattern_enable ? (xpos_pp[4] ^ ypos_pp[4]) : (mask_enable_pp[4] ? 8'h00 : apply_fade(DATA_linebuf_pp4[15:12], fade_mult_pp4));
+    G_o <= testpattern_enable ? (xpos_pp[4] ^ ypos_pp[4]) : (mask_enable_pp[4] ? 8'h00 : apply_fade(DATA_linebuf_pp4[11:8], fade_mult_pp4));
+    B_o <= testpattern_enable ? (xpos_pp[4] ^ ypos_pp[4]) : (mask_enable_pp[4] ? 8'h00 : apply_fade(DATA_linebuf_pp4[7:4], fade_mult_pp4));
     
     // Output
-    HSYNC_o <= HSYNC_pp[3];
-    VSYNC_o <= VSYNC_pp[3];
-    DE_o <= DE_pp[3];
+    HSYNC_o <= HSYNC_pp[4];
+    VSYNC_o <= VSYNC_pp[4];
+    DE_o <= DE_pp[4];
 end
 
 endmodule

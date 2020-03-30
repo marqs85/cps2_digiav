@@ -1,6 +1,6 @@
 ### Clocks ###
 
-create_clock -period 165MHz -name pclk_si [get_ports PCLK_SI]
+create_clock -period 183MHz -name pclk_si [get_ports PCLK_SI]
 create_clock -period 24.576MHz -name mclk [get_ports MCLK_SI]
 create_clock -period 16MHz -name clk16 [get_ports PCLK2x_in]
 create_clock -period 5MHz -name clk5 [get_ports I2S_BCK]
@@ -68,4 +68,4 @@ set_input_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tdi]
 #constrain the TMS port
 set_input_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tms]
 #constrain the TDO port
-#set_output_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tdo]
+set_output_delay -clock altera_reserved_tck 20 [get_ports altera_reserved_tdo]
