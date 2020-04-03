@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="sys" kind="sys" version="1.0" fabric="QSYS">
  <!-- Format version 19.1 670 (Future versions may contain additional information.) -->
- <!-- 2020.03.16.13:44:30 -->
+ <!-- 2020.04.04.00:52:13 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1584359070</value>
+  <value>1585950733</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -7199,40 +7199,16 @@ parameters are a RESULT of the module parameters. -->
    <type>conduit</type>
    <isStart>false</isStart>
    <port>
-    <name>sc_status_i</name>
+    <name>fe_status_i</name>
     <direction>Input</direction>
     <width>32</width>
-    <role>sc_status_i</role>
+    <role>fe_status_i</role>
    </port>
    <port>
-    <name>sc_status2_i</name>
+    <name>fe_status2_i</name>
     <direction>Input</direction>
     <width>32</width>
-    <role>sc_status2_i</role>
-   </port>
-   <port>
-    <name>lt_status_i</name>
-    <direction>Input</direction>
-    <width>32</width>
-    <role>lt_status_i</role>
-   </port>
-   <port>
-    <name>h_in_config_o</name>
-    <direction>Output</direction>
-    <width>32</width>
-    <role>h_in_config_o</role>
-   </port>
-   <port>
-    <name>h_in_config2_o</name>
-    <direction>Output</direction>
-    <width>32</width>
-    <role>h_in_config2_o</role>
-   </port>
-   <port>
-    <name>v_in_config_o</name>
-    <direction>Output</direction>
-    <width>32</width>
-    <role>v_in_config_o</role>
+    <role>fe_status2_i</role>
    </port>
    <port>
     <name>misc_config_o</name>
@@ -7253,34 +7229,34 @@ parameters are a RESULT of the module parameters. -->
     <role>sl_config2_o</role>
    </port>
    <port>
-    <name>h_out_config_o</name>
+    <name>hv_out_config_o</name>
     <direction>Output</direction>
     <width>32</width>
-    <role>h_out_config_o</role>
+    <role>hv_out_config_o</role>
    </port>
    <port>
-    <name>h_out_config2_o</name>
+    <name>hv_out_config2_o</name>
     <direction>Output</direction>
     <width>32</width>
-    <role>h_out_config2_o</role>
+    <role>hv_out_config2_o</role>
    </port>
    <port>
-    <name>v_out_config_o</name>
+    <name>hv_out_config3_o</name>
     <direction>Output</direction>
     <width>32</width>
-    <role>v_out_config_o</role>
-   </port>
-   <port>
-    <name>v_out_config2_o</name>
-    <direction>Output</direction>
-    <width>32</width>
-    <role>v_out_config2_o</role>
+    <role>hv_out_config3_o</role>
    </port>
    <port>
     <name>xy_out_config_o</name>
     <direction>Output</direction>
     <width>32</width>
     <role>xy_out_config_o</role>
+   </port>
+   <port>
+    <name>xy_out_config2_o</name>
+    <direction>Output</direction>
+    <width>32</width>
+    <role>xy_out_config2_o</role>
    </port>
   </interface>
  </module>

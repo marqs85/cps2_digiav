@@ -44,7 +44,7 @@ typedef enum {
 } status_t;
 
 typedef struct {
-    uint8_t lm_conf_idx;
+    ad_mode_id_t ad_mode_id;
     adv7513_config adv7513_cfg;
 } __attribute__((packed)) avconfig_t;
 

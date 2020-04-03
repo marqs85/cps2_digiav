@@ -29,7 +29,7 @@ avconfig_t cc, tc;
 
 // Default configuration
 const avconfig_t tc_default = {
-    .lm_conf_idx = 4,
+    .ad_mode_id = 4,
 };
 
 int reset_target_avconfig() {
@@ -58,7 +58,7 @@ int set_default_avconfig(int update_cc)
 status_t update_avconfig() {
     status_t status = NO_CHANGE;
 
-    if ((tc.lm_conf_idx != cc.lm_conf_idx))
+    if ((tc.ad_mode_id != cc.ad_mode_id))
         status = (status < MODE_CHANGE) ? MODE_CHANGE : status;
 
     memcpy(&cc, &tc, sizeof(avconfig_t));

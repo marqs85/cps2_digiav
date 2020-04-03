@@ -34,8 +34,15 @@ module cps2_frontend (
     output reg DE_o,
     output reg [8:0] xpos,
     output reg [8:0] ypos,
-    output reg frame_change
+    output reg frame_change,
+    output [9:0] h_active,
+    output [9:0] v_active,
+    output reg [9:0] h_total,
+    output reg [9:0] v_total,
+    output [4:0] mclk_cfg_id
 );
+
+`include "mclk_cfg_ids.vh"
 
 localparam CPS2_H_TOTAL     = 512;
 localparam CPS2_H_SYNCLEN   = 8'd36;
@@ -62,6 +69,12 @@ wire [8:0] H_ACTIVE = CPS2_H_ACTIVE;
 wire [2:0] V_SYNCLEN = CPS2_V_SYNCLEN;
 wire [5:0] V_BACKPORCH = CPS2_V_BACKPORCH;
 wire [8:0] V_ACTIVE = CPS2_V_ACTIVE;
+
+assign h_active = CPS2_H_ACTIVE;
+assign v_active = CPS2_V_ACTIVE;
+assign h_total = CPS2_H_TOTAL;
+assign v_total = CPS2_V_TOTAL;
+assign mclk_cfg_id = CPS2_MCLK_CFG;
 
 always @(posedge PCLK_i) begin
     if (h_ctr_divctr) begin

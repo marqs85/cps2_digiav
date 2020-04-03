@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -41,6 +41,11 @@
 
 #define SI5351_BASE (0xC0>>1)
 
+typedef struct {
+    uint32_t si_clkin_freq;
+    si5351_ms_config_t si_mclk_conf;
+} clk_config_t;
+
 si5351_dev si_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
                      .i2c_addr = SI5351_BASE,
                      .xtal_freq = 0LU};
@@ -53,61 +58,56 @@ adv7513_dev advtx_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
 
 volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
 
+input_mode_t input_mode;
+
+clk_config_t clk_configs[] = { \
+    /* CPS1/2 */
+    { 16000000UL, {6565, 111, 125, 36, 0, 0, 0, 0, 0} },  \
+    /* CPS3 */
+    { 42954500UL, {4760, 72584, 85909, 36, 0, 0, 1, 0, 0} } \
+};
+
 
 void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf)
 {
-    h_in_config_reg h_in_config = {.data=0x00000000};
-    h_in_config2_reg h_in_config2 = {.data=0x00000000};
-    v_in_config_reg v_in_config = {.data=0x00000000};
     misc_config_reg misc_config = {.data=0x00000000};
     sl_config_reg sl_config = {.data=0x00000000};
     sl_config2_reg sl_config2 = {.data=0x00000000};
-    h_out_config_reg h_out_config = {.data=0x00000000};
-    h_out_config2_reg h_out_config2 = {.data=0x00000000};
-    v_out_config_reg v_out_config = {.data=0x00000000};
-    v_out_config2_reg v_out_config2 = {.data=0x00000000};
-    xy_out_config_reg xy_out_config = {.data=0x00000000};
-
-    // Set input params
-    h_in_config.h_synclen = vm_in->timings.h_synclen;
-    h_in_config.h_backporch = vm_in->timings.h_backporch;
-    h_in_config.h_active = vm_in->timings.h_active;
-    h_in_config2.h_total = vm_in->timings.h_total;
-    v_in_config.v_synclen = vm_in->timings.v_synclen;
-    v_in_config.v_backporch = vm_in->timings.v_backporch;
-    v_in_config.v_active = vm_in->timings.v_active;
+    hv_config_reg hv_out_config = {.data=0x00000000};
+    hv_config2_reg hv_out_config2 = {.data=0x00000000};
+    hv_config3_reg hv_out_config3 = {.data=0x00000000};
+    xy_config_reg xy_out_config = {.data=0x00000000};
+    xy_config2_reg xy_out_config2 = {.data=0x00000000};
 
     // Set output params
-    h_out_config.h_synclen = vm_out->timings.h_synclen;
-    h_out_config.h_backporch = vm_out->timings.h_backporch;
-    h_out_config.h_active = vm_out->timings.h_active;
-    h_out_config.x_rpt = vm_conf->x_rpt;
-    h_out_config2.h_total = vm_out->timings.h_total;
-    h_out_config2.x_offset = vm_conf->x_offset;
-    h_out_config2.x_skip = vm_conf->x_skip;
-    v_out_config.v_synclen = vm_out->timings.v_synclen;
-    v_out_config.v_backporch = vm_out->timings.v_backporch;
-    v_out_config.v_active = vm_out->timings.v_active;
-    v_out_config.y_rpt = vm_conf->y_rpt;
-    v_out_config2.v_total = vm_out->timings.v_total;
-    v_out_config2.v_startline = vm_conf->framesync_line;
-    v_out_config2.y_offset = vm_conf->y_offset;
+    hv_out_config.h_total = vm_out->timings.h_total;
+    hv_out_config.h_active = vm_out->timings.h_active;
+    hv_out_config.h_backporch = vm_out->timings.h_backporch;
+    hv_out_config2.h_synclen = vm_out->timings.h_synclen;
+    hv_out_config2.v_total = vm_out->timings.v_total;
+    hv_out_config2.v_active = vm_out->timings.v_active;
+    hv_out_config3.v_backporch = vm_out->timings.v_backporch;
+    hv_out_config3.v_synclen = vm_out->timings.v_synclen;
+    hv_out_config3.v_startline = vm_conf->framesync_line;
 
     xy_out_config.x_size = vm_conf->x_size;
     xy_out_config.y_size = vm_conf->y_size;
-    xy_out_config.y_start_lb = vm_conf->linebuf_startline;
+    xy_out_config.x_offset = vm_conf->x_offset;
+    xy_out_config2.y_offset = vm_conf->y_offset;
+    xy_out_config2.x_start_lb = vm_conf->x_start_lb;
+    xy_out_config2.y_start_lb = vm_conf->linebuf_startline;
+    xy_out_config2.x_rpt = vm_conf->x_rpt;
+    xy_out_config2.y_rpt = vm_conf->y_rpt;
+    xy_out_config2.x_skip = vm_conf->x_skip;
 
-    sc->h_in_config = h_in_config;
-    sc->h_in_config2 = h_in_config2;
-    sc->v_in_config = v_in_config;
     sc->misc_config = misc_config;
     sc->sl_config = sl_config;
     sc->sl_config2 = sl_config2;
-    sc->h_out_config = h_out_config;
-    sc->h_out_config2 = h_out_config2;
-    sc->v_out_config = v_out_config;
-    sc->v_out_config2 = v_out_config2;
+    sc->hv_out_config = hv_out_config;
+    sc->hv_out_config2 = hv_out_config2;
+    sc->hv_out_config3 = hv_out_config3;
     sc->xy_out_config = xy_out_config;
+    sc->xy_out_config2 = xy_out_config2;
 }
 
 // Initialize hardware
@@ -126,15 +126,31 @@ int init_hw()
     return 0;
 }
 
+int check_input_mode_change() {
+    int mode_changed = 0;
+
+    input_mode_t target_mode = {0};
+
+    target_mode.h_active = sc->fe_status.h_active;
+    target_mode.v_active = sc->fe_status.v_active;
+    target_mode.h_total = sc->fe_status.h_total;
+    target_mode.v_total = sc->fe_status2.v_total;
+
+    if (memcmp(&input_mode, &target_mode, sizeof(input_mode_t)))
+        mode_changed = 1;
+
+    memcpy(&input_mode, &target_mode, sizeof(input_mode_t));
+
+    return mode_changed;
+}
+
 int main()
 {
-    int ret, init_mode=1;
+    int ret, input_mode_change, output_mode_id;
     status_t status;
     mode_data_t vmode_in, vmode_out;
     vm_mult_config_t vm_conf;
     avconfig_t *cur_avconfig;
-    lm_conf_t *cur_lm_conf;
-    si5351_ms_config_t mclk_cfg = {6565, 111, 125, 36, 0, 0, 0, 0, 0};
 
     uint32_t btn_vec, btn_vec_prev=0;
 
@@ -148,7 +164,7 @@ int main()
     }
 
     // configure audio MCLK
-    si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, &mclk_cfg);
+    si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, &clk_configs[sc->fe_status2.mclk_cfg_id].si_mclk_conf);
 
     cur_avconfig = get_current_avconfig();
 
@@ -158,34 +174,37 @@ int main()
 
         if ((btn_vec_prev == 0) && btn_vec) {
             if (btn_vec & PB0_BIT) {
-                step_lm_conf(1);
+                step_ad_mode(1);
             }
             if (btn_vec & PB1_BIT) {
-                step_lm_conf(0);
+                step_ad_mode(0);
             }
         }
 
         status = update_avconfig();
 
-        if ((status == MODE_CHANGE) || init_mode) {
-            cur_lm_conf = select_lm_conf(cur_avconfig->lm_conf_idx);
-            get_mode(512, 262, cur_lm_conf, &vm_conf, &vmode_in, &vmode_out);
-            printf("Mode %s selected\n", vmode_out.name);
+        input_mode_change = check_input_mode_change();
 
-            if (vmode_out.si_pclk_mult != 0)
-                si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, 16000000UL, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
-            else
-                si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
+        if ((status == MODE_CHANGE) || input_mode_change) {
+            output_mode_id = get_output_mode(&input_mode, cur_avconfig->ad_mode_id, &vm_conf, &vmode_in, &vmode_out);
 
-            update_sc_config(&vmode_in, &vmode_out, &vm_conf);
-            adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
+            if (output_mode_id != -1) {
+                printf("Output mode %d (%s) selected\n", output_mode_id, vmode_out.name);
+
+                if (vmode_out.si_pclk_mult != 0)
+                    si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, clk_configs[sc->fe_status2.mclk_cfg_id].si_clkin_freq, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
+                else
+                    si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
+
+                update_sc_config(&vmode_in, &vmode_out, &vm_conf);
+                adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
+            }
         }
 
         adv7513_check_hpd_power(&advtx_dev);
         adv7513_update_config(&advtx_dev, &cur_avconfig->adv7513_cfg);
 
         btn_vec_prev = btn_vec;
-        init_mode = 0;
 
         usleep(WAITLOOP_SLEEP_US);
     }

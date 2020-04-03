@@ -66,12 +66,9 @@ wire DE_out;
 wire pll_locked;
 wire clk25;
 
-wire I2S_WS_2x;
-wire I2S_DATA_2x;
-wire I2S_BCK_out;
-wire [7:0] clkcnt_out;
+wire I2S_BCK_o, I2S_DATA_o, I2S_WS_o; 
 
-wire [31:0] h_in_config, h_in_config2, v_in_config, h_out_config, h_out_config2, v_out_config, v_out_config2, xy_out_config;
+wire [31:0] misc_config, sl_config, sl_config2, hv_out_config, hv_out_config2, hv_out_config3, xy_out_config, xy_out_config2, fe_status, fe_status2;
 
 wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
@@ -117,7 +114,12 @@ cps2_frontend u_cps2_frontend (
     .DE_o(CPS_DE_post),
     .xpos(CPS_fe_xpos),
     .ypos(CPS_fe_ypos),
-    .frame_change(CPS_fe_frame_change)
+    .frame_change(CPS_fe_frame_change),
+    .h_active(fe_status[9:0]),
+    .v_active(fe_status[19:10]),
+    .h_total(fe_status[29:20]),
+    .v_total(fe_status2[9:0]),
+    .mclk_cfg_id(fe_status2[14:10])
 );
 
 //assign HDMI_TX_RST_N = reset_n;
@@ -125,9 +127,9 @@ assign HDMI_TX_DE = DE_out;
 assign HDMI_TX_PCLK = PCLK_out;
 assign HDMI_TX_HS = HSYNC_out;
 assign HDMI_TX_VS = VSYNC_out;
-assign HDMI_TX_I2S_DATA = I2S_DATA_2x;
-assign HDMI_TX_I2S_BCK = I2S_BCK_out;
-assign HDMI_TX_I2S_WS = I2S_WS_2x;
+assign HDMI_TX_I2S_DATA = I2S_DATA_o;
+assign HDMI_TX_I2S_BCK = I2S_BCK_o;
+assign HDMI_TX_I2S_WS = I2S_WS_o;
 //assign HDMI_TX_I2S_MCLK = 0;
 assign HDMI_TX_RD = R_out;
 assign HDMI_TX_GD = G_out;
@@ -139,20 +141,16 @@ sys sys_inst(
     .pio_0_ctrl_in_export               ({BTN_volminus_debounced, BTN_volplus_debounced, 30'h0}),
     .i2c_opencores_0_export_scl_pad_io  (scl),
     .i2c_opencores_0_export_sda_pad_io  (sda),
-    .sc_config_0_sc_if_sc_status_i          (32'h0),
-    .sc_config_0_sc_if_sc_status2_i         (32'h0),
-    .sc_config_0_sc_if_lt_status_i          (32'h00000000),
-    .sc_config_0_sc_if_h_in_config_o        (h_in_config),
-    .sc_config_0_sc_if_h_in_config2_o       (h_in_config2),
-    .sc_config_0_sc_if_v_in_config_o        (v_in_config),
-    .sc_config_0_sc_if_misc_config_o        (),
-    .sc_config_0_sc_if_sl_config_o          (),
-    .sc_config_0_sc_if_sl_config2_o         (),
-    .sc_config_0_sc_if_h_out_config_o       (h_out_config),
-    .sc_config_0_sc_if_h_out_config2_o      (h_out_config2),
-    .sc_config_0_sc_if_v_out_config_o       (v_out_config),
-    .sc_config_0_sc_if_v_out_config2_o      (v_out_config2),
+    .sc_config_0_sc_if_fe_status_i          (fe_status),
+    .sc_config_0_sc_if_fe_status2_i         (fe_status2),
+    .sc_config_0_sc_if_misc_config_o        (misc_config),
+    .sc_config_0_sc_if_sl_config_o          (sl_config),
+    .sc_config_0_sc_if_sl_config2_o         (sl_config2),
+    .sc_config_0_sc_if_hv_out_config_o      (hv_out_config),
+    .sc_config_0_sc_if_hv_out_config2_o     (hv_out_config2),
+    .sc_config_0_sc_if_hv_out_config3_o     (hv_out_config3),
     .sc_config_0_sc_if_xy_out_config_o      (xy_out_config),
+    .sc_config_0_sc_if_xy_out_config2_o     (xy_out_config2)
 );
 
 scanconverter scanconverter_inst (
@@ -167,14 +165,14 @@ scanconverter scanconverter_inst (
     .frame_change_i(CPS_fe_frame_change),
     .xpos_i(CPS_fe_xpos),
     .ypos_i(CPS_fe_ypos),
-    .h_out_config(h_out_config),
-    .h_out_config2(h_out_config2),
-    .v_out_config(v_out_config),
-    .v_out_config2(v_out_config2),
+    .hv_out_config(hv_out_config),
+    .hv_out_config2(hv_out_config2),
+    .hv_out_config3(hv_out_config3),
     .xy_out_config(xy_out_config),
-    .misc_config(32'h0),
-    .sl_config(32'h0),
-    .sl_config2(32'h0),
+    .xy_out_config2(xy_out_config2),
+    .misc_config(misc_config),
+    .sl_config(sl_config),
+    .sl_config2(sl_config2),
     .testpattern_enable(1'b0),
     .PCLK_o(PCLK_out),
     .R_o(R_out),
@@ -200,10 +198,10 @@ i2s_upsampler_2x upsampler0 (
     .I2S_BCK        (I2S_BCK),
     .I2S_WS         (I2S_WS),
     .I2S_DATA       (I2S_DATA),
-    .I2S_BCK_out    (I2S_BCK_out),
-    .I2S_WS_out     (I2S_WS_2x),
-    .I2S_DATA_out   (I2S_DATA_2x),
-    .clkcnt_out     (clkcnt_out)
+    .I2S_BCK_out    (I2S_BCK_o),
+    .I2S_WS_out     (I2S_WS_o),
+    .I2S_DATA_out   (I2S_DATA_o),
+    .clkcnt_out     ()
 );
 `else
 i2s_upsampler_asrc upsampler0 (
@@ -212,9 +210,9 @@ i2s_upsampler_asrc upsampler0 (
     .ASCLK_i        (I2S_BCK),
     .ASDATA_i       (I2S_DATA),
     .ALRCLK_i       (I2S_WS),
-    .ASCLK_o        (I2S_BCK_out),
-    .ASDATA_o       (I2S_DATA_2x),
-    .ALRCLK_o       (I2S_WS_2x)
+    .ASCLK_o        (I2S_BCK_o),
+    .ASDATA_o       (I2S_DATA_o),
+    .ALRCLK_o       (I2S_WS_o)
 );
 `endif
 

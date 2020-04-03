@@ -324,13 +324,17 @@ i2c_opencores_driver_SRCS_ROOT := drivers
 i2c_opencores_driver_C_LIB_SRCS := \
 	$(i2c_opencores_driver_SRCS_ROOT)/src/i2c_opencores.c
 
+# sc_config_driver sources root 
+sc_config_driver_SRCS_ROOT := drivers
+
+# sc_config_driver sources 
 
 # Assemble all component C source files 
 COMPONENT_C_LIB_SRCS += \
 	$(altera_avalon_jtag_uart_driver_C_LIB_SRCS) \
 	$(altera_nios2_gen2_hal_driver_C_LIB_SRCS) \
 	$(hal_C_LIB_SRCS) \
-	$(i2c_opencores_driver_C_LIB_SRCS)
+	$(i2c_opencores_driver_C_LIB_SRCS) \
 
 # Assemble all component assembly source files 
 COMPONENT_ASM_LIB_SRCS += \

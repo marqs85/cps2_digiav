@@ -65,7 +65,18 @@ typedef enum {
     STDMODE_1080p  = 8,
     STDMODE_1200p  = 9,
     STDMODE_1440p  = 10
-} stdmode_t;
+} mode_idx_t;
+
+typedef enum {
+    ADMODE_240p_CRT = 0,
+    ADMODE_480p_CRT = 1,
+    ADMODE_720p     = 2,
+    ADMODE_1080p_4X = 3,
+    ADMODE_1080p_5X = 4,
+    ADMODE_1200p    = 5,
+    ADMODE_1440p    = 6,
+    ADMODE_LAST     = 6
+} ad_mode_id_t;
 
 typedef struct {
     uint16_t h_active;
@@ -91,7 +102,7 @@ typedef struct {
 } mode_data_t;
 
 typedef struct {
-    stdmode_t mode_idx_i;
+    ad_mode_id_t id;
     const sync_timings_t *timings_i;
     uint8_t x_rpt;
     uint8_t y_rpt;
@@ -109,24 +120,24 @@ typedef struct {
     uint16_t x_size;
     uint16_t y_size;
     uint16_t framesync_line;
+    uint8_t x_start_lb;
     int8_t linebuf_startline;
 } vm_mult_config_t;
 
 typedef struct {
-    stdmode_t mode_idx;
-    uint8_t x_rpt;
-    uint8_t y_rpt;
-} lm_conf_t;
+    uint16_t h_active;
+    uint16_t v_active;
+    uint16_t h_total;
+    uint16_t v_total;
+} input_mode_t;
 
 
 void set_default_vm_table();
 
-lm_conf_t* select_lm_conf(uint8_t lm_conf_idx);
-
-void step_lm_conf(uint8_t next);
+void step_ad_mode(uint8_t next);
 
 uint32_t estimate_dotclk(mode_data_t *vm_in, uint32_t h_hz);
 
-int get_mode(uint16_t h_total, uint16_t v_total, lm_conf_t *lm_conf, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out);
+int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out);
 
 #endif /* VIDEO_MODES_H_ */
