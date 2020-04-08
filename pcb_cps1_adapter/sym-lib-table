@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name custom_components)(type Legacy)(uri /home/markus/Code/cps2_digiav/pcb_cps1_adapter/custom_components.lib)(options "")(descr ""))
+)

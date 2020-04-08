@@ -1,0 +1,33 @@
+R28:
+dip sw side: HS
+
+1F - 74F32:
+pin 6: C1
+pin 7: GND
+note 1: use coax cable
+note 2: add a jumper wire between C1 and C2 pads on cps2_digiav board
+
+11F - YM2151:
+pin 1: GND
+pin 20: WS
+pin 21: DAT
+pin 23: BCK
+pin 24: oCM (cps1_adapter)
+note 1: use coax cable for oCM/GND
+
+R49:
+M6295 side: DAO (cps1_adapter)
+
+11C - YM3012:
+pin 8: GND (cps1_adapter)
+note 1: use coax cable for DAO/GND
+
+various places, e.g. some CCX caps:
+: 5V
+: GND
+
+cps1_adapter:
+oC1: J3
+SH1: J5
+SO: VS
+3v3: U7 leg closest to PCB hole
