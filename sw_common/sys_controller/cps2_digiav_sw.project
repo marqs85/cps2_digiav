@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="cps2_digiav_sw" InternalType="" Version="11000">
+  <VirtualDirectory Name="src">
+    <File Name="../../../../sw_common/sys_controller/src/video_modes.c"/>
+    <File Name="../../../../sw_common/sys_controller/src/avconfig.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="inc">
+    <File Name="../../../../sw_common/sys_controller/inc/video_modes.h"/>
+    <File Name="../../../../sw_common/sys_controller/inc/avconfig.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="ic_drivers">
+    <VirtualDirectory Name="si5351">
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351_regs.h"/>
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.h"/>
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="adv7513">
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513_regs.h"/>
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.h"/>
+      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.c"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
   <Plugins>
     <Plugin Name="qmake">
       <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
@@ -33,32 +53,12 @@
     <Extensions>
       <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp]]>
     </Extensions>
-    <Topleveldir>/home/markus/Code/cps2_digiav/software/sys_controller</Topleveldir>
+    <Topleveldir>/home/markus/Code/cps2_digiav/sw_common/sys_controller</Topleveldir>
   </Reconciliation>
   <Description/>
   <Dependencies/>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>
-  <VirtualDirectory Name="sys_controller">
-    <File Name="sys_controller/avconfig.h"/>
-    <File Name="sys_controller/avconfig.c"/>
-    <File Name="sys_controller/video_modes.h"/>
-    <File Name="sys_controller/video_modes.c"/>
-    <VirtualDirectory Name="ic_drivers">
-      <VirtualDirectory Name="si5351">
-        <File Name="sys_controller/ic_drivers/si5351/si5351_regs.h"/>
-        <File Name="sys_controller/ic_drivers/si5351/si5351.h"/>
-        <File Name="sys_controller/ic_drivers/si5351/si5351.c"/>
-      </VirtualDirectory>
-      <VirtualDirectory Name="adv7513">
-        <File Name="sys_controller/ic_drivers/adv7513/adv7513_regs.h"/>
-        <File Name="sys_controller/ic_drivers/adv7513/adv7513.h"/>
-        <File Name="sys_controller/ic_drivers/adv7513/adv7513.c"/>
-      </VirtualDirectory>
-    </VirtualDirectory>
-    <File Name="sys_controller/av_controller.c"/>
-    <File Name="sys_controller/sysconfig.h"/>
-  </VirtualDirectory>
   <Settings Type="Dynamic Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -95,7 +95,7 @@
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>$(ProjectPath)/sys_controller</WorkingDirectory>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>
@@ -135,7 +135,7 @@
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>$(ProjectPath)/sys_controller</WorkingDirectory>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>

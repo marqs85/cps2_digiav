@@ -70,7 +70,6 @@ set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name SEARCH_PATH rtl
 set_location_assignment PIN_144 -to BTN_volminus
 set_location_assignment PIN_101 -to HDMI_TX_RD[5]
 set_location_assignment PIN_103 -to HDMI_TX_RD[6]
@@ -142,23 +141,26 @@ set_location_assignment PIN_23 -to MCLK_SI
 set_location_assignment PIN_24 -to PCLK_SI
 
 
-set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
-set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
-set_global_assignment -name SDC_FILE cps2_digiav.sdc
-set_global_assignment -name QIP_FILE rtl/linebuf.qip
-set_global_assignment -name VERILOG_FILE rtl/cps2_frontend.v
-set_global_assignment -name VERILOG_FILE rtl/scanconverter.v
-set_global_assignment -name VERILOG_FILE rtl/btn_debounce.v
-set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_2x.v
-set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
-set_global_assignment -name VERILOG_FILE rtl/i2s_tx_asrc.v
-set_global_assignment -name VERILOG_FILE rtl/i2s_rx_asrc.v
-set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
-set_global_assignment -name QIP_FILE rtl/pll_i2s.qip
-set_global_assignment -name SIGNALTAP_FILE output_files/stp1.stp
-set_global_assignment -name QIP_FILE rtl/pll_pclk.qip
-set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
-set_global_assignment -name SIP_FILE rtl/fir_2ch_audio.sip
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
 set_global_assignment -name SEED 1
+
+set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
+set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
+set_global_assignment -name QIP_FILE rtl/pll_pclk.qip
+set_global_assignment -name QIP_FILE rtl/pll_i2s.qip
+set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
+set_global_assignment -name SIP_FILE rtl/fir_2ch_audio.sip
+set_global_assignment -name QIP_FILE ../../rtl_common/linebuf.qip
+set_global_assignment -name SDC_FILE cps2_digiav.sdc
+set_global_assignment -name VERILOG_FILE ../../rtl_common/scanconverter.v
+set_global_assignment -name VERILOG_FILE ../../rtl_common/btn_debounce.v
+set_global_assignment -name VERILOG_FILE ../../rtl_common/i2s_tx_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_2x.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_rx_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/cps2_frontend.v
+set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
+set_global_assignment -name SEARCH_PATH ../../rtl_common
+set_global_assignment -name SEARCH_PATH rtl
+set_global_assignment -name SEARCH_PATH software/sys_controller/mem_init/
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

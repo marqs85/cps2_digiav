@@ -139,14 +139,14 @@ ACDS_VERSION := 16.1
 # Define path to the application ELF. 
 # It may be used by the makefile fragments so is defined before including them. 
 # 
-ELF := av_controller.elf
+ELF := sys_controller.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS += av_controller.c
-C_SRCS += video_modes.c
-C_SRCS += avconfig.c
-C_SRCS += ic_drivers/adv7513/adv7513.c
-C_SRCS += ic_drivers/si5351/si5351.c
+C_SRCS += ../../../../sw_common/sys_controller/src/sys_controller.c
+C_SRCS += ../../../../sw_common/sys_controller/src/video_modes.c
+C_SRCS += ../../../../sw_common/sys_controller/src/avconfig.c
+C_SRCS += ../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.c
+C_SRCS += ../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -187,7 +187,11 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../sys_controller_bsp/
 
 # List of application specific include directories, library directories and library names
-APP_INCLUDE_DIRS := ./ ic_drivers/si5351 ic_drivers/adv7513
+APP_INCLUDE_DIRS += ./
+APP_INCLUDE_DIRS += inc
+APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/inc
+APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/ic_drivers/si5351
+APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/ic_drivers/adv7513
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 

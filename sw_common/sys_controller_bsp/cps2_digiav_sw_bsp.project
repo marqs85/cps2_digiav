@@ -67,7 +67,7 @@
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>$(ProjectPath)/software/sys_controller_bsp</WorkingDirectory>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>
@@ -107,7 +107,7 @@
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory>$(ProjectPath)/software/sys_controller_bsp</WorkingDirectory>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>
