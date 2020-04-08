@@ -46,7 +46,7 @@ module cps2_frontend (
 
 localparam CPS2_H_TOTAL     = 512;
 localparam CPS2_H_SYNCLEN   = 8'd36;
-localparam CPS2_H_BACKPORCH = 9'd62;
+localparam CPS2_H_BACKPORCH = 9'd61;
 localparam CPS2_H_ACTIVE    = 9'd384;
 
 localparam CPS2_V_TOTAL     = 262;
@@ -59,7 +59,6 @@ reg h_ctr_divctr;
 reg [8:0] v_ctr;
 reg HSYNC_i_prev, VSYNC_i_prev;
 
-reg [3:0] R, G, B, F;
 reg HSYNC, VSYNC;
 
 wire [7:0] H_SYNCLEN = CPS2_H_SYNCLEN;
@@ -77,11 +76,11 @@ assign v_total = CPS2_V_TOTAL;
 assign mclk_cfg_id = CPS2_MCLK_CFG;
 
 always @(posedge PCLK_i) begin
-    if (h_ctr_divctr) begin
-        R <= R_i;
-        G <= G_i;
-        B <= B_i;
-        F <= F_i;
+    if (h_ctr_divctr == 1'b0) begin
+        R_o <= R_i;
+        G_o <= G_i;
+        B_o <= B_i;
+        F_o <= F_i;
     end
 
     HSYNC_i_prev <= HSYNC_i;
@@ -104,7 +103,7 @@ always @(posedge PCLK_i) begin
 
         VSYNC_i_prev <= VSYNC_i;
     end else begin
-        if (h_ctr_divctr) begin
+        if (h_ctr_divctr == 1'b1) begin
             h_ctr <= h_ctr + 1'b1;
             if (h_ctr == H_SYNCLEN-1)
                 HSYNC <= 1'b1;
@@ -114,13 +113,8 @@ always @(posedge PCLK_i) begin
 end
 
 always @(posedge PCLK_i) begin
-    R_o <= R;
-    G_o <= G;
-    B_o <= B;
-    F_o <= F;
     HSYNC_o <= HSYNC;
     VSYNC_o <= VSYNC;
-
     DE_o <= (h_ctr >= H_SYNCLEN+H_BACKPORCH) & (h_ctr < H_SYNCLEN+H_BACKPORCH+H_ACTIVE) & (v_ctr >= V_SYNCLEN+V_BACKPORCH) & (v_ctr < V_SYNCLEN+V_BACKPORCH+V_ACTIVE);
     xpos <= (h_ctr-H_SYNCLEN-H_BACKPORCH);
     ypos <= (v_ctr-V_SYNCLEN-V_BACKPORCH);

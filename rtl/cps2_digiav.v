@@ -74,8 +74,8 @@ wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
 
 
-// Latch inputs syncronized to PCLKx2_in (negedge)
-always @(negedge PCLK2x_in)
+// Latch inputs syncronized to pixel clock
+always @(posedge PCLK2x_in)
 begin
     R_in_L <= R_in;
     G_in_L <= G_in;
