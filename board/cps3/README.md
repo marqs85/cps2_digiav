@@ -1,4 +1,4 @@
-CPS2 digital AV interface (Rev 2 - CPS3 branch)
+CPS2 digital AV interface (CPS3 version)
 ==============
 
 Features (current)
@@ -28,14 +28,10 @@ The add-on board can be installed on top of CPS3 board, preferably close to JAMM
 * coaxial cable (~50cm total)
 * kynar wire (~50cm total)
 
-Signal hookup points are listed in pcb/doc/cps3_hookup_points.txt and instructions are in pcb/doc/install.md .
+Signal hookup points are listed in doc/cps3_hookup_points.txt and instructions are in doc/install.md .
 
 Usage
 --------------------------
 Board is controlled via TL2243 (or via 2 external buttons depending on installation):
 * Upper button (VOL-): select lower output resolution
 * Lower button (VOL+): select higher output resolution
-
-More info and discussion
---------------------------
-* [Forum topic](http://shmups.system11.org/viewtopic.php?f=6&t=59479&p=1266977)
