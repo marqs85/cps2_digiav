@@ -1,0 +1,164 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2016  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Intel Program License 
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel MegaCore Function License Agreement, or other 
+# applicable license agreement, including, without limitation, 
+# that your use is for the sole purpose of programming logic 
+# devices manufactured by Intel and sold by Intel or its 
+# authorized distributors.  Please refer to the applicable 
+# agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+# Date created = 23:25:51  November 29, 2016
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		cps2_digiav_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone 10 LP"
+set_global_assignment -name DEVICE 10CL025YE144C8G
+set_global_assignment -name TOP_LEVEL_ENTITY cps2_digiav
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:25:51  NOVEMBER 29, 2016"
+set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name DEVICE_FILTER_PACKAGE TQFP
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 144
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "NO HEAT SINK WITH STILL AIR"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name SMART_RECOMPILE ON
+set_global_assignment -name VERILOG_INPUT_VERSION SYSTEMVERILOG_2005
+set_global_assignment -name VERILOG_SHOW_LMF_MAPPING_MESSAGES OFF
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
+set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
+set_global_assignment -name STRATIXV_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name USE_CONFIGURATION_DEVICE ON
+set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS16
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_location_assignment PIN_144 -to BTN_volminus
+set_location_assignment PIN_101 -to HDMI_TX_RD[5]
+set_location_assignment PIN_103 -to HDMI_TX_RD[6]
+set_location_assignment PIN_106 -to HDMI_TX_RD[7]
+set_location_assignment PIN_100 -to HDMI_TX_RD[4]
+set_location_assignment PIN_99 -to HDMI_TX_RD[3]
+set_location_assignment PIN_98 -to HDMI_TX_RD[2]
+set_location_assignment PIN_87 -to HDMI_TX_RD[1]
+set_location_assignment PIN_86 -to HDMI_TX_RD[0]
+set_location_assignment PIN_85 -to HDMI_TX_GD[7]
+set_location_assignment PIN_83 -to HDMI_TX_GD[6]
+set_location_assignment PIN_77 -to HDMI_TX_GD[5]
+set_location_assignment PIN_76 -to HDMI_TX_GD[4]
+set_location_assignment PIN_72 -to HDMI_TX_GD[3]
+set_location_assignment PIN_71 -to HDMI_TX_GD[2]
+set_location_assignment PIN_69 -to HDMI_TX_GD[1]
+set_location_assignment PIN_67 -to HDMI_TX_GD[0]
+set_location_assignment PIN_60 -to HDMI_TX_BD[6]
+set_location_assignment PIN_59 -to HDMI_TX_BD[5]
+set_location_assignment PIN_68 -to HDMI_TX_PCLK
+set_location_assignment PIN_58 -to HDMI_TX_BD[4]
+set_location_assignment PIN_51 -to HDMI_TX_BD[3]
+set_location_assignment PIN_50 -to HDMI_TX_BD[2]
+set_location_assignment PIN_49 -to HDMI_TX_BD[1]
+set_location_assignment PIN_44 -to HDMI_TX_BD[0]
+set_location_assignment PIN_43 -to HDMI_TX_DE
+set_location_assignment PIN_42 -to HDMI_TX_HS
+set_location_assignment PIN_39 -to HDMI_TX_VS
+set_location_assignment PIN_46 -to HDMI_TX_I2S_DATA
+set_location_assignment PIN_32 -to HDMI_TX_I2S_WS
+set_location_assignment PIN_33 -to HDMI_TX_I2S_BCK
+set_location_assignment PIN_65 -to HDMI_TX_INT_N
+set_location_assignment PIN_143 -to BTN_volplus
+set_location_assignment PIN_11 -to I2S_DATA
+set_location_assignment PIN_10 -to I2S_WS
+set_location_assignment PIN_22 -to I2S_BCK
+set_location_assignment PIN_31 -to HSYNC_in
+set_location_assignment PIN_28 -to VSYNC_in
+set_location_assignment PIN_25 -to PCLK_in
+set_location_assignment PIN_23 -to MCLK_SI
+set_location_assignment PIN_24 -to PCLK_SI
+set_location_assignment PIN_142 -to scl
+set_location_assignment PIN_141 -to sda
+set_location_assignment PIN_111 -to R_in[4]
+set_location_assignment PIN_112 -to R_in[3]
+set_location_assignment PIN_113 -to R_in[2]
+set_location_assignment PIN_114 -to R_in[1]
+set_location_assignment PIN_125 -to R_in[0]
+set_location_assignment PIN_121 -to G_in[4]
+set_location_assignment PIN_120 -to G_in[3]
+set_location_assignment PIN_115 -to G_in[2]
+set_location_assignment PIN_126 -to G_in[1]
+set_location_assignment PIN_127 -to G_in[0]
+set_location_assignment PIN_128 -to B_in[4]
+set_location_assignment PIN_137 -to B_in[3]
+set_location_assignment PIN_132 -to B_in[2]
+set_location_assignment PIN_133 -to B_in[1]
+set_location_assignment PIN_135 -to B_in[0]
+set_location_assignment PIN_66 -to HDMI_TX_BD[7]
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+set_global_assignment -name USE_SIGNALTAP_FILE output_files/cps3.stp
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
+set_global_assignment -name ENABLE_LOGIC_ANALYZER_INTERFACE OFF
+
+
+set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
+set_global_assignment -name SEED 2
+
+
+set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
+set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
+set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
+set_global_assignment -name SIP_FILE rtl/fir_2ch_audio.sip
+set_global_assignment -name QIP_FILE ../../rtl_common/linebuf.qip
+set_global_assignment -name SDC_FILE cps2_digiav.sdc
+set_global_assignment -name VERILOG_FILE ../../rtl_common/scanconverter.v
+set_global_assignment -name VERILOG_FILE ../../rtl_common/btn_debounce.v
+set_global_assignment -name VERILOG_FILE ../../rtl_common/i2s_tx_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/i2s_rx_asrc.v
+set_global_assignment -name VERILOG_FILE rtl/cps3_frontend.v
+set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
+set_global_assignment -name SEARCH_PATH ../../rtl_common
+set_global_assignment -name SEARCH_PATH rtl
+set_global_assignment -name SEARCH_PATH software/sys_controller/mem_init/
+
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

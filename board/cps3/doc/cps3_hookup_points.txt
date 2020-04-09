@@ -1,0 +1,47 @@
+RN7: (below the label from left to right)
+: R4
+: R3
+: R2
+: R1
+
+RN6: (below the label from left to right)
+: R0
+: G4
+: G3
+: G2
+
+RN5: (below the label from left to right)
+: G1
+: G0
+: B4
+: B3
+
+RN4: (below the label from left to right)
+: B2
+: B1
+: B0
+: (-)
+
+RN3: (below the label from left to right)
+: BCK
+: WS
+: DAT
+: (AUD_SYSCLK)
+note: use coax cable for BCK, GND point available on the other side on RN3
+
+R74 (right side):
+: C1
+note: use coax cable, GND pin available below R74
+
+R36 (left side):
+: C2
+
+96682A-S (add-on board):
+IN1: HS
+IN2: VS
+note: later revisions have LS08 chip intergrated on the main PCB
+
+various places, e.g. large vias near JAMMA connector:
+: 5V
+: GND
+note: be sure to use JAMMA 5V rail, there seems to be another 5V plane (for audio/analog?) regulated from 12V
