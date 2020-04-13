@@ -18,7 +18,7 @@
 //
 
 module cps1_frontend (
-    input PCLK_i,
+    input PCLK2x_i,
     input [3:0] R_i,
     input [3:0] G_i,
     input [3:0] B_i,
@@ -74,7 +74,7 @@ assign h_total = CPS2_H_TOTAL;
 assign v_total = CPS2_V_TOTAL;
 assign mclk_cfg_id = CPS2_MCLK_CFG;
 
-always @(posedge PCLK_i) begin
+always @(posedge PCLK2x_i) begin
     if (h_ctr_divctr == 1'b0) begin
         R_o <= R_i;
         G_o <= G_i;
@@ -109,7 +109,7 @@ always @(posedge PCLK_i) begin
     end
 end
 
-always @(posedge PCLK_i) begin
+always @(posedge PCLK2x_i) begin
     HSYNC_o <= HSYNC;
     VSYNC_o <= VSYNC;
     DE_o <= (h_ctr >= H_SYNCLEN+H_BACKPORCH) & (h_ctr < H_SYNCLEN+H_BACKPORCH+H_ACTIVE) & (v_ctr >= V_SYNCLEN+V_BACKPORCH) & (v_ctr < V_SYNCLEN+V_BACKPORCH+V_ACTIVE);

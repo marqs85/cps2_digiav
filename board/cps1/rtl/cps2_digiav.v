@@ -52,6 +52,8 @@ module cps2_digiav(
 reg reset_n = 1'b0;
 reg [3:0] reset_n_ctr;
 
+reg WM_LRCLK;
+
 reg [3:0] R_in_L, G_in_L, B_in_L, F_in_L;
 reg CSYNC_in_L;
 
@@ -73,13 +75,16 @@ wire BTN_volplus_debounced;
 
 
 // Latch inputs syncronized to pixel clock
-always @(posedge PCLK2x_in)
-begin
+always @(posedge PCLK2x_in) begin
     R_in_L <= R_in;
     G_in_L <= G_in;
     B_in_L <= B_in;
     F_in_L <= F_in;
     CSYNC_in_L <= CSYNC_in;
+end
+
+always @(negedge YM_SH1) begin
+    WM_LRCLK <= ~WM_LRCLK;
 end
 
 always @(posedge PCLK2x_in) begin
@@ -95,7 +100,7 @@ wire CPS_HSYNC_post, CPS_VSYNC_post, CPS_DE_post;
 wire CPS_fe_frame_change;
 wire [8:0] CPS_fe_xpos, CPS_fe_ypos;
 cps1_frontend u_cps1_frontend ( 
-    .PCLK_i(PCLK2x_in),
+    .PCLK2x_i(PCLK2x_in),
     .R_i(R_in_L),
     .G_i(G_in_L),
     .B_i(B_in_L),
