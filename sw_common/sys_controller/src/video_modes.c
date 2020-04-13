@@ -41,12 +41,15 @@ const mode_data_t video_modes_default[] = { \
     { "480p_CRT",   HDMI_480p60,      {0},                                              TX_1X, TX_1X,  0, {0} },  \
     { "480p",       HDMI_480p60,      { 720,  480,   858, 0,  525,   60, 30,   62, 6},  TX_1X, TX_1X,  0, {0} },  \
     { "640x480",    HDMI_640x480p60,  { 640,  480,   800, 0,  525,   48, 33,   96, 2},  TX_1X, TX_1X,  0, {0} },  \
-    /* 720p modes */ \
+    /* CEA 720p mode */ \
     { "720p",       HDMI_720p60,      {1280,  720,  1650, 0,  750,  220, 20,   40, 5},  TX_1X, TX_1X,  0, {0} },  \
     /* VESA 1280x960 and SXGA modes */ \
     { "1280x960",   HDMI_Unknown,     {1280,  960,  1800, 0, 1000,  312, 36,  112, 3},  TX_1X, TX_1X,  0, {0} },  \
     { "1280x1024",  HDMI_Unknown,     {1280, 1024,  1688, 0, 1066,  248, 38,  112, 3},  TX_1X, TX_1X,  0, {0} },  \
+    /* CEA 1080p mode */ \
     { "1080p",      HDMI_1080p60,     {1920, 1080,  2200, 0, 1125,  148, 36,   44, 5},  TX_1X, TX_1X,  0, {0} },  \
+    /* VESA UXGA mode */ \
+    { "1600x1200",  HDMI_Unknown,     {1600, 1200,  2160, 0, 1250,  304, 46,  192, 3},  TX_1X, TX_1X,  0, {0} },  \
     /* CVT 1920x1200 with reduced blanking */ \
     { "1920x1200",  HDMI_Unknown,     {1920, 1200,  2080, 0, 1235,   80, 26,   32, 6},  TX_1X, TX_1X,  0, {0} },  \
     /* CVT 1920x1440 with reduced blanking */ \
@@ -57,6 +60,8 @@ const sync_timings_t cps2_timings =         { 384,  224,   512, 0,  262,   62, 2
 const sync_timings_t cps3_timings_std =     { 384,  224,   546, 0,  264,   68, 21,   51, 3};
 const sync_timings_t cps3_timings_wide =    { 495,  224,   682, 0,  264,   72, 21,   54, 3};
 
+const sync_timings_t tp2_timings =          { 320,  240,   432, 0,  263,   55, 18,   32, 3};
+
 const ad_mode_data_t adaptive_modes_default[] = { \
     /* CPS2 modes */ \
     { ADMODE_240p_CRT,  &cps2_timings,  0, 0,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
@@ -64,8 +69,8 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_720p,      &cps2_timings,  1, 2,  0, 0,  { 6572, 15488, 16768,  1024, 0, 1,  0, 0, 0} },  \
     { ADMODE_1080p_4X,  &cps2_timings,  2, 3,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
     { ADMODE_1080p_5X,  &cps2_timings,  3, 4,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1200p,     &cps2_timings,  3, 4,  0, 0,  { 4390,   608,  2096,     0, 0, 1,  0, 0, 3} },  \
-    { ADMODE_1440p,     &cps2_timings,  4, 5,  0, 0,  { 5366,  1632,  2096,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1200, &cps2_timings,  3, 4,  0, 0,  { 4390,   608,  2096,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1440, &cps2_timings,  4, 5,  0, 0,  { 5366,  1632,  2096,     0, 0, 1,  0, 0, 3} },  \
     /*{ STDMODE_1440p,  &cps2_timings,  4, 5,  0, 0,  {8306, 704, 4192, 256, 0, 1, 0, 0, 0} },       \*/
 
     /* CPS3 standard modes */ \
@@ -74,8 +79,8 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_720p,      &cps3_timings_std,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
     { ADMODE_1080p_4X,  &cps3_timings_std,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
     { ADMODE_1080p_5X,  &cps3_timings_std,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1200p,     &cps3_timings_std,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
-    { ADMODE_1440p,     &cps3_timings_std,  4, 5,  0, 0,  { 3864,   520,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_1920x1200, &cps3_timings_std,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_1920x1440, &cps3_timings_std,  4, 5,  0, 0,  { 3864,   520,   693,     0, 0, 1,  1, 0, 3} },  \
 
     /* CPS3 wide modes */ \
     { ADMODE_240p_CRT,  &cps3_timings_wide,  0, 0,  0, 0,  { 4844,    40,   546, 10208, 0, 4,  1, 0, 0} },  \
@@ -83,10 +88,21 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_720p,      &cps3_timings_wide,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
     { ADMODE_1080p_4X,  &cps3_timings_wide,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
     { ADMODE_1080p_5X,  &cps3_timings_wide,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1200p,     &cps3_timings_wide,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_1920x1200, &cps3_timings_wide,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+
+    /* Toaplan2 / Knuckle Bash */
+    { ADMODE_240p_CRT,  &tp2_timings,  0, 0,  0, 0,  { 8013, 25499, 56825, 16544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_480p_CRT,  &tp2_timings,  1, 1,  0, 0,  { 7997, 25771, 56825,  3744, 0, 4,  0, 0, 0} },  \
+    { ADMODE_720p,      &tp2_timings,  2, 2,  0, 0,  { 7850,  1174,  2273,  1024, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1280x1024, &tp2_timings,  3, 3,  0, 0,  { 7847, 43537, 56825,   544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_1080p_4X,  &tp2_timings,  3, 3,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1080p_5X,  &tp2_timings,  4, 4,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1600x1200, &tp2_timings,  4, 4,  0, 0,  { 5569,  1887,  2273,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1200, &tp2_timings,  4, 4,  0, 0,  { 5274,   678,  2273,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1440, &tp2_timings,  5, 5,  0, 0,  { 6426,  9918, 11365,     0, 0, 1,  0, 0, 3} },  \
 };
 
-const mode_idx_t ad_mode_id_map[] = {CRTMODE_240p, CRTMODE_480p, STDMODE_720p, STDMODE_1080p, STDMODE_1080p, STDMODE_1200p, STDMODE_1440p};
+const mode_idx_t ad_mode_id_map[] = {CRTMODE_240p, CRTMODE_480p, STDMODE_720p, STDMODE_1280x1024, STDMODE_1080p, STDMODE_1080p, STDMODE_1600x1200, STDMODE_1920x1200, STDMODE_1920x1440};
 
 //mode_data_t video_modes[sizeof(video_modes_default)/sizeof(mode_data_t)];
 ad_mode_data_t adaptive_modes[sizeof(adaptive_modes_default)/sizeof(ad_mode_data_t)];

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -17,13 +17,21 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-`ifndef mclk_cfg_ids_vh_
-`define mclk_cfg_ids_vh_
+#ifndef SYSCONFIG_H_
+#define SYSCONFIG_H_
 
-enum bit [4:0] {
-    CPS2_MCLK_CFG=5'h0,
-    CPS3_MCLK_CFG=5'h1,
-    TP2_MCLK_CFG=5'h2
-} mclk_cfg;
+#ifndef DEBUG
+#define OS_PRINTF(...)
+#define ErrorF(...)
+#define printf(...)
+#else
+#include <stdio.h>
+#define OS_PRINTF printf
+#define ErrorF printf
+// use reduced printf
+//#define printf alt_printf
+#endif
 
-`endif //mclk_cfg_ids_vh_
+#define WAITLOOP_SLEEP_US   10000
+
+#endif /* SYSCONFIG_H_ */

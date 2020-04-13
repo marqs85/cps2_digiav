@@ -56,26 +56,30 @@ typedef enum {
 } HDMI_pixelrep_t;
 
 typedef enum {
-    CRTMODE_240p   = 0,
-    STDMODE_240p   = 1,
-    CRTMODE_480p   = 2,
-    STDMODE_480p   = 3,
-    STDMODE_720p   = 5,
-    STDMODE_960p   = 6,
-    STDMODE_1080p  = 8,
-    STDMODE_1200p  = 9,
-    STDMODE_1440p  = 10
+    CRTMODE_240p      = 0,
+    STDMODE_240p      = 1,
+    CRTMODE_480p      = 2,
+    STDMODE_480p      = 3,
+    STDMODE_720p      = 5,
+    STDMODE_1280x960  = 6,
+    STDMODE_1280x1024 = 7,
+    STDMODE_1080p     = 8,
+    STDMODE_1600x1200 = 9,
+    STDMODE_1920x1200 = 10,
+    STDMODE_1920x1440 = 11
 } mode_idx_t;
 
 typedef enum {
-    ADMODE_240p_CRT = 0,
-    ADMODE_480p_CRT = 1,
-    ADMODE_720p     = 2,
-    ADMODE_1080p_4X = 3,
-    ADMODE_1080p_5X = 4,
-    ADMODE_1200p    = 5,
-    ADMODE_1440p    = 6,
-    ADMODE_LAST     = 6
+    ADMODE_240p_CRT  = 0,
+    ADMODE_480p_CRT  = 1,
+    ADMODE_720p      = 2,
+    ADMODE_1280x1024 = 3,
+    ADMODE_1080p_4X  = 4,
+    ADMODE_1080p_5X  = 5,
+    ADMODE_1600x1200 = 6,
+    ADMODE_1920x1200 = 7,
+    ADMODE_1920x1440 = 8,
+    ADMODE_LAST      = 8
 } ad_mode_id_t;
 
 typedef struct {

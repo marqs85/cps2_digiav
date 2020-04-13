@@ -29,7 +29,7 @@ avconfig_t cc, tc;
 
 // Default configuration
 const avconfig_t tc_default = {
-    .ad_mode_id = 4,
+    .ad_mode_id = ADMODE_1080p_5X,
 };
 
 int reset_target_avconfig() {
