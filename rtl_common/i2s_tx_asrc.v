@@ -36,6 +36,7 @@ parameter MCLK_FRAME_DIVIDER = 256; // must be power of 2
 localparam MCLK_DIV_BITS = $clog2(MCLK_FRAME_DIVIDER);
 localparam WS_TOGGLE_BIT = (MCLK_DIV_BITS-1);
 localparam BCK_TOGGLE_BIT = WS_TOGGLE_BIT-$clog2(I2S_BCKS_PER_FRAME);
+localparam bit [$clog2(I2S_DATA_BITS):0] I2S_DATA_BITS_V = I2S_DATA_BITS[$clog2(I2S_DATA_BITS):0];
 
 reg [(MCLK_DIV_BITS-1):0] mclk_div_ctr;
 reg [$clog2(I2S_DATA_BITS):0] l_ctr;
@@ -62,9 +63,9 @@ always @(posedge AMCLK_i) begin
     end
 
     if (mclk_div_ctr == 0)
-        l_ctr <= I2S_DATA_BITS;
+        l_ctr <= I2S_DATA_BITS_V;
     else if (mclk_div_ctr == (MCLK_FRAME_DIVIDER/2))
-        r_ctr <= I2S_DATA_BITS;
+        r_ctr <= I2S_DATA_BITS_V;
     else if (shift_edge) begin
         if (l_ctr > 0) begin
             I2S_DATA <= APSDATA_LEFT_i[l_ctr-1];

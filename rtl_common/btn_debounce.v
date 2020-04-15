@@ -30,10 +30,10 @@ reg i_btn_prev;
 
 always @(posedge i_clk) begin
     if (i_btn == i_btn_prev) begin
-        if (clk_ctr == MIN_PULSE_WIDTH-1)
+        if (clk_ctr == MIN_PULSE_WIDTH-1'b1)
             o_btn <= i_btn;
         else
-            clk_ctr <= clk_ctr + 1;
+            clk_ctr <= clk_ctr + 1'b1;
     end else begin
         clk_ctr <= 0;
     end
