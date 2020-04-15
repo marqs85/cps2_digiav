@@ -55,52 +55,57 @@ const mode_data_t video_modes_default[] = { \
     { "1920x1440",  HDMI_Unknown,     {1920, 1440,  2080, 0, 1481,   80, 34,   32, 4},  TX_1X, TX_1X,  0, {0} },  \
 };
 
-const sync_timings_t cps2_timings =         { 384,  224,   512, 0,  262,   61, 22,   36, 3};
-const sync_timings_t cps3_timings_std =     { 384,  224,   546, 0,  264,   68, 21,   51, 3};
-const sync_timings_t cps3_timings_wide =    { 495,  224,   682, 0,  264,   72, 21,   54, 3};
 
-const sync_timings_t tp2_timings =          { 320,  240,   432, 0,  263,   55, 18,   32, 3};
+// CPS1/2
+const source_params_t cps2_params =         { 16000000UL,  268288UL,  { 384,  224,   512, 0,  262,   61, 22,   36, 3},  {6565,   111,   125,  36, 0, 0,  0, 0, 0} };
+
+// CPS3
+const source_params_t cps3_params_std =     { 42954500UL,  720720UL,  { 384,  224,   546, 0,  264,   68, 21,   51, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
+const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 495,  224,   682, 0,  264,   72, 21,   54, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
+
+// Toaplan2 - Knuckle Bash
+const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   55, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
+
 
 const ad_mode_data_t adaptive_modes_default[] = { \
     /* CPS1/2 modes */ \
-    { ADMODE_240p_CRT,  &cps2_timings,  0, 0,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
-    { ADMODE_480p_CRT,  &cps2_timings,  1, 1,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
-    { ADMODE_720p,      &cps2_timings,  1, 2,  0, 0,  { 6572, 15488, 16768,  1024, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1280x1024, &cps2_timings,  2, 3,  0, 0,  { 6570, 39808, 67072,   544, 0, 4,  0, 0, 0} },  \
-    { ADMODE_1080p_4X,  &cps2_timings,  2, 3,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1080p_5X,  &cps2_timings,  3, 4,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1600x1200, &cps2_timings,  3, 4,  0, 0,  { 4640,  1408,  2096,     0, 0, 1,  0, 0, 3} },  \
-    { ADMODE_1920x1200, &cps2_timings,  3, 4,  0, 0,  { 4390,   608,  2096,     0, 0, 1,  0, 0, 3} },  \
-    { ADMODE_1920x1440, &cps2_timings,  4, 5,  0, 0,  { 5366,  1632,  2096,     0, 0, 1,  0, 0, 3} },  \
-    /*{ STDMODE_1440p,  &cps2_timings,  4, 5,  0, 0,  {8306, 704, 4192, 256, 0, 1, 0, 0, 0} },       \*/
+    { ADMODE_240p_CRT,  &cps2_params,  0, 0,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
+    { ADMODE_480p_CRT,  &cps2_params,  1, 1,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
+    { ADMODE_720p,      &cps2_params,  1, 2,  0, 0,  { 6572, 15488, 16768,  1024, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1280x1024, &cps2_params,  2, 3,  0, 0,  { 6570, 39808, 67072,   544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_1080p_4X,  &cps2_params,  2, 3,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1080p_5X,  &cps2_params,  3, 4,  0, 0,  { 6572, 15488, 16768,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1600x1200, &cps2_params,  3, 4,  0, 0,  { 4640,  1408,  2096,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1200, &cps2_params,  3, 4,  0, 0,  { 4390,   608,  2096,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1440, &cps2_params,  4, 5,  0, 0,  { 5366,  1632,  2096,     0, 0, 1,  0, 0, 3} },  \
 
     /* CPS3 standard modes */ \
-    { ADMODE_240p_CRT,  &cps3_timings_std,  0, 0,  0, 0,  { 4851,     2,    10, 12896, 0, 4,  1, 0, 0} },  \
-    { ADMODE_480p_CRT,  &cps3_timings_std,  1, 1,  0, 0,  { 4812,     4,     5,  2816, 0, 1,  1, 0, 0} },  \
-    { ADMODE_720p,      &cps3_timings_std,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1080p_4X,  &cps3_timings_std,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1080p_5X,  &cps3_timings_std,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1920x1200, &cps3_timings_std,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
-    { ADMODE_1920x1440, &cps3_timings_std,  4, 5,  0, 0,  { 3864,   520,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_240p_CRT,  &cps3_params_std,  0, 0,  0, 0,  { 4851,     2,    10, 12896, 0, 4,  1, 0, 0} },  \
+    { ADMODE_480p_CRT,  &cps3_params_std,  1, 1,  0, 0,  { 4812,     4,     5,  2816, 0, 1,  1, 0, 0} },  \
+    { ADMODE_720p,      &cps3_params_std,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1080p_4X,  &cps3_params_std,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1080p_5X,  &cps3_params_std,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1920x1200, &cps3_params_std,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_1920x1440, &cps3_params_std,  4, 5,  0, 0,  { 3864,   520,   693,     0, 0, 1,  1, 0, 3} },  \
 
     /* CPS3 wide modes */ \
-    { ADMODE_240p_CRT,  &cps3_timings_wide,  0, 0,  0, 0,  { 4844,    40,   546, 10208, 0, 4,  1, 0, 0} },  \
-    { ADMODE_480p_CRT,  &cps3_timings_wide,  1, 1,  0, 0,  { 4796,   148,  1365,  2144, 0, 4,  1, 0, 0} },  \
-    { ADMODE_720p,      &cps3_timings_wide,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1080p_4X,  &cps3_timings_wide,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1080p_5X,  &cps3_timings_wide,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
-    { ADMODE_1920x1200, &cps3_timings_wide,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_240p_CRT,  &cps3_params_wide,  0, 0,  0, 0,  { 4844,    40,   546, 10208, 0, 4,  1, 0, 0} },  \
+    { ADMODE_480p_CRT,  &cps3_params_wide,  1, 1,  0, 0,  { 4796,   148,  1365,  2144, 0, 4,  1, 0, 0} },  \
+    { ADMODE_720p,      &cps3_params_wide,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1080p_4X,  &cps3_params_wide,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1080p_5X,  &cps3_params_wide,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1920x1200, &cps3_params_wide,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
 
     /* Toaplan2 / Knuckle Bash */
-    { ADMODE_240p_CRT,  &tp2_timings,  0, 0,  0, 0,  { 8013, 25499, 56825, 16544, 0, 4,  0, 0, 0} },  \
-    { ADMODE_480p_CRT,  &tp2_timings,  1, 1,  0, 0,  { 7997, 25771, 56825,  3744, 0, 4,  0, 0, 0} },  \
-    { ADMODE_720p,      &tp2_timings,  2, 2,  0, 0,  { 7850,  1174,  2273,  1024, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1280x1024, &tp2_timings,  3, 3,  0, 0,  { 7847, 43537, 56825,   544, 0, 4,  0, 0, 0} },  \
-    { ADMODE_1080p_4X,  &tp2_timings,  3, 3,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1080p_5X,  &tp2_timings,  4, 4,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
-    { ADMODE_1600x1200, &tp2_timings,  4, 4,  0, 0,  { 5569,  1887,  2273,     0, 0, 1,  0, 0, 3} },  \
-    { ADMODE_1920x1200, &tp2_timings,  4, 4,  0, 0,  { 5274,   678,  2273,     0, 0, 1,  0, 0, 3} },  \
-    { ADMODE_1920x1440, &tp2_timings,  5, 5,  0, 0,  { 6426,  9918, 11365,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_240p_CRT,  &tp2_kbash_params,  0, 0,  0, 0,  { 8013, 25499, 56825, 16544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_480p_CRT,  &tp2_kbash_params,  1, 1,  0, 0,  { 7997, 25771, 56825,  3744, 0, 4,  0, 0, 0} },  \
+    { ADMODE_720p,      &tp2_kbash_params,  2, 2,  0, 0,  { 7850,  1174,  2273,  1024, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1280x1024, &tp2_kbash_params,  3, 3,  0, 0,  { 7847, 43537, 56825,   544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_1080p_4X,  &tp2_kbash_params,  3, 3,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1080p_5X,  &tp2_kbash_params,  4, 4,  0, 0,  { 7850,  1174,  2273,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1600x1200, &tp2_kbash_params,  4, 4,  0, 0,  { 5569,  1887,  2273,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1200, &tp2_kbash_params,  4, 4,  0, 0,  { 5274,   678,  2273,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1440, &tp2_kbash_params,  5, 5,  0, 0,  { 6426,  9918, 11365,     0, 0, 1,  0, 0, 3} },  \
 };
 
 const mode_idx_t ad_mode_id_map[] = {CRTMODE_240p, CRTMODE_480p, STDMODE_720p, STDMODE_1280x1024, STDMODE_1080p, STDMODE_1080p, STDMODE_1600x1200, STDMODE_1920x1200, STDMODE_1920x1440};
@@ -139,7 +144,7 @@ void vmode_hv_mult(mode_data_t *vmode, uint8_t h_mult, uint8_t v_mult) {
     //}
 }
 
-int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out)
+const ad_mode_data_t* get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out)
 {
     int i;
     int32_t v_linediff;
@@ -151,12 +156,11 @@ int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t 
 
     for (i=0; i<num_modes; i++) {
         if ((ad_mode_id == adaptive_modes[i].id) &&
-            (im->h_active == (adaptive_modes[i].timings_i->h_active)) &&
-            (im->v_active == (adaptive_modes[i].timings_i->v_active)) &&
-            (im->h_total == (adaptive_modes[i].timings_i->h_total)) &&
-            (im->v_total == (adaptive_modes[i].timings_i->v_total)))
+            (im->h_active == (adaptive_modes[i].src_params->timings.h_active)) &&
+            (im->v_active == (adaptive_modes[i].src_params->timings.v_active)) &&
+            (im->vclks_per_frame == (adaptive_modes[i].src_params->vclks_per_frame)))
         {
-            memcpy(&vm_in->timings, adaptive_modes[i].timings_i, sizeof(sync_timings_t));
+            memcpy(&vm_in->timings, &adaptive_modes[i].src_params->timings, sizeof(sync_timings_t));
             memcpy(vm_out, &video_modes_default[ad_mode_id_map[adaptive_modes[i].id]], sizeof(mode_data_t));
 
             vm_conf->x_rpt = adaptive_modes[i].x_rpt;
@@ -165,7 +169,7 @@ int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t 
 
             // select pure LM ("CRT mode") or adaptive mode
             if (vm_out->timings.v_total == 0) {
-                memcpy(&vm_out->timings, adaptive_modes[i].timings_i, sizeof(sync_timings_t));
+                memcpy(&vm_out->timings, &adaptive_modes[i].src_params->timings, sizeof(sync_timings_t));
                 vmode_hv_mult(vm_out, adaptive_modes[i].x_rpt+1, adaptive_modes[i].y_rpt+1);
 
                 vm_conf->x_offset = 0;
@@ -214,9 +218,9 @@ int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t 
             printf("framesync_line = %u (linebuf_startline: %d, y_offset: %d, y_size: %u)\n", vm_conf->framesync_line, vm_conf->linebuf_startline, vm_conf->y_offset, vm_conf->y_size);
             printf("x_start_lb: %d, x_offset: %d, x_size: %u\n", vm_conf->x_start_lb, vm_conf->x_offset, vm_conf->x_size);
 
-            return i;
+            return &adaptive_modes[i];
         }
     }
 
-    return -1;
+    return NULL;
 }

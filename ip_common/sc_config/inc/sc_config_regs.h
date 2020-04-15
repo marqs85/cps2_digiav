@@ -27,17 +27,14 @@ typedef union {
     struct {
         uint16_t h_active:10;
         uint16_t v_active:10;
-        uint16_t h_total:10;
-        uint8_t fe_rsv:2;
     } __attribute__((packed, __may_alias__));
     uint32_t data;
 } fe_status_reg;
 
 typedef union {
     struct {
-        uint16_t v_total:10;
-        uint8_t mclk_cfg_id:5;
-        uint32_t fe_rsv:17;
+        uint32_t vclks_per_frame:22;
+        uint16_t fe_rsv:10;
     } __attribute__((packed, __may_alias__));
     uint32_t data;
 } fe_status2_reg;

@@ -84,7 +84,7 @@ typedef struct {
 
 typedef struct {
     ad_mode_id_t id;
-    const sync_timings_t *timings_i;
+    const source_params_t *src_params;
     uint8_t x_rpt;
     uint8_t y_rpt;
     int16_t x_offset_i;
@@ -108,8 +108,7 @@ typedef struct {
 typedef struct {
     uint16_t h_active;
     uint16_t v_active;
-    uint16_t h_total;
-    uint16_t v_total;
+    uint32_t vclks_per_frame;
 } input_mode_t;
 
 
@@ -119,6 +118,6 @@ void step_ad_mode(uint8_t next);
 
 uint32_t estimate_dotclk(mode_data_t *vm_in, uint32_t h_hz);
 
-int get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out);
+const ad_mode_data_t* get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id, vm_mult_config_t *vm_conf, mode_data_t *vm_in, mode_data_t *vm_out);
 
 #endif /* VIDEO_MODES_H_ */

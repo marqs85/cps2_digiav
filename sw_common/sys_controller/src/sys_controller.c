@@ -60,15 +60,6 @@ volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
 
 input_mode_t input_mode;
 
-clk_config_t clk_configs[] = { \
-    /* CPS1/2 */
-    { 16000000UL, {6565, 111, 125, 36, 0, 0, 0, 0, 0} },  \
-    /* CPS3 */
-    { 42954500UL, {4760, 72584, 85909, 36, 0, 0, 1, 0, 0} }, \
-    /* Toaplan2 / Knuckle Bash */
-    { 13500000UL, {7876, 76, 125, 36, 0, 0, 0, 0, 0} } \
-};
-
 
 void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf)
 {
@@ -135,8 +126,7 @@ int check_input_mode_change() {
 
     target_mode.h_active = sc->fe_status.h_active;
     target_mode.v_active = sc->fe_status.v_active;
-    target_mode.h_total = sc->fe_status.h_total;
-    target_mode.v_total = sc->fe_status2.v_total;
+    target_mode.vclks_per_frame = sc->fe_status2.vclks_per_frame;
 
     if (memcmp(&input_mode, &target_mode, sizeof(input_mode_t)))
         mode_changed = 1;
@@ -148,10 +138,11 @@ int check_input_mode_change() {
 
 int main()
 {
-    int ret, input_mode_change, output_mode_id;
+    int ret, input_mode_change;
     status_t status;
     mode_data_t vmode_in, vmode_out;
     vm_mult_config_t vm_conf;
+    const ad_mode_data_t *output_mode;
     avconfig_t *cur_avconfig;
 
     uint32_t btn_vec, btn_vec_prev=0;
@@ -164,9 +155,6 @@ int main()
         printf("Init error  %d", ret);
         while (1) {}
     }
-
-    // configure audio MCLK
-    si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, &clk_configs[sc->fe_status2.mclk_cfg_id].si_mclk_conf);
 
     cur_avconfig = get_current_avconfig();
 
@@ -188,15 +176,19 @@ int main()
         input_mode_change = check_input_mode_change();
 
         if ((status == MODE_CHANGE) || input_mode_change) {
-            output_mode_id = get_output_mode(&input_mode, cur_avconfig->ad_mode_id, &vm_conf, &vmode_in, &vmode_out);
+            output_mode = get_output_mode(&input_mode, cur_avconfig->ad_mode_id, &vm_conf, &vmode_in, &vmode_out);
 
-            if (output_mode_id != -1) {
-                printf("Output mode %d (%s) selected\n", output_mode_id, vmode_out.name);
+            if (output_mode != NULL) {
+                printf("Output mode %d (%s) selected\n", output_mode->id, vmode_out.name);
 
+                // configure output pixel clock
                 if (vmode_out.si_pclk_mult != 0)
-                    si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, clk_configs[sc->fe_status2.mclk_cfg_id].si_clkin_freq, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
+                    si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, output_mode->src_params->vclk_hz, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
                 else
                     si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
+
+                // configure audio MCLK
+                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
 
                 update_sc_config(&vmode_in, &vmode_out, &vm_conf);
                 adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
