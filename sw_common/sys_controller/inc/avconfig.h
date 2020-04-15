@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include "adv7513.h"
+#include "video_modes.h"
 
 #define SIGNED_NUMVAL_ZERO  128
 

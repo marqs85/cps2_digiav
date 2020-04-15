@@ -22,38 +22,8 @@
 
 #include <stdint.h>
 #include "si5351.h"
+#include "adv7513.h"
 #include "sysconfig.h"
-
-typedef enum tagHDMI_Video_Type {
-    HDMI_Unknown = 0 ,
-    HDMI_640x480p60 = 1 ,
-    HDMI_480p60,
-    HDMI_480p60_16x9,
-    HDMI_720p60,
-    HDMI_1080i60,
-    HDMI_480i60,
-    HDMI_480i60_16x9,
-    HDMI_240p60,
-    HDMI_1080p60 = 16,
-    HDMI_576p50,
-    HDMI_576p50_16x9,
-    HDMI_720p50 = 19,
-    HDMI_1080i50,
-    HDMI_576i50,
-    HDMI_576i50_16x9,
-    HDMI_288p50,
-    HDMI_1080p50 = 31,
-    /*HDMI_1080p24,
-    HDMI_1080p25,
-    HDMI_1080p30,
-    HDMI_1080i120 = 46,*/
-} HDMI_Video_Type ;
-
-typedef enum {
-    TX_1X   = 0,
-    TX_2X   = 1,
-    TX_4X   = 2
-} HDMI_pixelrep_t;
 
 typedef enum {
     CRTMODE_240p      = 0,
@@ -93,6 +63,13 @@ typedef struct {
     uint16_t h_synclen:9;
     uint8_t v_synclen:5;
 } __attribute__((packed)) sync_timings_t;
+
+typedef struct {
+    uint32_t vclk_hz;
+    uint32_t vclks_per_frame;
+    sync_timings_t timings;
+    si5351_ms_config_t vclk_to_mclk_conf;
+} source_params_t;
 
 typedef struct {
     char name[10];

@@ -23,7 +23,6 @@
 #include <stdint.h>
 #include "system.h"
 #include "video_modes.h"
-#include "sysconfig.h"
 #include "avconfig.h"
 
 #define VM_OUT_YMULT        (vm_conf->y_rpt+1)
@@ -35,8 +34,8 @@ extern avconfig_t tc;
 
 const mode_data_t video_modes_default[] = { \
     /* 240p modes */ \
-    { "240p_CRT",   HDMI_240p60,      {0},                                              TX_4X, TX_4X,  0, {0} },  \
-    { "240p",       HDMI_240p60,      { 720,  240,   858, 0,  262,   57, 15,   62, 3},  TX_2X, TX_2X,  0, {0} },  \
+    { "240p_CRT",   HDMI_240p60_PR4x, {0},                                              TX_4X, TX_4X,  0, {0} },  \
+    { "240p",       HDMI_240p60_PR2x, { 720,  240,   858, 0,  262,   57, 15,   62, 3},  TX_2X, TX_2X,  0, {0} },  \
     /* 480p modes */ \
     { "480p_CRT",   HDMI_480p60,      {0},                                              TX_1X, TX_1X,  0, {0} },  \
     { "480p",       HDMI_480p60,      { 720,  480,   858, 0,  525,   60, 30,   62, 6},  TX_1X, TX_1X,  0, {0} },  \

@@ -20,7 +20,6 @@
 #include <string.h>
 #include "system.h"
 #include "avconfig.h"
-#include "video_modes.h"
 
 #define DEFAULT_ON              1
 
