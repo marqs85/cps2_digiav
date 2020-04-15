@@ -18,7 +18,7 @@
 //
 
 module toaplan2_frontend (
-    input PCLK2x_i,
+    input VCLK_i,
     input [4:0] R_i,
     input [4:0] G_i,
     input [4:0] B_i,
@@ -34,27 +34,25 @@ module toaplan2_frontend (
     output reg frame_change,
     output [9:0] h_active,
     output [9:0] v_active,
-    output reg [9:0] h_total,
-    output reg [9:0] v_total,
-    output [4:0] mclk_cfg_id
+    output reg [21:0] vclks_per_frame
 );
 
-`include "mclk_cfg_ids.vh"
+localparam bit [9:0] TP2_H_TOTAL     = 432;
+localparam bit [7:0] TP2_H_SYNCLEN   = 32;
+localparam bit [8:0] TP2_H_BACKPORCH = 54;
+localparam bit [8:0] TP2_H_ACTIVE    = 320;
 
-localparam TP2_H_TOTAL     = 432;
-localparam TP2_H_SYNCLEN   = 8'd32;
-localparam TP2_H_BACKPORCH = 9'd55;
-localparam TP2_H_ACTIVE    = 9'd320;
-
-localparam TP2_V_TOTAL     = 263;
-localparam TP2_V_SYNCLEN   = 3'd3;
-localparam TP2_V_BACKPORCH = 6'd18;
-localparam TP2_V_ACTIVE    = 9'd240;
+localparam bit [9:0] TP2_V_TOTAL     = 263;
+localparam bit [2:0] TP2_V_SYNCLEN   = 3;
+localparam bit [5:0] TP2_V_BACKPORCH = 18;
+localparam bit [8:0] TP2_V_ACTIVE    = 240;
 
 reg [8:0] h_ctr;
 reg h_ctr_divctr;
 reg [8:0] v_ctr;
 reg CSYNC_i_prev;
+
+reg [21:0] vclk_ctr;
 
 reg HSYNC, VSYNC;
 
@@ -68,11 +66,8 @@ wire [8:0] V_ACTIVE = TP2_V_ACTIVE;
 
 assign h_active = TP2_H_ACTIVE;
 assign v_active = TP2_V_ACTIVE;
-assign h_total = TP2_H_TOTAL;
-assign v_total = TP2_V_TOTAL;
-assign mclk_cfg_id = TP2_MCLK_CFG;
 
-always @(posedge PCLK2x_i) begin
+always @(posedge VCLK_i) begin
     if (h_ctr_divctr == 1'b0) begin
         R_o <= R_i;
         G_o <= G_i;
@@ -89,9 +84,12 @@ always @(posedge PCLK2x_i) begin
         if (~CSYNC_i_prev & (v_ctr >= 16)) begin
             v_ctr <= 0;
             frame_change <= 1'b1;
+            vclks_per_frame <= vclk_ctr;
+            vclk_ctr <= 1;
             VSYNC <= 1'b0;
         end else begin
             v_ctr <= v_ctr + 1'b1;
+            vclk_ctr <= vclk_ctr + 1'b1;
             frame_change <= 1'b0;
             if (v_ctr == V_SYNCLEN-1)
                 VSYNC <= 1'b1;
@@ -103,10 +101,11 @@ always @(posedge PCLK2x_i) begin
                 HSYNC <= 1'b1;
         end
         h_ctr_divctr <= h_ctr_divctr + 1'b1;
+        vclk_ctr <= vclk_ctr + 1'b1;
     end
 end
 
-always @(posedge PCLK2x_i) begin
+always @(posedge VCLK_i) begin
     HSYNC_o <= HSYNC;
     VSYNC_o <= VSYNC;
     DE_o <= (h_ctr >= H_SYNCLEN+H_BACKPORCH) & (h_ctr < H_SYNCLEN+H_BACKPORCH+H_ACTIVE) & (v_ctr >= V_SYNCLEN+V_BACKPORCH) & (v_ctr < V_SYNCLEN+V_BACKPORCH+V_ACTIVE);

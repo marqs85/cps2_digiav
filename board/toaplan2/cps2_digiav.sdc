@@ -2,7 +2,7 @@
 
 create_clock -period 183MHz -name pclk_si [get_ports PCLK_SI]
 create_clock -period 24.576MHz -name mclk [get_ports MCLK_SI]
-create_clock -period 13.5MHz -name pclk [get_ports PCLK2x_in]
+create_clock -period 13.5MHz -name pclk [get_ports VCLK_in]
 create_clock -period 1.79MHz -name bck [get_ports YM_o1]
 create_clock -period 55kHz -name clk_sh [get_ports YM_SH1]
 create_clock -period 40MHz -name clk40 clk_osc_div

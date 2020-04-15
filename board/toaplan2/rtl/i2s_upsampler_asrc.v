@@ -77,7 +77,7 @@ ym_rx_asrc ym_rx_u(
     .APDATA_VALID_o(APDATA_VALID)
 );
 
-wire signed [23:0] APDATA_WM [0:1];
+wire signed [23:0] APDATA_WM; // WM8782 input is mono
 wire APDATA_WM_VALID;
 
 i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
@@ -86,8 +86,8 @@ i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
     .I2S_BCK(ASCLK_WM_i),
     .I2S_DATA(ASDATA_WM_i),
     .I2S_WS(ALRCLK_WM_i),
-    .APDATA_LEFT_o(APDATA_WM[1]),
-    .APDATA_RIGHT_o(APDATA_WM[0]),
+    .APDATA_LEFT_o(),
+    .APDATA_RIGHT_o(APDATA_WM),
     .APDATA_VALID_o(APDATA_WM_VALID)
 );
 
@@ -128,8 +128,8 @@ i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
   always @(posedge AMCLK_i) begin
     case (tdm)
       2'b00: if (APDATA_VALID) begin
-        sink_data_buf_1 <= {APDATA[1][15], APDATA[1]} + {APDATA_WM[1][23], APDATA_WM[1][23:8]};
-        sink_data_buf_0 <= {APDATA[0][15], APDATA[0]} + {APDATA_WM[0][23], APDATA_WM[0][23:8]};
+        sink_data_buf_1 <= {APDATA[1][15], APDATA[1]} + {APDATA_WM[23], APDATA_WM[23:8]};
+        sink_data_buf_0 <= {APDATA[0][15], APDATA[0]} + {APDATA_WM[23], APDATA_WM[23:8]};
         tdm <= 2'b01;
       end
       2'b01: begin

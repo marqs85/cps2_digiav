@@ -22,7 +22,7 @@ module cps2_digiav(
     input [4:0] G_in,
     input [4:0] B_in,
     input CSYNC_in,
-    input PCLK2x_in,
+    input VCLK_in,
     input MCLK_SI,
     input PCLK_SI,
     input YM_o1,
@@ -75,8 +75,7 @@ wire BTN_volplus_debounced;
 
 
 // Latch inputs syncronized to pixel clock
-always @(posedge PCLK2x_in)
-begin
+always @(posedge VCLK_in) begin
     R_in_L <= R_in;
     G_in_L <= G_in;
     B_in_L <= B_in;
@@ -87,7 +86,7 @@ always @(negedge YM_SH1) begin
     WM_LRCLK <= ~WM_LRCLK;
 end
 
-always @(posedge PCLK2x_in) begin
+always @(posedge VCLK_in) begin
     if (reset_n_ctr == 4'hf)
         reset_n <= 1'b1;
     else
@@ -100,7 +99,7 @@ wire TP2_HSYNC_post, TP2_VSYNC_post, TP2_DE_post;
 wire TP2_fe_frame_change;
 wire [8:0] TP2_fe_xpos, TP2_fe_ypos;
 toaplan2_frontend u_toaplan2_frontend ( 
-    .PCLK2x_i(PCLK2x_in),
+    .VCLK_i(VCLK_in),
     .R_i(R_in_L),
     .G_i(G_in_L),
     .B_i(B_in_L),
@@ -116,9 +115,7 @@ toaplan2_frontend u_toaplan2_frontend (
     .frame_change(TP2_fe_frame_change),
     .h_active(fe_status[9:0]),
     .v_active(fe_status[19:10]),
-    .h_total(fe_status[29:20]),
-    .v_total(fe_status2[9:0]),
-    .mclk_cfg_id(fe_status2[14:10])
+    .vclks_per_frame(fe_status2[21:0])
 );
 
 //assign HDMI_TX_RST_N = reset_n;
@@ -163,7 +160,7 @@ sys sys_inst(
 scanconverter #(
     .CPS_FADE(1'b0)
 ) scanconverter_inst (
-    .PCLK_CAP_i(PCLK2x_in),
+    .PCLK_CAP_i(VCLK_in),
     .PCLK_OUT_i(PCLK_SI),
     .reset_n(reset_n),
     .DATA_i({1'b0, TP2_R_post, TP2_G_post, TP2_B_post}),

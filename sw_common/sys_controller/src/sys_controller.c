@@ -41,11 +41,6 @@
 
 #define SI5351_BASE (0xC0>>1)
 
-typedef struct {
-    uint32_t si_clkin_freq;
-    si5351_ms_config_t si_mclk_conf;
-} clk_config_t;
-
 si5351_dev si_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
                      .i2c_addr = SI5351_BASE,
                      .xtal_freq = 0LU};

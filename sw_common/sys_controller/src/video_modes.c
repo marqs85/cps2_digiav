@@ -64,7 +64,7 @@ const source_params_t cps3_params_std =     { 42954500UL,  720720UL,  { 384,  22
 const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 495,  224,   682, 0,  264,   72, 21,   54, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
 
 // Toaplan2 - Knuckle Bash
-const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   55, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
+const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
 
 
 const ad_mode_data_t adaptive_modes_default[] = { \
