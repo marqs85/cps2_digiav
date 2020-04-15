@@ -75,8 +75,7 @@ wire BTN_volplus_debounced;
 
 
 // Latch inputs syncronized to pixel clock
-always @(posedge PCLK2x_in)
-begin
+always @(posedge PCLK2x_in) begin
     R_in_L <= R_in;
     G_in_L <= G_in;
     B_in_L <= B_in;
@@ -98,7 +97,7 @@ wire CPS_HSYNC_post, CPS_VSYNC_post, CPS_DE_post;
 wire CPS_fe_frame_change;
 wire [8:0] CPS_fe_xpos, CPS_fe_ypos;
 cps2_frontend u_cps2_frontend ( 
-    .PCLK_i(PCLK2x_in),
+    .PCLK2x_i(PCLK2x_in),
     .R_i(R_in_L),
     .G_i(G_in_L),
     .B_i(B_in_L),
@@ -117,9 +116,7 @@ cps2_frontend u_cps2_frontend (
     .frame_change(CPS_fe_frame_change),
     .h_active(fe_status[9:0]),
     .v_active(fe_status[19:10]),
-    .h_total(fe_status[29:20]),
-    .v_total(fe_status2[9:0]),
-    .mclk_cfg_id(fe_status2[14:10])
+    .vclks_per_frame(fe_status2[21:0])
 );
 
 //assign HDMI_TX_RST_N = reset_n;
@@ -216,13 +213,13 @@ i2s_upsampler_asrc upsampler0 (
 );
 `endif
 
-btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb0 (
+btn_debounce #(.MIN_PULSE_WIDTH(100000)) deb0 (
     .i_clk          (clk25),
     .i_btn          (BTN_volminus),
     .o_btn          (BTN_volminus_debounced)
 );
 
-btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb1 (
+btn_debounce #(.MIN_PULSE_WIDTH(100000)) deb1 (
     .i_clk          (clk25),
     .i_btn          (BTN_volplus),
     .o_btn          (BTN_volplus_debounced)
