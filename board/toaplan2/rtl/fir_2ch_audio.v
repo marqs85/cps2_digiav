@@ -8,7 +8,7 @@
 module fir_2ch_audio (
 		input  wire        clk,                //                     clk.clk
 		input  wire        reset_n,            //                     rst.reset_n
-		input  wire [16:0] ast_sink_data,      //   avalon_streaming_sink.data
+		input  wire [17:0] ast_sink_data,      //   avalon_streaming_sink.data
 		input  wire        ast_sink_valid,     //                        .valid
 		input  wire [1:0]  ast_sink_error,     //                        .error
 		input  wire        ast_sink_sop,       //                        .startofpacket
@@ -90,7 +90,7 @@ endmodule
 // Retrieval info: 	<generic name="MODE_STRING" value="None Set" />
 // Retrieval info: 	<generic name="channelModes" value="0,1,2,3" />
 // Retrieval info: 	<generic name="inputType" value="int" />
-// Retrieval info: 	<generic name="inputBitWidth" value="17" />
+// Retrieval info: 	<generic name="inputBitWidth" value="18" />
 // Retrieval info: 	<generic name="inputFracBitWidth" value="0" />
 // Retrieval info: 	<generic name="coeffSetRealValue" value="0.0087890625,0.021484375,0.0078125,-0.0390625,-0.0625,0.017578125,0.19921875,0.357421875,0.357421875,0.19921875,0.017578125,-0.0625,-0.0390625,0.0078125,0.021484375,0.0087890625" />
 // Retrieval info: 	<generic name="coeffSetRealValueImag" value="0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0530093, -0.04498, 0.0, 0.0749693, 0.159034, 0.224907, 0.249809, 0.224907, 0.159034, 0.0749693, 0.0, -0.04498, -0.0530093, -0.0321283, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0" />
@@ -104,7 +104,7 @@ endmodule
 // Retrieval info: 	<generic name="outMSBRound" value="sat" />
 // Retrieval info: 	<generic name="outMsbBitRem" value="4" />
 // Retrieval info: 	<generic name="outLSBRound" value="trunc" />
-// Retrieval info: 	<generic name="outLsbBitRem" value="3" />
+// Retrieval info: 	<generic name="outLsbBitRem" value="4" />
 // Retrieval info: 	<generic name="bankCount" value="1" />
 // Retrieval info: 	<generic name="bankDisplay" value="0" />
 // Retrieval info: </instance>

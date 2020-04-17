@@ -12,7 +12,7 @@
 # or its authorized distributors. Please refer to the applicable 
 # agreement for further details.
 
-# ACDS 19.1 670 linux 2020.04.08.18:41:56
+# ACDS 19.1 670 linux 2020.04.17.23:44:25
 
 # ----------------------------------------
 # ncsim - auto-generated simulation script
@@ -106,7 +106,7 @@
 # within the Quartus project, and generate a unified
 # script which supports all the Altera IP within the design.
 # ----------------------------------------
-# ACDS 19.1 670 linux 2020.04.08.18:41:56
+# ACDS 19.1 670 linux 2020.04.17.23:44:25
 # ----------------------------------------
 # initialize variables
 TOP_LEVEL_NAME="fir_2ch_audio"

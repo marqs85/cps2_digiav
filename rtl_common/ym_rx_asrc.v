@@ -31,6 +31,8 @@ module ym_rx_asrc (
 parameter I2S_DATA_BITS = 16;
 parameter MCLK_DIVIDER = 16; // must be power of 2
 
+localparam bit [$clog2(I2S_DATA_BITS):0] I2S_DATA_BITS_V = I2S_DATA_BITS[$clog2(I2S_DATA_BITS):0];
+
 reg I2S_WS_prev;
 
 reg signed [(I2S_DATA_BITS-1):0] samplebuf_l;
@@ -53,27 +55,27 @@ begin
         I2S_WS_prev <= 0;
     end else begin
         if ((I2S_WS_prev == 1'b1) && (I2S_WS == 1'b0)) begin
-            samplebuf_l_ctr <= I2S_DATA_BITS-1;
+            samplebuf_l_ctr <= I2S_DATA_BITS_V-1'b1;
             samplebuf_l[0] <= I2S_DATA;
         end else if (samplebuf_l_ctr == 1) begin
-            samplebuf_r_ctr <= I2S_DATA_BITS;
+            samplebuf_r_ctr <= I2S_DATA_BITS_V;
         end
 
         if (samplebuf_l_ctr > 0) begin
-            samplebuf_l[I2S_DATA_BITS-samplebuf_l_ctr] <= I2S_DATA;
-            samplebuf_l_ctr <= samplebuf_l_ctr - 1;
+            samplebuf_l[I2S_DATA_BITS_V-samplebuf_l_ctr] <= I2S_DATA;
+            samplebuf_l_ctr <= samplebuf_l_ctr - 1'b1;
         end
 
         if (samplebuf_r_ctr > 0) begin
-            samplebuf_r[I2S_DATA_BITS-samplebuf_r_ctr] <= I2S_DATA;
-            samplebuf_r_ctr <= samplebuf_r_ctr - 1;
+            samplebuf_r[I2S_DATA_BITS_V-samplebuf_r_ctr] <= I2S_DATA;
+            samplebuf_r_ctr <= samplebuf_r_ctr - 1'b1;
         end
 
         if ((I2S_WS_prev == 1'b1) && (I2S_WS == 1'b0)) begin
-            sample_l <= {{6'h0, samplebuf_l[12:3]} - 512} <<< (samplebuf_l[15:13]-3'h1);
-            sample_r <= {{6'h0, samplebuf_r[12:3]} - 512} <<< (samplebuf_r[15:13]-3'h1);
+            sample_l <= {{6'h0, samplebuf_l[12:3]} - 16'd512} <<< (samplebuf_l[15:13]-3'h1);
+            sample_r <= {{6'h0, samplebuf_r[12:3]} - 16'd512} <<< (samplebuf_r[15:13]-3'h1);
             samplebuf_copied <= 1'b1;
-        end else if (samplebuf_l_ctr == (I2S_DATA_BITS-2)) begin
+        end else if (samplebuf_l_ctr == (I2S_DATA_BITS_V-2)) begin
             samplebuf_copied <= 1'b0;
         end
 

@@ -141,7 +141,7 @@ set_location_assignment PIN_24 -to PCLK_SI
 
 
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
-set_global_assignment -name SEED 3
+set_global_assignment -name SEED 1
 
 set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip

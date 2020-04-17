@@ -122,14 +122,14 @@ i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
 `else
 
   reg [1:0] tdm = 2'b11;
-  reg [16:0] sink_data_buf_0, sink_data_buf_1, sink_data;
+  reg signed [17:0] sink_data_buf_0, sink_data_buf_1, sink_data;
   reg sink_valid, sink_sop, sink_eop;
 
   always @(posedge AMCLK_i) begin
     case (tdm)
       2'b00: if (APDATA_VALID) begin
-        sink_data_buf_1 <= {APDATA[1][15], APDATA[1]} + {APDATA_WM[23], APDATA_WM[23:8]};
-        sink_data_buf_0 <= {APDATA[0][15], APDATA[0]} + {APDATA_WM[23], APDATA_WM[23:8]};
+        sink_data_buf_1 <= {{2{APDATA[1][15]}}, APDATA[1]} + {APDATA_WM[23], APDATA_WM[23:7]};
+        sink_data_buf_0 <= {{2{APDATA[0][15]}}, APDATA[0]} + {APDATA_WM[23], APDATA_WM[23:7]};
         tdm <= 2'b01;
       end
       2'b01: begin

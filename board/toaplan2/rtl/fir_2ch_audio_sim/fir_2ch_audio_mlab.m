@@ -10,7 +10,7 @@
 %    This Model Only Support FIR_WIDTH to 51 Bits
 
 %FILTER PARAMETER
-%Input Data Width: 17
+%Input Data Width: 18
 %Interpolation Factor: 1
 %Decimation Factor: 16
 %FIR Width (Full Calculation Width Before Output Width Adjust) :24
@@ -23,11 +23,11 @@ function  output = fir_2ch_audio_mlab(stimulation, bank);
  DECI_FACTOR  =  16;
  MSB_RM  = 4;
  MSB_TYPE  = 1;
- LSB_RM  = 3;
+ LSB_RM  = 4;
  LSB_TYPE  = 0;
  FIR_WIDTH  = 24 + MSB_RM + LSB_RM;
  OUT_WIDTH  = 24 ;  %24
- DATA_WIDTH = 17;
+ DATA_WIDTH = 18;
 
   
  % check size of inputs. 

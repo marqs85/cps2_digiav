@@ -16,7 +16,7 @@
 -- ---------------------------------------------------------------------------
 
 -- VHDL created from fir_2ch_audio_rtl_core
--- VHDL created on Wed Apr  8 18:41:55 2020
+-- VHDL created on Fri Apr 17 23:44:25 2020
 
 
 library IEEE;
@@ -35,10 +35,10 @@ entity fir_2ch_audio_rtl_core is
     port (
         xIn_v : in std_logic_vector(0 downto 0);  -- sfix1
         xIn_c : in std_logic_vector(7 downto 0);  -- sfix8
-        xIn_0 : in std_logic_vector(16 downto 0);  -- sfix17
+        xIn_0 : in std_logic_vector(17 downto 0);  -- sfix18
         xOut_v : out std_logic_vector(0 downto 0);  -- ufix1
         xOut_c : out std_logic_vector(7 downto 0);  -- ufix8
-        xOut_0 : out std_logic_vector(30 downto 0);  -- sfix31
+        xOut_0 : out std_logic_vector(31 downto 0);  -- sfix32
         clk : in std_logic;
         areset : in std_logic
     );
@@ -51,7 +51,7 @@ architecture normal of fir_2ch_audio_rtl_core is
     
     signal GND_q : STD_LOGIC_VECTOR (0 downto 0);
     signal VCC_q : STD_LOGIC_VECTOR (0 downto 0);
-    signal d_xIn_0_14_q : STD_LOGIC_VECTOR (16 downto 0);
+    signal d_xIn_0_14_q : STD_LOGIC_VECTOR (17 downto 0);
     signal d_in0_m0_wi0_wo0_assign_id1_q_11_q : STD_LOGIC_VECTOR (0 downto 0);
     signal d_in0_m0_wi0_wo0_assign_id1_q_14_q : STD_LOGIC_VECTOR (0 downto 0);
     signal u0_m0_wo0_inputframe_seq_q : STD_LOGIC_VECTOR (0 downto 0);
@@ -85,11 +85,11 @@ architecture normal of fir_2ch_audio_rtl_core is
     signal u0_m0_wo0_wi0_r0_wa0_i : UNSIGNED (4 downto 0);
     attribute preserve of u0_m0_wo0_wi0_r0_wa0_i : signal is true;
     signal u0_m0_wo0_wi0_r0_memr0_reset0 : std_logic;
-    signal u0_m0_wo0_wi0_r0_memr0_ia : STD_LOGIC_VECTOR (16 downto 0);
+    signal u0_m0_wo0_wi0_r0_memr0_ia : STD_LOGIC_VECTOR (17 downto 0);
     signal u0_m0_wo0_wi0_r0_memr0_aa : STD_LOGIC_VECTOR (4 downto 0);
     signal u0_m0_wo0_wi0_r0_memr0_ab : STD_LOGIC_VECTOR (4 downto 0);
-    signal u0_m0_wo0_wi0_r0_memr0_iq : STD_LOGIC_VECTOR (16 downto 0);
-    signal u0_m0_wo0_wi0_r0_memr0_q : STD_LOGIC_VECTOR (16 downto 0);
+    signal u0_m0_wo0_wi0_r0_memr0_iq : STD_LOGIC_VECTOR (17 downto 0);
+    signal u0_m0_wo0_wi0_r0_memr0_q : STD_LOGIC_VECTOR (17 downto 0);
     signal u0_m0_wo0_ca0_inner_q : STD_LOGIC_VECTOR (0 downto 0);
     signal u0_m0_wo0_ca0_inner_i : SIGNED (0 downto 0);
     attribute preserve of u0_m0_wo0_ca0_inner_i : signal is true;
@@ -100,18 +100,18 @@ architecture normal of fir_2ch_audio_rtl_core is
     attribute preserve of u0_m0_wo0_ca0_i : signal is true;
     signal u0_m0_wo0_cm0_q : STD_LOGIC_VECTOR (9 downto 0);
     signal u0_m0_wo0_mtree_mult1_0_a0 : STD_LOGIC_VECTOR (9 downto 0);
-    signal u0_m0_wo0_mtree_mult1_0_b0 : STD_LOGIC_VECTOR (16 downto 0);
-    signal u0_m0_wo0_mtree_mult1_0_s1 : STD_LOGIC_VECTOR (26 downto 0);
+    signal u0_m0_wo0_mtree_mult1_0_b0 : STD_LOGIC_VECTOR (17 downto 0);
+    signal u0_m0_wo0_mtree_mult1_0_s1 : STD_LOGIC_VECTOR (27 downto 0);
     signal u0_m0_wo0_mtree_mult1_0_reset : std_logic;
-    signal u0_m0_wo0_mtree_mult1_0_q : STD_LOGIC_VECTOR (26 downto 0);
-    signal u0_m0_wo0_adelay_q : STD_LOGIC_VECTOR (30 downto 0);
+    signal u0_m0_wo0_mtree_mult1_0_q : STD_LOGIC_VECTOR (27 downto 0);
+    signal u0_m0_wo0_adelay_q : STD_LOGIC_VECTOR (31 downto 0);
     signal u0_m0_wo0_aseq_q : STD_LOGIC_VECTOR (0 downto 0);
     signal u0_m0_wo0_aseq_eq : std_logic;
-    signal u0_m0_wo0_accum_a : STD_LOGIC_VECTOR (30 downto 0);
-    signal u0_m0_wo0_accum_b : STD_LOGIC_VECTOR (30 downto 0);
-    signal u0_m0_wo0_accum_i : STD_LOGIC_VECTOR (30 downto 0);
-    signal u0_m0_wo0_accum_o : STD_LOGIC_VECTOR (30 downto 0);
-    signal u0_m0_wo0_accum_q : STD_LOGIC_VECTOR (30 downto 0);
+    signal u0_m0_wo0_accum_a : STD_LOGIC_VECTOR (31 downto 0);
+    signal u0_m0_wo0_accum_b : STD_LOGIC_VECTOR (31 downto 0);
+    signal u0_m0_wo0_accum_i : STD_LOGIC_VECTOR (31 downto 0);
+    signal u0_m0_wo0_accum_o : STD_LOGIC_VECTOR (31 downto 0);
+    signal u0_m0_wo0_accum_q : STD_LOGIC_VECTOR (31 downto 0);
     signal u0_m0_wo0_oseq_q : STD_LOGIC_VECTOR (0 downto 0);
     signal u0_m0_wo0_oseq_eq : std_logic;
     signal u0_m0_wo0_oseq_gated_reg_q : STD_LOGIC_VECTOR (0 downto 0);
@@ -271,7 +271,7 @@ begin
 
     -- u0_m0_wo0_adelay(DELAY,37)@16
     u0_m0_wo0_adelay : dspba_delay
-    GENERIC MAP ( width => 31, depth => 1, reset_kind => "NONE" )
+    GENERIC MAP ( width => 32, depth => 1, reset_kind => "NONE" )
     PORT MAP ( xin => u0_m0_wo0_accum_q, xout => u0_m0_wo0_adelay_q, ena => d_u0_m0_wo0_compute_q_16_q(0), clk => clk, aclr => areset );
 
     -- GND(CONSTANT,0)@0
@@ -349,7 +349,7 @@ begin
 
     -- d_xIn_0_14(DELAY,53)@10 + 4
     d_xIn_0_14 : dspba_delay
-    GENERIC MAP ( width => 17, depth => 4, reset_kind => "ASYNC" )
+    GENERIC MAP ( width => 18, depth => 4, reset_kind => "ASYNC" )
     PORT MAP ( xin => xIn_0, xout => d_xIn_0_14_q, clk => clk, aclr => areset );
 
     -- d_in0_m0_wi0_wo0_assign_id1_q_14(DELAY,55)@11 + 3
@@ -379,10 +379,10 @@ begin
     GENERIC MAP (
         ram_block_type => "M9K",
         operation_mode => "DUAL_PORT",
-        width_a => 17,
+        width_a => 18,
         widthad_a => 5,
         numwords_a => 32,
-        width_b => 17,
+        width_b => 18,
         widthad_b => 5,
         numwords_b => 32,
         lpm_type => "altsyncram",
@@ -411,7 +411,7 @@ begin
         address_b => u0_m0_wo0_wi0_r0_memr0_ab,
         q_b => u0_m0_wo0_wi0_r0_memr0_iq
     );
-    u0_m0_wo0_wi0_r0_memr0_q <= u0_m0_wo0_wi0_r0_memr0_iq(16 downto 0);
+    u0_m0_wo0_wi0_r0_memr0_q <= u0_m0_wo0_wi0_r0_memr0_iq(17 downto 0);
 
     -- u0_m0_wo0_ca0_inner(COUNTER,29)@13
     -- low=-1, high=0, step=1, init=0
@@ -490,8 +490,8 @@ begin
     u0_m0_wo0_mtree_mult1_0_component : lpm_mult
     GENERIC MAP (
         lpm_widtha => 10,
-        lpm_widthb => 17,
-        lpm_widthp => 27,
+        lpm_widthb => 18,
+        lpm_widthp => 28,
         lpm_widths => 1,
         lpm_type => "LPM_MULT",
         lpm_representation => "SIGNED",
@@ -509,7 +509,7 @@ begin
     u0_m0_wo0_mtree_mult1_0_q <= u0_m0_wo0_mtree_mult1_0_s1;
 
     -- u0_m0_wo0_accum(ADD,39)@16 + 1
-    u0_m0_wo0_accum_a <= STD_LOGIC_VECTOR(STD_LOGIC_VECTOR((30 downto 27 => u0_m0_wo0_mtree_mult1_0_q(26)) & u0_m0_wo0_mtree_mult1_0_q));
+    u0_m0_wo0_accum_a <= STD_LOGIC_VECTOR(STD_LOGIC_VECTOR((31 downto 28 => u0_m0_wo0_mtree_mult1_0_q(27)) & u0_m0_wo0_mtree_mult1_0_q));
     u0_m0_wo0_accum_b <= STD_LOGIC_VECTOR(u0_m0_wo0_adelay_q);
     u0_m0_wo0_accum_i <= u0_m0_wo0_accum_a;
     u0_m0_wo0_accum_clkproc: PROCESS (clk, areset)
@@ -526,7 +526,7 @@ begin
             END IF;
         END IF;
     END PROCESS;
-    u0_m0_wo0_accum_q <= u0_m0_wo0_accum_o(30 downto 0);
+    u0_m0_wo0_accum_q <= u0_m0_wo0_accum_o(31 downto 0);
 
     -- u0_m0_wo0_oseq(SEQUENCE,40)@14 + 1
     u0_m0_wo0_oseq_clkproc: PROCESS (clk, areset)

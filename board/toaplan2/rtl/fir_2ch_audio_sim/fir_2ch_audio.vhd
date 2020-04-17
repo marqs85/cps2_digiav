@@ -20,7 +20,7 @@ entity fir_2ch_audio is
   port (
     clk : in STD_LOGIC;    
     reset_n : in STD_LOGIC;
-    ast_sink_data : in STD_LOGIC_VECTOR((0 + 1*17) * 1 + 0 - 1 downto 0);
+    ast_sink_data : in STD_LOGIC_VECTOR((0 + 1*18) * 1 + 0 - 1 downto 0);
     ast_sink_valid : in STD_LOGIC;
     ast_sink_sop : in STD_LOGIC;
     ast_sink_eop : in STD_LOGIC;
@@ -40,7 +40,7 @@ architecture syn of fir_2ch_audio is
   port (
     clk : in STD_LOGIC;
     reset_n : in STD_LOGIC;
-    ast_sink_data : in STD_LOGIC_VECTOR((0 + 1*17) * 1 + 0 - 1 downto 0);
+    ast_sink_data : in STD_LOGIC_VECTOR((0 + 1*18) * 1 + 0 - 1 downto 0);
     ast_sink_valid : in STD_LOGIC;
     ast_sink_ready : out STD_LOGIC;
     ast_sink_sop : in STD_LOGIC;

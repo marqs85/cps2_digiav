@@ -41,8 +41,8 @@ https://fpgasoftware.intel.com/eula.
 	(port
 		(pt 0 152)
 		(input)
-		(text "ast_sink_data[16..0]" (rect 0 0 79 12)(font "Arial" (font_size 8)))
-		(text "ast_sink_data[16..0]" (rect 4 141 124 152)(font "Arial" (font_size 8)))
+		(text "ast_sink_data[17..0]" (rect 0 0 79 12)(font "Arial" (font_size 8)))
+		(text "ast_sink_data[17..0]" (rect 4 141 124 152)(font "Arial" (font_size 8)))
 		(line (pt 0 152)(pt 144 152)(line_width 3))
 	)
 	(port
