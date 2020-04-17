@@ -1,0 +1,30 @@
+right from U5, near Toaplan logo:
+: 5V
+: GND
+
+via left from GP9001:
+: VCLK
+
+R2R DAC resistors:
+R1: B4
+R2: G4
+R3: R4
+...
+R15: B0
+R14: G0
+R15: R0
+
+R16:
+left side: CSYNC
+
+U38 - YM2151:
+pin 1: GND
+pin 20: YM_WS
+pin 21: YM_DAT
+pin 23: YM_BCK
+pin 24: YM_oCM
+note: use coax cable for YM_oCM/GND
+
+R23:
+right side: AUD_ADPCM
+note: use coax cable for AUD_ADPCM/GND

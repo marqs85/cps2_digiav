@@ -10,6 +10,7 @@ Supported boards
 * CPS1 (88617A)
 * CPS2
 * CPS3
+* Toaplan V2
 
 Hardware
 --------------------------
