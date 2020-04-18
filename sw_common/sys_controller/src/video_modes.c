@@ -61,7 +61,7 @@ const source_params_t cps2_params =         { 16000000UL,  268288UL,  { 384,  22
 
 // CPS3
 const source_params_t cps3_params_std =     { 42954500UL,  720720UL,  { 384,  224,   546, 0,  264,   68, 21,   51, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
-const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 495,  224,   682, 0,  264,   72, 21,   54, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
+const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 496,  224,   682, 0,  264,   71, 21,   54, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
 
 // Toaplan2
 const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
@@ -84,9 +84,11 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_240p_CRT,  &cps3_params_std,  0, 0,  0, 0,  { 4851,     2,    10, 12896, 0, 4,  1, 0, 0} },  \
     { ADMODE_480p_CRT,  &cps3_params_std,  1, 1,  0, 0,  { 4812,     4,     5,  2816, 0, 1,  1, 0, 0} },  \
     { ADMODE_720p,      &cps3_params_std,  1, 2,  0, 0,  { 4762,    66,    91,  1024, 0, 1,  1, 0, 0} },  \
+    { ADMODE_1280x1024, &cps3_params_std,  2, 3,  0, 0,  { 4760,   208,   210,   544, 0, 4,  1, 0, 0} },  \
     { ADMODE_1080p_4X,  &cps3_params_std,  2, 3,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
     { ADMODE_1080p_5X,  &cps3_params_std,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
     { ADMODE_1920x1200, &cps3_params_std,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
+    { ADMODE_1600x1200, &cps3_params_std,  3, 4,  0, 0,  { 3324,   164,  1001,     0, 0, 1,  1, 0, 3} },  \
     { ADMODE_1920x1440, &cps3_params_std,  4, 5,  0, 0,  { 3864,   520,   693,     0, 0, 1,  1, 0, 3} },  \
 
     /* CPS3 wide modes */ \

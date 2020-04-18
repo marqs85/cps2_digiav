@@ -72,9 +72,8 @@ wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
 
 
-// Latch inputs syncronized to PCLKx2_in (negedge)
-always @(posedge PCLK_in)
-begin
+// Latch inputs syncronized to pixel clock
+always @(posedge PCLK_in) begin
     R_in_L <= R_in;
     G_in_L <= G_in;
     B_in_L <= B_in;
@@ -113,9 +112,7 @@ cps3_frontend u_cps3_frontend (
     .frame_change(CPS_fe_frame_change),
     .h_active(fe_status[9:0]),
     .v_active(fe_status[19:10]),
-    .h_total(fe_status[29:20]),
-    .v_total(fe_status2[9:0]),
-    .mclk_cfg_id(fe_status2[14:10])
+    .vclks_per_frame(fe_status2[21:0])
 );
 
 //assign HDMI_TX_RST_N = reset_n;

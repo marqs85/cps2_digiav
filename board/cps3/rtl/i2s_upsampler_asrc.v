@@ -57,14 +57,17 @@ output ALRCLK_o;
 wire [15:0] APDATA [0:1];
 wire APDATA_VALID;
 
-i2s_rx_asrc i2s_rx_u(
+// CPS3 uses right justified audio format with L/R channels reversed
+i2s_rx_asrc #(
+    .MODE(1)
+) i2s_rx_u(
     .AMCLK_i(AMCLK_i),
     .reset_n(nARST),
     .I2S_BCK(ASCLK_i),
     .I2S_DATA(ASDATA_i),
     .I2S_WS(ALRCLK_i),
-    .APDATA_LEFT_o(APDATA[1]),
-    .APDATA_RIGHT_o(APDATA[0]),
+    .APDATA_LEFT_o(APDATA[0]),
+    .APDATA_RIGHT_o(APDATA[1]),
     .APDATA_VALID_o(APDATA_VALID)
 );
 

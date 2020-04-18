@@ -35,30 +35,26 @@ module cps3_frontend (
     output reg frame_change,
     output [9:0] h_active,
     output [9:0] v_active,
-    output reg [9:0] h_total,
-    output reg [9:0] v_total,
-    output [4:0] mclk_cfg_id
+    output [21:0] vclks_per_frame
 );
-
-`include "mclk_cfg_ids.vh"
 
 localparam CPS3_ASP_STD         = 1'b0;
 localparam CPS3_ASP_WIDE        = 1'b1;
 
-localparam CPS3_H_TOTAL_STD     = 546;
-localparam CPS3_H_SYNCLEN_STD   = 8'd51;
-localparam CPS3_H_BACKPORCH_STD = 9'd68;
-localparam CPS3_H_ACTIVE_STD    = 9'd384;
+localparam [9:0] CPS3_H_TOTAL_STD     = 546;
+localparam [7:0] CPS3_H_SYNCLEN_STD   = 51;
+localparam [8:0] CPS3_H_BACKPORCH_STD = 68;
+localparam [8:0] CPS3_H_ACTIVE_STD    = 384;
 
-localparam CPS3_H_TOTAL_WIDE     = 682;
-localparam CPS3_H_SYNCLEN_WIDE   = 8'd54;
-localparam CPS3_H_BACKPORCH_WIDE = 9'd72;
-localparam CPS3_H_ACTIVE_WIDE    = 9'd495;
+localparam [9:0] CPS3_H_TOTAL_WIDE     = 682;
+localparam [7:0] CPS3_H_SYNCLEN_WIDE   = 54;
+localparam [8:0] CPS3_H_BACKPORCH_WIDE = 71;
+localparam [8:0] CPS3_H_ACTIVE_WIDE    = 496;
 
-localparam CPS3_V_TOTAL     = 264;
-localparam CPS3_V_SYNCLEN   = 3'd3;
-localparam CPS3_V_BACKPORCH = 6'd21;
-localparam CPS3_V_ACTIVE    = 9'd224;
+localparam [9:0] CPS3_V_TOTAL     = 264;
+localparam [2:0] CPS3_V_SYNCLEN   = 3;
+localparam [5:0] CPS3_V_BACKPORCH = 21;
+localparam [8:0] CPS3_V_ACTIVE    = 224;
 
 reg [9:0] h_ctr;
 reg h_ctr_divctr;
@@ -80,7 +76,7 @@ wire [8:0] V_ACTIVE = CPS3_V_ACTIVE;
 
 assign h_active = wide_mode ? CPS3_H_ACTIVE_WIDE : CPS3_H_ACTIVE_STD;
 assign v_active = CPS3_V_ACTIVE;
-assign mclk_cfg_id = CPS3_MCLK_CFG;
+assign vclks_per_frame = 2730*CPS3_V_TOTAL;
 
 always @(posedge PCLK_i) begin
     R <= R_i;
@@ -97,8 +93,6 @@ always @(posedge PCLK_i) begin
             v_ctr <= 0;
             frame_change <= 1'b1;
             VSYNC <= 1'b0;
-            h_total <= h_ctr + 1'b1;
-            v_total <= v_ctr + 1'b1;
             wide_mode <= (h_ctr == CPS3_H_TOTAL_WIDE-1'b1);
         end else begin
             v_ctr <= v_ctr + 1'b1;
