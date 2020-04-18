@@ -3,7 +3,7 @@ CPS2 digital AV interface (Toaplan V2 version)
 
 Features (current)
 --------------------------
-* framelocked 59-60Hz output (game dependent) with max. 40 scanline latency
+* framelocked 59.4Hz output with max. 40 scanline latency
   * 240p_CRT (for 15kHz CRTs and capture)
   * 480p_CRT (for 31kHz CRTs)
   * 720p (CEA)

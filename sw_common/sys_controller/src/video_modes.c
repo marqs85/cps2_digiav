@@ -63,8 +63,9 @@ const source_params_t cps2_params =         { 16000000UL,  268288UL,  { 384,  22
 const source_params_t cps3_params_std =     { 42954500UL,  720720UL,  { 384,  224,   546, 0,  264,   68, 21,   51, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
 const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 495,  224,   682, 0,  264,   72, 21,   54, 3},  {4760, 72584, 85909,  36, 0, 0,  1, 0, 0} };
 
-// Toaplan2 - Knuckle Bash
+// Toaplan2
 const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
+const source_params_t tp2_params =          { 13500000UL,  227232UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
 
 
 const ad_mode_data_t adaptive_modes_default[] = { \
@@ -96,7 +97,7 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_1080p_5X,  &cps3_params_wide,  3, 4,  0, 0,  { 4762,    66,    91,   256, 0, 1,  1, 0, 0} },  \
     { ADMODE_1920x1200, &cps3_params_wide,  3, 4,  0, 0,  { 3137,   523,   693,     0, 0, 1,  1, 0, 3} },  \
 
-    /* Toaplan2 / Knuckle Bash */
+    /* Toaplan2 boards with deranged sync (Knuckle Bash, V-V, Dogyuun etc.) */
     { ADMODE_240p_CRT,  &tp2_kbash_params,  0, 0,  0, 0,  { 8013, 25499, 56825, 16544, 0, 4,  0, 0, 0} },  \
     { ADMODE_480p_CRT,  &tp2_kbash_params,  1, 1,  0, 0,  { 7997, 25771, 56825,  3744, 0, 4,  0, 0, 0} },  \
     { ADMODE_720p,      &tp2_kbash_params,  2, 2,  0, 0,  { 7850,  1174,  2273,  1024, 0, 1,  0, 0, 0} },  \
@@ -106,6 +107,17 @@ const ad_mode_data_t adaptive_modes_default[] = { \
     { ADMODE_1600x1200, &tp2_kbash_params,  4, 4,  0, 0,  { 5569,  1887,  2273,     0, 0, 1,  0, 0, 3} },  \
     { ADMODE_1920x1200, &tp2_kbash_params,  4, 4,  0, 0,  { 5274,   678,  2273,     0, 0, 1,  0, 0, 3} },  \
     { ADMODE_1920x1440, &tp2_kbash_params,  5, 5,  0, 0,  { 6426,  9918, 11365,     0, 0, 1,  0, 0, 3} },  \
+
+    /* Toaplan2 boards with standard sync */
+    { ADMODE_240p_CRT,  &tp2_params,  0, 0,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
+    { ADMODE_480p_CRT,  &tp2_params,  1, 1,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },  \
+    { ADMODE_720p,      &tp2_params,  2, 2,  0, 0,  { 7853,    10,   526,  1024, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1280x1024, &tp2_params,  3, 3,  0, 0,  { 7850,  5072, 18936,   544, 0, 4,  0, 0, 0} },  \
+    { ADMODE_1080p_4X,  &tp2_params,  3, 3,  0, 0,  { 7853,    10,   526,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1080p_5X,  &tp2_params,  4, 4,  0, 0,  { 7853,    10,   526,   256, 0, 1,  0, 0, 0} },  \
+    { ADMODE_1600x1200, &tp2_params,  4, 4,  0, 0,  { 5571,   171,   263,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1200, &tp2_params,  4, 4,  0, 0,  { 5276,   212,  7101,     0, 0, 1,  0, 0, 3} },  \
+    { ADMODE_1920x1440, &tp2_params,  5, 5,  0, 0,  { 6428,  6740,  7101,     0, 0, 1,  0, 0, 3} },  \
 };
 
 const mode_idx_t ad_mode_id_map[] = {CRTMODE_240p, CRTMODE_480p, STDMODE_720p, STDMODE_1280x1024, STDMODE_1080p, STDMODE_1080p, STDMODE_1600x1200, STDMODE_1920x1200, STDMODE_1920x1440};
