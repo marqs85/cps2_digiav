@@ -7,8 +7,10 @@ Features (current)
   * 240p_CRT (for 15kHz CRTs and capture)
   * 480p_CRT (for 31kHz CRTs)
   * 720p (CEA)
+  * 1280x1024 (VESA)
   * 1080p (CEA, vertical 4x)
   * 1080p (CEA, vertical 5x) [default]
+  * 1600x1200 (VESA)
   * 1920x1200 (CVT-RB)
   * 1920x1440 (CVT-RB)
 * 24bit/48kHz audio output

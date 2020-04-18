@@ -7,10 +7,12 @@ Features (current)
   * 240p_CRT (for 15kHz CRTs and capture)
   * 480p_CRT (for 31kHz CRTs)
   * 720p (CEA)
+  * 1280x1024 (VESA) [std. aspect only]
   * 1080p (CEA, vertical 4x)
   * 1080p (CEA, vertical 5x) [default]
+  * 1600x1200 (VESA) [std. aspect only]
   * 1920x1200 (CVT-RB)
-  * 1920x1440 (CVT-RB) [non-widescreen only]
+  * 1920x1440 (CVT-RB) [std. aspect only]
 * 24bit/48kHz audio output
 * supports CPS3 standard and widescreen modes
 
