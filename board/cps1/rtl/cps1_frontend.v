@@ -36,22 +36,18 @@ module cps1_frontend (
     output reg frame_change,
     output [9:0] h_active,
     output [9:0] v_active,
-    output reg [9:0] h_total,
-    output reg [9:0] v_total,
-    output [4:0] mclk_cfg_id
+    output [21:0] vclks_per_frame
 );
 
-`include "mclk_cfg_ids.vh"
+localparam bit [9:0] CPS2_H_TOTAL     = 512;
+localparam bit [7:0] CPS2_H_SYNCLEN   = 36;
+localparam bit [8:0] CPS2_H_BACKPORCH = 61;
+localparam bit [8:0] CPS2_H_ACTIVE    = 384;
 
-localparam CPS2_H_TOTAL     = 512;
-localparam CPS2_H_SYNCLEN   = 8'd36;
-localparam CPS2_H_BACKPORCH = 9'd61;
-localparam CPS2_H_ACTIVE    = 9'd384;
-
-localparam CPS2_V_TOTAL     = 262;
-localparam CPS2_V_SYNCLEN   = 3'd3;
-localparam CPS2_V_BACKPORCH = 6'd22;
-localparam CPS2_V_ACTIVE    = 9'd224;
+localparam bit [9:0] CPS2_V_TOTAL     = 262;
+localparam bit [2:0] CPS2_V_SYNCLEN   = 3;
+localparam bit [5:0] CPS2_V_BACKPORCH = 22;
+localparam bit [8:0] CPS2_V_ACTIVE    = 224;
 
 reg [8:0] h_ctr;
 reg h_ctr_divctr;
@@ -70,9 +66,7 @@ wire [8:0] V_ACTIVE = CPS2_V_ACTIVE;
 
 assign h_active = CPS2_H_ACTIVE;
 assign v_active = CPS2_V_ACTIVE;
-assign h_total = CPS2_H_TOTAL;
-assign v_total = CPS2_V_TOTAL;
-assign mclk_cfg_id = CPS2_MCLK_CFG;
+assign vclks_per_frame = 2*CPS2_H_TOTAL*CPS2_V_TOTAL;
 
 always @(posedge PCLK2x_i) begin
     if (h_ctr_divctr == 1'b0) begin
@@ -84,7 +78,7 @@ always @(posedge PCLK2x_i) begin
 
     CSYNC_i_prev <= CSYNC_i;
 
-    if ((CSYNC_i_prev & ~CSYNC_i) | ((h_ctr==511) & h_ctr_divctr)) begin
+    if ((CSYNC_i_prev & ~CSYNC_i) | ((h_ctr==CPS2_H_TOTAL-1) & h_ctr_divctr)) begin
         h_ctr <= 0;
         h_ctr_divctr <= 0;
         HSYNC <= 1'b0;

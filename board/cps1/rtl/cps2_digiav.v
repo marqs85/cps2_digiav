@@ -118,9 +118,7 @@ cps1_frontend u_cps1_frontend (
     .frame_change(CPS_fe_frame_change),
     .h_active(fe_status[9:0]),
     .v_active(fe_status[19:10]),
-    .h_total(fe_status[29:20]),
-    .v_total(fe_status2[9:0]),
-    .mclk_cfg_id(fe_status2[14:10])
+    .vclks_per_frame(fe_status2[21:0])
 );
 
 //assign HDMI_TX_RST_N = reset_n;
