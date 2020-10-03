@@ -20,6 +20,7 @@
 #include <string.h>
 #include "system.h"
 #include "avconfig.h"
+#include "menu.h"
 
 #define DEFAULT_ON              1
 
@@ -33,6 +34,7 @@ const avconfig_t tc_default = {
 
 int reset_target_avconfig() {
     set_default_avconfig(0);
+    render_osd_page();
 
     return 0;
 }
@@ -54,8 +56,11 @@ int set_default_avconfig(int update_cc)
     return 0;
 }
 
-status_t update_avconfig() {
+status_t update_avconfig(avconfig_t *avc) {
     status_t status = NO_CHANGE;
+
+    if (avc != NULL)
+        memcpy(&tc, avc, sizeof(avconfig_t));
 
     if ((tc.ad_mode_id != cc.ad_mode_id))
         status = (status < MODE_CHANGE) ? MODE_CHANGE : status;

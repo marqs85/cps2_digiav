@@ -33,14 +33,20 @@ set_input_delay -clock pclk 0 [get_ports {sda HDMI_TX_INT_N BTN*}]
 #set_output_delay -reference_pin HDMI_TX_I2S_BCK -clock i2s_bck 0 $i2soutputs_hdmi
 #set_false_path -to [remove_from_collection [all_outputs] "$critoutputs_hdmi $i2soutputs_hdmi"]
 
-# ADV7513
-set hdmitx_dmin -0.7
-set hdmitx_dmax 1
+# ADV7513 (0ns video clock delay adjustment)
+set hdmitx_dmin -1.9
+set hdmitx_dmax -0.2
 set hdmitx_data_outputs [get_ports {HDMI_TX_RD* HDMI_TX_GD* HDMI_TX_BD* HDMI_TX_DE HDMI_TX_HS HDMI_TX_VS}]
 set_output_delay -clock pclk_si_out -min $hdmitx_dmin $hdmitx_data_outputs -add_delay
 set_output_delay -clock pclk_si_out -max $hdmitx_dmax $hdmitx_data_outputs -add_delay
 set_output_delay -clock i2s_bck_out -min $hdmitx_dmin [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
 set_output_delay -clock i2s_bck_out -max $hdmitx_dmax [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
+
+# EPCQ controller (delays from N25Q128A datasheet)
+create_generated_clock -name epcq_clk -master_clock clk25 -source {pll_pclk_inst|altpll_component|auto_generated|pll1|clk[0]} -multiply_by 1 [get_ports *ALTERA_DCLK]
+set_input_delay -clock epcq_clk -clock_fall 5 [get_ports *ALTERA_DATA0]
+set_output_delay -clock epcq_clk 4 [get_ports *ALTERA_SCE]
+set_output_delay -clock epcq_clk 2 [get_ports **ALTERA_SDO]
 
 
 ### CPU/scanconverter clock relations ###
@@ -49,7 +55,7 @@ set_clock_groups -exclusive \
 -group {bck i2s_bck i2s_bck_out} \
 -group {pclk} \
 -group {pclk_si pclk_si_out} \
--group {clk25} \
+-group {clk25 epcq_clk} \
 -group {mclk}
 
 set_false_path -from [get_clocks i2s_bck] -to [get_clocks bck]

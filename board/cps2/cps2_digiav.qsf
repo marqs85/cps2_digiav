@@ -139,10 +139,21 @@ set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
 set_global_assignment -name ENABLE_LOGIC_ANALYZER_INTERFACE OFF
 set_location_assignment PIN_23 -to MCLK_SI
 set_location_assignment PIN_24 -to PCLK_SI
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_RD
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_GD
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_BD
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_DE
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_HS
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_VS
 
 
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
-set_global_assignment -name SEED 1
+set_global_assignment -name SEED 3
+
+set_global_assignment -name SEARCH_PATH ../../rtl_common
+set_global_assignment -name SEARCH_PATH rtl
+
+
 
 set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
@@ -151,6 +162,8 @@ set_global_assignment -name QIP_FILE rtl/pll_i2s.qip
 set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
 set_global_assignment -name SIP_FILE rtl/fir_2ch_audio.sip
 set_global_assignment -name QIP_FILE ../../rtl_common/linebuf.qip
+set_global_assignment -name QIP_FILE ../../rtl_common/char_array.qip
+set_global_assignment -name QIP_FILE ../../rtl_common/char_rom.qip
 set_global_assignment -name SDC_FILE cps2_digiav.sdc
 set_global_assignment -name VERILOG_FILE ../../rtl_common/scanconverter.v
 set_global_assignment -name VERILOG_FILE ../../rtl_common/btn_debounce.v
@@ -160,8 +173,4 @@ set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_2x.v
 set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
 set_global_assignment -name VERILOG_FILE rtl/cps2_frontend.v
 set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
-set_global_assignment -name SEARCH_PATH ../../rtl_common
-set_global_assignment -name SEARCH_PATH rtl
-set_global_assignment -name SEARCH_PATH software/sys_controller/mem_init/
-
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

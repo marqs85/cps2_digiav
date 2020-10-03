@@ -221,6 +221,13 @@ altera_avalon_jtag_uart_driver_C_LIB_SRCS := \
 altera_avalon_pio_driver_SRCS_ROOT := drivers
 
 # altera_avalon_pio_driver sources 
+# altera_epcq_controller_driver sources root 
+altera_epcq_controller_driver_SRCS_ROOT := drivers
+
+# altera_epcq_controller_driver sources 
+altera_epcq_controller_driver_C_LIB_SRCS := \
+	$(altera_epcq_controller_driver_SRCS_ROOT)/src/altera_epcq_controller.c
+
 # altera_nios2_gen2_hal_driver sources root 
 altera_nios2_gen2_hal_driver_SRCS_ROOT := HAL
 
@@ -324,6 +331,10 @@ i2c_opencores_driver_SRCS_ROOT := drivers
 i2c_opencores_driver_C_LIB_SRCS := \
 	$(i2c_opencores_driver_SRCS_ROOT)/src/i2c_opencores.c
 
+# osd_generator_driver sources root 
+osd_generator_driver_SRCS_ROOT := drivers
+
+# osd_generator_driver sources 
 # sc_config_driver sources root 
 sc_config_driver_SRCS_ROOT := drivers
 
@@ -332,6 +343,7 @@ sc_config_driver_SRCS_ROOT := drivers
 # Assemble all component C source files 
 COMPONENT_C_LIB_SRCS += \
 	$(altera_avalon_jtag_uart_driver_C_LIB_SRCS) \
+	$(altera_epcq_controller_driver_C_LIB_SRCS) \
 	$(altera_nios2_gen2_hal_driver_C_LIB_SRCS) \
 	$(hal_C_LIB_SRCS) \
 	$(i2c_opencores_driver_C_LIB_SRCS) \

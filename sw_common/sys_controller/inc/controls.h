@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -17,23 +17,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SYSCONFIG_H_
-#define SYSCONFIG_H_
+#ifndef CONTROLS_H_
+#define CONTROLS_H_
 
-#ifndef DEBUG
-#define OS_PRINTF(...)
-#define ErrorF(...)
-#define printf(...)
-#else
-#include <stdio.h>
-#define OS_PRINTF printf
-#define ErrorF printf
-// use reduced printf
-//#define printf alt_printf
+#include <stdint.h>
+
+typedef enum {
+    PB_BTN0             = (1<<0),
+    PB_BTN1             = (1<<1)
+} btn_vec_t;
+
+void parse_control(uint8_t btn_vec);
+
 #endif
-
-#define TOAPLAN2
-
-#define WAITLOOP_SLEEP_US   10000
-
-#endif /* SYSCONFIG_H_ */

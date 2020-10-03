@@ -27,11 +27,17 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
+    <File Name="../../../../sw_common/sys_controller/src/userdata.c"/>
+    <File Name="../../../../sw_common/sys_controller/src/controls.c"/>
+    <File Name="../../../../sw_common/sys_controller/src/menu.c"/>
     <File Name="../../../../sw_common/sys_controller/src/sys_controller.c"/>
     <File Name="../../../../sw_common/sys_controller/src/video_modes.c"/>
     <File Name="../../../../sw_common/sys_controller/src/avconfig.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
+    <File Name="../../../../sw_common/sys_controller/inc/userdata.h"/>
+    <File Name="../../../../sw_common/sys_controller/inc/controls.h"/>
+    <File Name="../../../../sw_common/sys_controller/inc/menu.h"/>
     <File Name="../../../../sw_common/sys_controller/inc/video_modes.h"/>
     <File Name="../../../../sw_common/sys_controller/inc/avconfig.h"/>
   </VirtualDirectory>

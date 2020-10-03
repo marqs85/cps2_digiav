@@ -102,7 +102,7 @@ typedef struct {
     uint16_t y_size;
     uint16_t framesync_line;
     uint8_t x_start_lb;
-    int8_t linebuf_startline;
+    int8_t y_start_lb;
 } vm_mult_config_t;
 
 typedef struct {

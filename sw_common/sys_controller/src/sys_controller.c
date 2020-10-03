@@ -27,12 +27,14 @@
 #include "adv7513.h"
 #include "si5351.h"
 #include "sc_config_regs.h"
+#include "osd_generator_regs.h"
 #include "video_modes.h"
 #include "avconfig.h"
+#include "menu.h"
+#include "userdata.h"
 
-#define PB_MASK             (3<<30)
-#define PB0_BIT             (1<<30)
-#define PB1_BIT             (1<<31)
+#define SSTAT_BTN_MASK  0xc0000000
+#define SSTAT_BTN_OFFS  30
 
 #define ADV7513_MAIN_BASE 0x72
 #define ADV7513_EDID_BASE 0x7e
@@ -52,6 +54,7 @@ adv7513_dev advtx_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
                          .cec_base = ADV7513_CEC_BASE};
 
 volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
+volatile osd_regs *osd = (volatile osd_regs*)OSD_GENERATOR_0_BASE;
 
 input_mode_t input_mode;
 
@@ -83,7 +86,7 @@ void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t 
     xy_out_config.x_offset = vm_conf->x_offset;
     xy_out_config2.y_offset = vm_conf->y_offset;
     xy_out_config2.x_start_lb = vm_conf->x_start_lb;
-    xy_out_config2.y_start_lb = vm_conf->linebuf_startline;
+    xy_out_config2.y_start_lb = vm_conf->y_start_lb;
     xy_out_config2.x_rpt = vm_conf->x_rpt;
     xy_out_config2.y_rpt = vm_conf->y_rpt;
     xy_out_config2.x_skip = vm_conf->x_skip;
@@ -104,12 +107,27 @@ int init_hw()
     I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ, 400000);
 
     // init HDMI TX
-    adv7513_init(&advtx_dev, 1);
+    adv7513_init(&advtx_dev);
 
     // Init Si5351C
     si5351_init(&si_dev);
 
+    init_flash();
+
     set_default_avconfig(1);
+    read_userdata(0);
+    init_menu();
+
+    // Init OSD
+    osd->osd_config.x_size = 1;
+    osd->osd_config.y_size = 1;
+    osd->osd_config.x_offset = 3;
+    osd->osd_config.y_offset = 3;
+    osd->osd_config.enable = 1;
+    osd->osd_config.status_timeout = 0;
+    osd->osd_config.status_refresh = 0;
+    osd->osd_config.menu_active = 0;
+    osd->osd_config.border_color = 1;
 
     return 0;
 }
@@ -155,18 +173,18 @@ int main()
 
     while(1) {
 
-        btn_vec = ~IORD_ALTERA_AVALON_PIO_DATA(PIO_0_BASE) & PB_MASK;
+        btn_vec = (~IORD_ALTERA_AVALON_PIO_DATA(PIO_0_BASE) & SSTAT_BTN_MASK) >> SSTAT_BTN_OFFS;
 
-        if ((btn_vec_prev == 0) && btn_vec) {
-            if (btn_vec & PB0_BIT) {
-                step_ad_mode(1);
-            }
-            if (btn_vec & PB1_BIT) {
-                step_ad_mode(0);
-            }
+        if (btn_vec_prev == 0) {
+            btn_vec_prev = btn_vec;
+        } else {
+            btn_vec_prev = btn_vec;
+            btn_vec = 0;
         }
 
-        status = update_avconfig();
+        parse_control(btn_vec);
+
+        status = update_avconfig(NULL);
 
         input_mode_change = check_input_mode_change();
 
@@ -192,8 +210,6 @@ int main()
 
         adv7513_check_hpd_power(&advtx_dev);
         adv7513_update_config(&advtx_dev, &cur_avconfig->adv7513_cfg);
-
-        btn_vec_prev = btn_vec;
 
         usleep(WAITLOOP_SLEEP_US);
     }

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016-2018  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -17,23 +17,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef SYSCONFIG_H_
-#define SYSCONFIG_H_
+#include <string.h>
+#include <unistd.h>
+#include "controls.h"
+#include "sysconfig.h"
+#include "menu.h"
 
-#ifndef DEBUG
-#define OS_PRINTF(...)
-#define ErrorF(...)
-#define printf(...)
-#else
-#include <stdio.h>
-#define OS_PRINTF printf
-#define ErrorF printf
-// use reduced printf
-//#define printf alt_printf
-#endif
+void parse_control(uint8_t btn_vec)
+{
+    btn_vec_t b = (btn_vec_t)btn_vec;
 
-#define TOAPLAN2
+    if (btn_vec) {
+        printf("BTN_CODE: 0x%.2lx\n", btn_vec);
 
-#define WAITLOOP_SLEEP_US   10000
-
-#endif /* SYSCONFIG_H_ */
+        if (!is_menu_active()) {
+            if (b == PB_BTN1)
+                display_menu(SHOW_MENU);
+            else if (b == PB_BTN0)
+                ;
+        } else {
+            if (b == PB_BTN1)
+                display_menu(NEXT_OPT);
+            else if (b == PB_BTN0)
+                display_menu(VAL_PLUS);
+        }
+    }
+}

@@ -17,46 +17,39 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef AVCONFIG_H_
-#define AVCONFIG_H_
+#ifndef USERDATA_H_
+#define USERDATA_H_
 
 #include <stdint.h>
-#include "adv7513.h"
-#include "video_modes.h"
+#include "avconfig.h"
 
-#define SIGNED_NUMVAL_ZERO  128
+// EPCS16 pagesize is 256 bytes
+// Flash is split 50-50 to FW and userdata, 1MB each
+#define PAGESIZE 256
+#define PAGES_PER_SECTOR 256        //EPCS "sector" corresponds to "block" on Spansion flash
+#define SECTORSIZE (PAGESIZE*PAGES_PER_SECTOR)
+#define USERDATA_OFFSET 0x100000
+#define MAX_USERDATA_ENTRY 15    // 16 sectors for userdata
 
-#define SCANLINESTR_MAX     15
-#define SL_HYBRIDSTR_MAX    28
-#define H_MASK_MAX          255
-#define V_MASK_MAX          63
-#define HV_MASK_MAX_BR      15
-
-#define SL_MODE_MAX         2
-#define SL_TYPE_MAX         2
-
-// In reverse order of importance
 typedef enum {
-    NO_CHANGE           = 0,
-    SC_CONFIG_CHANGE    = 1,
-    MODE_CHANGE         = 2,
-    TX_MODE_CHANGE      = 3,
-    ACTIVITY_CHANGE     = 4
-} status_t;
+    UDE_INITCFG  = 0,
+    UDE_PROFILE,
+} ude_type;
 
 typedef struct {
-    uint8_t sl_mode;
-    uint8_t sl_str;
-    ad_mode_id_t ad_mode_id;
-    adv7513_config adv7513_cfg;
-} __attribute__((packed)) avconfig_t;
+    char userdata_key[8];
+    uint8_t version_major;
+    uint8_t version_minor;
+} __attribute__((packed, __may_alias__)) ude_hdr;
 
-int reset_target_avconfig();
+typedef struct {
+    ude_hdr hdr;
+    uint16_t avc_data_len;
+    avconfig_t avc;
+} __attribute__((packed, __may_alias__)) ude_profile;
 
-avconfig_t* get_current_avconfig();
-
-int set_default_avconfig(int update_cc);
-
-status_t update_avconfig(avconfig_t *avc);
+int init_flash();
+int write_userdata(uint8_t entry);
+int read_userdata(uint8_t entry);
 
 #endif

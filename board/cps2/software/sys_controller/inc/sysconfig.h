@@ -32,6 +32,8 @@
 //#define printf alt_printf
 #endif
 
+#define CPS1_CPS2
+
 #define WAITLOOP_SLEEP_US   10000
 
 #endif /* SYSCONFIG_H_ */
