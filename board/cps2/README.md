@@ -17,9 +17,7 @@ Features (current)
 
 TODO
 --------------------------
-* OSD/UI
 * scanline options
-* settings store / profiles
 
 Installation
 --------------------------
@@ -34,6 +32,12 @@ Signal hookup points are listed in doc/cps2_hookup_points.txt and instructions a
 
 Usage
 --------------------------
-Board is controlled via CPS2 volume buttons on the side (which do not affect digital volume level):
-* VOL-: select lower output resolution
-* VOL+: select higher output resolution
+Board is controlled via CPS2 volume buttons on the side (which do not affect digital volume level).
+
+Bindings outside OSD:
+* VOL-: enable OSD
+* VOL+: reserved
+
+Bindings inside OSD:
+* VOL-: next option
+* VOL+: next value / select function
