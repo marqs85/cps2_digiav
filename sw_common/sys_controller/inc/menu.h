@@ -21,7 +21,6 @@
 #define MENU_H_
 
 #include <stdint.h>
-#include "controls.h"
 
 typedef enum {
     OPT_AVCONFIG_SELECTION,

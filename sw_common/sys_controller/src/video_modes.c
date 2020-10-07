@@ -22,6 +22,7 @@
 #include <string.h>
 #include <stdint.h>
 #include "system.h"
+#include "sysconfig.h"
 #include "video_modes.h"
 #include "avconfig.h"
 
@@ -216,6 +217,8 @@ const ad_mode_data_t* get_output_mode(input_mode_t *im, ad_mode_id_t ad_mode_id,
                 vm_conf->x_start_lb = (vm_conf->x_offset >= 0) ? 0 : (-vm_conf->x_offset / (adaptive_modes[i].x_rpt+1));
                 vm_conf->x_size = vm_in->timings.h_active*(vm_conf->x_rpt+1);
                 vm_conf->y_start_lb = ((vm_in->timings.v_active - (vm_out->timings.v_active/(adaptive_modes[i].y_rpt+1)))/2) + adaptive_modes[i].y_offset_i;
+                if (ad_mode_id == ADMODE_1080p_5X)
+                    vm_conf->y_start_lb += (4-cc->l5x_1080p_y_offset);
                 vm_conf->y_offset = -(adaptive_modes[i].y_rpt+1)*vm_conf->y_start_lb;
                 vm_conf->y_size = vm_in->timings.v_active*(adaptive_modes[i].y_rpt+1);
 

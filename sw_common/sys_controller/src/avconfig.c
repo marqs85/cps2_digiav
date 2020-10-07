@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include "system.h"
+#include "sysconfig.h"
 #include "avconfig.h"
 #include "menu.h"
 
@@ -29,6 +30,8 @@ avconfig_t cc, tc;
 
 // Default configuration
 const avconfig_t tc_default = {
+    .sl_str = 4,
+    .l5x_1080p_y_offset = 4,
     .ad_mode_id = ADMODE_1080p_5X,
 };
 
@@ -62,7 +65,13 @@ status_t update_avconfig(avconfig_t *avc) {
     if (avc != NULL)
         memcpy(&tc, avc, sizeof(avconfig_t));
 
-    if ((tc.ad_mode_id != cc.ad_mode_id))
+    if ((tc.sl_mode != cc.sl_mode) ||
+        (tc.sl_method != cc.sl_method) ||
+        (tc.sl_str != cc.sl_str))
+        status = (status < SC_CONFIG_CHANGE) ? SC_CONFIG_CHANGE : status;
+
+    if ((tc.ad_mode_id != cc.ad_mode_id) ||
+        (tc.l5x_1080p_y_offset != cc.l5x_1080p_y_offset))
         status = (status < MODE_CHANGE) ? MODE_CHANGE : status;
 
     memcpy(&cc, &tc, sizeof(avconfig_t));

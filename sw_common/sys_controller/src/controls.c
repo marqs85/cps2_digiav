@@ -20,8 +20,11 @@
 #include <string.h>
 #include <unistd.h>
 #include "controls.h"
+#include "avconfig.h"
 #include "sysconfig.h"
 #include "menu.h"
+
+extern avconfig_t tc;
 
 void parse_control(uint8_t btn_vec)
 {
@@ -34,7 +37,7 @@ void parse_control(uint8_t btn_vec)
             if (b == PB_BTN1)
                 display_menu(SHOW_MENU);
             else if (b == PB_BTN0)
-                ;
+                tc.sl_mode = (tc.sl_mode + 1) % 3;
         } else {
             if (b == PB_BTN1)
                 display_menu(NEXT_OPT);

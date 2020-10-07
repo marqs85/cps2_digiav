@@ -33,167 +33,55 @@ module sc_config_top(
     // SC interface
     input [31:0] fe_status_i,
     input [31:0] fe_status2_i,
-    output reg [31:0] misc_config_o,
-    output reg [31:0] sl_config_o,
-    output reg [31:0] sl_config2_o,
     output reg [31:0] hv_out_config_o,
     output reg [31:0] hv_out_config2_o,
     output reg [31:0] hv_out_config3_o,
     output reg [31:0] xy_out_config_o,
-    output reg [31:0] xy_out_config2_o
+    output reg [31:0] xy_out_config2_o,
+    output reg [31:0] misc_config_o,
+    output reg [31:0] sl_config_o,
+    output reg [31:0] sl_config2_o
 );
 
 localparam FE_STATUS_REGNUM =       4'h0;
 localparam FE_STATUS2_REGNUM =      4'h1;
-localparam MISC_CONFIG_REGNUM =     4'h2;
-localparam SL_CONFIG_REGNUM =       4'h3;
-localparam SL_CONFIG2_REGNUM =      4'h4;
-localparam HV_OUT_CONFIG_REGNUM =   4'h5;
-localparam HV_OUT_CONFIG2_REGNUM =  4'h6;
-localparam HV_OUT_CONFIG3_REGNUM =  4'h7;
-localparam XY_OUT_CONFIG_REGNUM =   4'h8;
-localparam XY_OUT_CONFIG2_REGNUM =  4'h9;
+localparam HV_OUT_CONFIG_REGNUM =   4'h2;
+localparam HV_OUT_CONFIG2_REGNUM =  4'h3;
+localparam HV_OUT_CONFIG3_REGNUM =  4'h4;
+localparam XY_OUT_CONFIG_REGNUM =   4'h5;
+localparam XY_OUT_CONFIG2_REGNUM =  4'h6;
+localparam MISC_CONFIG_REGNUM =     4'h7;
+localparam SL_CONFIG_REGNUM =       4'h8;
+localparam SL_CONFIG2_REGNUM =      4'h9;
 
+reg [31:0] config_reg[HV_OUT_CONFIG_REGNUM:SL_CONFIG2_REGNUM] /* synthesis ramstyle = "logic" */;
 
 assign avalon_s_waitrequest_n = 1'b1;
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        misc_config_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==MISC_CONFIG_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                misc_config_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                misc_config_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                misc_config_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                misc_config_o[7:0] <= avalon_s_writedata[7:0];
+genvar i;
+generate
+    for (i=HV_OUT_CONFIG_REGNUM; i <= SL_CONFIG2_REGNUM; i++) begin : gen_reg
+        always @(posedge clk_i or posedge rst_i) begin
+            if (rst_i) begin
+                config_reg[i] <= 0;
+            end else begin
+                if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==i)) begin
+                    if (avalon_s_byteenable[3])
+                        config_reg[i][31:24] <= avalon_s_writedata[31:24];
+                    if (avalon_s_byteenable[2])
+                        config_reg[i][23:16] <= avalon_s_writedata[23:16];
+                    if (avalon_s_byteenable[1])
+                        config_reg[i][15:8] <= avalon_s_writedata[15:8];
+                    if (avalon_s_byteenable[0])
+                        config_reg[i][7:0] <= avalon_s_writedata[7:0];
+                end
+            end
         end
     end
-end
+endgenerate
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        sl_config_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==SL_CONFIG_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                sl_config_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                sl_config_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                sl_config_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                sl_config_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
 
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        sl_config2_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==SL_CONFIG2_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                sl_config2_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                sl_config2_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                sl_config2_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                sl_config2_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        hv_out_config_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==HV_OUT_CONFIG_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                hv_out_config_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                hv_out_config_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                hv_out_config_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                hv_out_config_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        hv_out_config2_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==HV_OUT_CONFIG2_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                hv_out_config2_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                hv_out_config2_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                hv_out_config2_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                hv_out_config2_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        hv_out_config3_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==HV_OUT_CONFIG3_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                hv_out_config3_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                hv_out_config3_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                hv_out_config3_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                hv_out_config3_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        xy_out_config_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==XY_OUT_CONFIG_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                xy_out_config_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                xy_out_config_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                xy_out_config_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                xy_out_config_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-always @(posedge clk_i or posedge rst_i) begin
-    if (rst_i) begin
-        xy_out_config2_o <= 0;
-    end else begin
-        if (avalon_s_chipselect && avalon_s_write && (avalon_s_address==XY_OUT_CONFIG2_REGNUM)) begin
-            if (avalon_s_byteenable[3])
-                xy_out_config2_o[31:24] <= avalon_s_writedata[31:24];
-            if (avalon_s_byteenable[2])
-                xy_out_config2_o[23:16] <= avalon_s_writedata[23:16];
-            if (avalon_s_byteenable[1])
-                xy_out_config2_o[15:8] <= avalon_s_writedata[15:8];
-            if (avalon_s_byteenable[0])
-                xy_out_config2_o[7:0] <= avalon_s_writedata[7:0];
-        end
-    end
-end
-
-// no config reg readback -> no space reserved for unused bits
+// no readback for config regs -> unused bits optimized out
 always @(*) begin
     if (avalon_s_chipselect && avalon_s_read) begin
         case (avalon_s_address)
@@ -205,5 +93,14 @@ always @(*) begin
         avalon_s_readdata = 32'h00000000;
     end
 end
+
+assign hv_out_config_o = config_reg[HV_OUT_CONFIG_REGNUM];
+assign hv_out_config2_o = config_reg[HV_OUT_CONFIG2_REGNUM];
+assign hv_out_config3_o = config_reg[HV_OUT_CONFIG3_REGNUM];
+assign xy_out_config_o = config_reg[XY_OUT_CONFIG_REGNUM];
+assign xy_out_config2_o = config_reg[XY_OUT_CONFIG2_REGNUM];
+assign misc_config_o = config_reg[MISC_CONFIG_REGNUM];
+assign sl_config_o = config_reg[SL_CONFIG_REGNUM];
+assign sl_config2_o = config_reg[SL_CONFIG2_REGNUM];
 
 endmodule

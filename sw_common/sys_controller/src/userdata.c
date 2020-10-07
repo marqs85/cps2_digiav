@@ -25,7 +25,7 @@
 #include "altera_epcq_controller.h"
 
 #define PROFILE_VER_MAJOR   0
-#define PROFILE_VER_MINOR   90
+#define PROFILE_VER_MINOR   91
 
 // save some code space
 #define SINGLE_FLASH_INSTANCE

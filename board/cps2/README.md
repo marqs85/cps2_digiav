@@ -15,10 +15,6 @@ Features (current)
   * 1920x1440 (CVT-RB)
 * 24bit/48kHz audio output
 
-TODO
---------------------------
-* scanline options
-
 Installation
 --------------------------
 The add-on board can be installed inside of CPS2 A-board. The following additional parts are required:
@@ -35,8 +31,8 @@ Usage
 Board is controlled via CPS2 volume buttons on the side (which do not affect digital volume level).
 
 Bindings outside OSD:
-* VOL-: enable OSD
-* VOL+: reserved
+* VOL- (hold 1.5s): enable OSD
+* VOL+ (hold 1.5s): toggle scanline mode
 
 Bindings inside OSD:
 * VOL-: next option

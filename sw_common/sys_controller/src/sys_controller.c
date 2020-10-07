@@ -32,6 +32,7 @@
 #include "avconfig.h"
 #include "menu.h"
 #include "userdata.h"
+#include "controls.h"
 
 #define SSTAT_BTN_MASK  0xc0000000
 #define SSTAT_BTN_OFFS  30
@@ -57,18 +58,21 @@ volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
 volatile osd_regs *osd = (volatile osd_regs*)OSD_GENERATOR_0_BASE;
 
 input_mode_t input_mode;
+extern uint8_t menu_active;;
 
 
-void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf)
+void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf, avconfig_t *avc)
 {
-    misc_config_reg misc_config = {.data=0x00000000};
-    sl_config_reg sl_config = {.data=0x00000000};
-    sl_config2_reg sl_config2 = {.data=0x00000000};
+    int i;
+
     hv_config_reg hv_out_config = {.data=0x00000000};
     hv_config2_reg hv_out_config2 = {.data=0x00000000};
     hv_config3_reg hv_out_config3 = {.data=0x00000000};
     xy_config_reg xy_out_config = {.data=0x00000000};
     xy_config2_reg xy_out_config2 = {.data=0x00000000};
+    misc_config_reg misc_config = {.data=0x00000000};
+    sl_config_reg sl_config = {.data=0x00000000};
+    sl_config2_reg sl_config2 = {.data=0x00000000};
 
     // Set output params
     hv_out_config.h_total = vm_out->timings.h_total;
@@ -91,14 +95,22 @@ void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t 
     xy_out_config2.y_rpt = vm_conf->y_rpt;
     xy_out_config2.x_skip = vm_conf->x_skip;
 
-    sc->misc_config = misc_config;
-    sc->sl_config = sl_config;
-    sc->sl_config2 = sl_config2;
+    for (i=0; i<6; i++) {
+        sl_config.sl_l_str_arr |= avc->sl_str<<(4*i);
+        sl_config2.sl_c_str_arr |= avc->sl_str<<(4*i);
+    }
+    sl_config.sl_l_overlay = (avc->sl_mode >= 1) ? ((1<<((vm_conf->y_rpt+1)/2))-1) : 0;
+    sl_config2.sl_c_overlay = (avc->sl_mode == 2) ? ((1<<((vm_conf->x_rpt+1)/3))-1) : 0;
+    sl_config.sl_method = avc->sl_method;
+
     sc->hv_out_config = hv_out_config;
     sc->hv_out_config2 = hv_out_config2;
     sc->hv_out_config3 = hv_out_config3;
     sc->xy_out_config = xy_out_config;
     sc->xy_out_config2 = xy_out_config2;
+    sc->misc_config = misc_config;
+    sc->sl_config = sl_config;
+    sc->sl_config2 = sl_config2;
 }
 
 // Initialize hardware
@@ -159,6 +171,7 @@ int main()
     avconfig_t *cur_avconfig;
 
     uint32_t btn_vec, btn_vec_prev=0;
+    uint8_t btn_rpt=0;
 
     ret = init_hw();
 
@@ -175,12 +188,20 @@ int main()
 
         btn_vec = (~IORD_ALTERA_AVALON_PIO_DATA(PIO_0_BASE) & SSTAT_BTN_MASK) >> SSTAT_BTN_OFFS;
 
+        if ((btn_vec != 0) && (btn_vec == btn_vec_prev))
+            btn_rpt++;
+        else
+            btn_rpt = 0;
+
         if (btn_vec_prev == 0) {
             btn_vec_prev = btn_vec;
         } else {
             btn_vec_prev = btn_vec;
             btn_vec = 0;
         }
+
+        if (!menu_active)
+            btn_vec = (btn_rpt == 80) ? btn_vec_prev : 0;
 
         parse_control(btn_vec);
 
@@ -203,9 +224,11 @@ int main()
                 // configure audio MCLK
                 si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
 
-                update_sc_config(&vmode_in, &vmode_out, &vm_conf);
+                update_sc_config(&vmode_in, &vmode_out, &vm_conf, cur_avconfig);
                 adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
             }
+        } else if (status == SC_CONFIG_CHANGE) {
+            update_sc_config(&vmode_in, &vmode_out, &vm_conf, cur_avconfig);
         }
 
         adv7513_check_hpd_power(&advtx_dev);

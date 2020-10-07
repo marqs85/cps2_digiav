@@ -41,35 +41,6 @@ typedef union {
 
 typedef union {
     struct {
-        uint8_t mask_br:4;
-        uint32_t misc_rsv:28;
-    } __attribute__((packed, __may_alias__));
-    uint32_t data;
-} misc_config_reg;
-
-typedef union {
-    struct {
-        uint32_t sl_l_str_arr:20;
-        uint8_t sl_l_overlay:5;
-        uint8_t sl_hybr_str:5;
-        uint8_t sl_method:1;
-        uint8_t sl_no_altern:1;
-    } __attribute__((packed, __may_alias__));
-    uint32_t data;
-} sl_config_reg;
-
-typedef union {
-    struct {
-        uint32_t sl_c_str_arr:24;
-        uint8_t sl_c_overlay:6;
-        uint8_t sl_rsv:1;
-        uint8_t sl_altiv:1;
-    } __attribute__((packed, __may_alias__));
-    uint32_t data;
-} sl_config2_reg;
-
-typedef union {
-    struct {
         uint16_t h_total:12;
         uint16_t h_active:11;
         uint16_t h_backporch:9;
@@ -82,7 +53,7 @@ typedef union {
         uint16_t h_synclen:9;
         uint16_t v_total:11;
         uint16_t v_active:11;
-        uint8_t hv_rsv:1;
+        uint8_t interlaced:1;
     } __attribute__((packed, __may_alias__));
     uint32_t data;
 } hv_config2_reg;
@@ -118,17 +89,44 @@ typedef union {
     uint32_t data;
 } xy_config2_reg;
 
+typedef union {
+    struct {
+        uint8_t mask_br:4;
+        uint32_t misc_rsv:28;
+    } __attribute__((packed, __may_alias__));
+    uint32_t data;
+} misc_config_reg;
+
+typedef union {
+    struct {
+        uint32_t sl_l_str_arr:24;
+        uint8_t sl_l_overlay:6;
+        uint8_t sl_method:1;
+        uint8_t sl_rsv:1;
+    } __attribute__((packed, __may_alias__));
+    uint32_t data;
+} sl_config_reg;
+
+typedef union {
+    struct {
+        uint32_t sl_c_str_arr:24;
+        uint8_t sl_c_overlay:6;
+        uint8_t sl_rsv:2;
+    } __attribute__((packed, __may_alias__));
+    uint32_t data;
+} sl_config2_reg;
+
 typedef struct {
     fe_status_reg fe_status;
     fe_status2_reg fe_status2;
-    misc_config_reg misc_config;
-    sl_config_reg sl_config;
-    sl_config2_reg sl_config2;
     hv_config_reg hv_out_config;
     hv_config2_reg hv_out_config2;
     hv_config3_reg hv_out_config3;
     xy_config_reg xy_out_config;
     xy_config2_reg xy_out_config2;
+    misc_config_reg misc_config;
+    sl_config_reg sl_config;
+    sl_config2_reg sl_config2;
 } __attribute__((packed, __may_alias__)) sc_regs;
 
 #endif //SC_CONFIG_REGS_H_

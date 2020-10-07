@@ -23,7 +23,6 @@
 #include <stdint.h>
 #include "si5351.h"
 #include "adv7513.h"
-#include "sysconfig.h"
 
 typedef enum {
     CRTMODE_240p      = 0,

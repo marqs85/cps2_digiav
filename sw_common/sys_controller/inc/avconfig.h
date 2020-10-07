@@ -24,16 +24,8 @@
 #include "adv7513.h"
 #include "video_modes.h"
 
-#define SIGNED_NUMVAL_ZERO  128
-
 #define SCANLINESTR_MAX     15
-#define SL_HYBRIDSTR_MAX    28
-#define H_MASK_MAX          255
-#define V_MASK_MAX          63
-#define HV_MASK_MAX_BR      15
-
-#define SL_MODE_MAX         2
-#define SL_TYPE_MAX         2
+#define L5X_1080P_YOFF_MAX  8
 
 // In reverse order of importance
 typedef enum {
@@ -46,7 +38,9 @@ typedef enum {
 
 typedef struct {
     uint8_t sl_mode;
+    uint8_t sl_method;
     uint8_t sl_str;
+    uint8_t l5x_1080p_y_offset;
     ad_mode_id_t ad_mode_id;
     adv7513_config adv7513_cfg;
 } __attribute__((packed)) avconfig_t;

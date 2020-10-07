@@ -36,7 +36,7 @@
 #define LNG(e, j) e
 #endif
 
-#define FW_VER      "0.90"
+#define FW_VER      "0.91"
 
 extern avconfig_t tc;
 extern volatile osd_regs *osd;
@@ -52,22 +52,19 @@ uint8_t navlvl;
 static const char *off_on_desc[] = { LNG("Off","ｵﾌ"), LNG("On","ｵﾝ") };
 static const char *ad_mode_id_desc[] = { "240p_CRT", "480p_CRT (Line2x)", "1280x720 (Line3x)", "1280x1024 (Line4x)", "1920x1080 (Line4x)", "1920x1080 (Line5x)", "1600x1200 (Line5x)", "1920x1200 (Line5x)", "1920x1440 (Line6x)" };
 static const char *tx_mode_desc[] = { "HDMI (RGB Full)", "HDMI (RGB Limited)", "HDMI (YCbCr444)", "DVI" };
+static const char *sl_mode_desc[] = { "Off", "Horizontal", "H+V" };
 static const char *sl_method_desc[] = { "Multiplication", "Subtraction" };
-static const char *sl_id_desc[] = { LNG("Top","ｳｴ"), LNG("Bottom","ｼﾀ") };
 static const char *audio_sr_desc[] = { "Off", "On (4.0)", "On (5.1)", "On (7.1)" };
 
-static void sl_str_disp(uint8_t v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, "%u%%", ((v+1)*625)/100); }
-static void lines_disp(uint8_t v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, LNG("%u lines","%u ﾗｲﾝ"), v); }
-static void pixels_disp(uint8_t v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, LNG("%u pixels","%u ﾄﾞｯﾄ"), v); }
-static void value_disp(uint8_t v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, "    %u", v); }
-static void value16_disp(uint16_t *v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, "    %u", *v); }
-static void signed_disp(uint8_t v) { sniprintf(menu_row2, OSD_CHAR_COLS+1, "    %d", (int8_t)(v-SIGNED_NUMVAL_ZERO)); }
+static void value_disp(uint8_t v) { if (v < 10) {menu_row2[0] = ('0'+v); menu_row2[1] = 0;} else {menu_row2[0] = '0'+(v/10); menu_row2[1] = '0'+(v%10); menu_row2[2] = 0;} }
 
 
 MENU(menu_main, P99_PROTECT({ \
     { "Output mode",                            OPT_AVCONFIG_SELECTION, { .sel = { &tc.ad_mode_id,              OPT_WRAP, SETTING_ITEM(ad_mode_id_desc) } } },
-    //{ LNG("Scanlines","ｽｷｬﾝﾗｲﾝ"),                OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_mode,                OPT_WRAP,   SETTING_ITEM(off_on_desc) } } },
-    //{ LNG("Sl. strength","ｽｷｬﾝﾗｲﾝﾂﾖｻ"),          OPT_AVCONFIG_NUMVALUE,  { .num = { &tc.sl_str,                 OPT_NOWRAP, 0, SCANLINESTR_MAX, sl_str_disp } } },
+    { "1080p L5x Y-offset",                     OPT_AVCONFIG_NUMVALUE,  { .num = { &tc.l5x_1080p_y_offset,      OPT_WRAP, 0, L5X_1080P_YOFF_MAX, value_disp } } },
+    { LNG("Scanlines","ｽｷｬﾝﾗｲﾝ"),                OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_mode,                OPT_WRAP,   SETTING_ITEM(sl_mode_desc) } } },
+    { "Sl. method",                             OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_method,             OPT_WRAP,   SETTING_ITEM(sl_method_desc) } } },
+    { LNG("Sl. strength","ｽｷｬﾝﾗｲﾝﾂﾖｻ"),          OPT_AVCONFIG_NUMVALUE,  { .num = { &tc.sl_str,                 OPT_WRAP, 0, SCANLINESTR_MAX, value_disp } } },
     { "Quad stereo",                            OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.i2s_chcfg, OPT_WRAP, SETTING_ITEM(audio_sr_desc) } } },
     { LNG("TX mode","TXﾓｰﾄﾞ"),                  OPT_AVCONFIG_SELECTION, { .sel = { &tc.adv7513_cfg.tx_mode,     OPT_WRAP, SETTING_ITEM(tx_mode_desc) } } },
     { "<Save settings>",                        OPT_FUNC_CALL,          { .fun = { save_settings, NULL } } },
@@ -105,45 +102,45 @@ int get_fw_info() {
     return 1;
 }
 
+void write_option_value(menuitem_t *item, int func_called, int retval)
+{
+    switch (item->type) {
+        case OPT_AVCONFIG_SELECTION:
+            strncpy(menu_row2, item->sel.setting_str[*(item->sel.data)], OSD_CHAR_COLS+1);
+            break;
+        case OPT_AVCONFIG_NUMVALUE:
+            item->num.df(*(item->num.data));
+            break;
+        case OPT_FUNC_CALL:
+            if (func_called) {
+                if (retval <= 0)
+                    strncpy(menu_row2, ((retval==0) ? "Done" : "Failed"), OSD_CHAR_COLS+1);
+            } else if (item->fun.arg_info) {
+                item->fun.arg_info->df(*item->fun.arg_info->data);
+            } else {
+                menu_row2[0] = 0;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 void render_osd_page() {
     int i;
-    menuitem_type type;
+    menuitem_t *item;
     uint32_t row_mask[2] = {0, 0};
 
     for (i=0; i < navi[navlvl].m->num_items; i++) {
-        // Generate menu text
-        type = navi[navlvl].m->items[i].type;
-        strncpy((char*)osd->osd_array.data[i][0], navi[navlvl].m->items[i].name, OSD_CHAR_COLS);
+        item = &navi[navlvl].m->items[i];
+        strncpy((char*)osd->osd_array.data[i][0], item->name, OSD_CHAR_COLS);
         row_mask[0] |= (1<<i);
 
-        switch (navi[navlvl].m->items[i].type) {
-            case OPT_AVCONFIG_SELECTION:
-                strncpy(menu_row2, navi[navlvl].m->items[i].sel.setting_str[*(navi[navlvl].m->items[i].sel.data)], OSD_CHAR_COLS+1);
-                break;
-            case OPT_AVCONFIG_NUMVALUE:
-                navi[navlvl].m->items[i].num.df(*(navi[navlvl].m->items[i].num.data));
-                break;
-            case OPT_AVCONFIG_NUMVAL_U16:
-                navi[navlvl].m->items[i].num_u16.df(navi[navlvl].m->items[i].num_u16.data);
-                break;
-            /*case OPT_SUBMENU:
-                if (navi[navlvl].m->items[i].sub.arg_info)
-                    navi[navlvl].m->items[i].sub.arg_info->df(*navi[navlvl].m->items[i].sub.arg_info->data);
-                else
-                    menu_row2[0] = 0;
-                break;*/
-            case OPT_FUNC_CALL:
-                if (navi[navlvl].m->items[i].fun.arg_info)
-                    navi[navlvl].m->items[i].fun.arg_info->df(*navi[navlvl].m->items[i].fun.arg_info->data);
-                else
-                    menu_row2[0] = 0;
-                break;
-            default:
-                break;
-        }
-        strncpy((char*)osd->osd_array.data[i][1], menu_row2, OSD_CHAR_COLS);
-        if (menu_row2[0] != 0)
+        if ((item->type != OPT_SUBMENU) && (item->type != OPT_FUNC_CALL)) {
+            write_option_value(item, 0, 0);
+            strncpy((char*)osd->osd_array.data[i][1], menu_row2, OSD_CHAR_COLS);
             row_mask[1] |= (1<<i);
+        }
     }
 
     osd->osd_sec_enable[0].mask = row_mask[0];
@@ -152,12 +149,12 @@ void render_osd_page() {
 
 void display_menu(menucode_id code)
 {
-    menuitem_type type;
+    menuitem_t *item;
     uint8_t *val, val_wrap, val_min, val_max;
     uint16_t *val_u16, val_u16_min, val_u16_max;
     int i, func_called = 0, retval = 0;
 
-    type = navi[navlvl].m->items[navi[navlvl].mp].type;
+    item = &navi[navlvl].m->items[navi[navlvl].mp];
 
     // Parse menu control
     switch (code) {
@@ -167,23 +164,22 @@ void display_menu(menucode_id code)
         osd->osd_config.menu_active = 1;
         break;
     case NEXT_OPT:
-        if ((navi[navlvl].m->items[navi[navlvl].mp].type == OPT_FUNC_CALL) && (navi[navlvl].m->items[navi[navlvl].mp].fun.arg_info == NULL))
+        if (item->type == OPT_FUNC_CALL)
             osd->osd_sec_enable[1].mask &= ~(1<<navi[navlvl].mp);
         navi[navlvl].mp = (navi[navlvl].mp+1) % navi[navlvl].m->num_items;
         break;
     case VAL_PLUS:
-        switch (navi[navlvl].m->items[navi[navlvl].mp].type) {
+        switch (item->type) {
             case OPT_AVCONFIG_SELECTION:
             case OPT_AVCONFIG_NUMVALUE:
-                val = navi[navlvl].m->items[navi[navlvl].mp].sel.data;
-                val_wrap = navi[navlvl].m->items[navi[navlvl].mp].sel.wrap_cfg;
-                val_min = navi[navlvl].m->items[navi[navlvl].mp].sel.min;
-                val_max = navi[navlvl].m->items[navi[navlvl].mp].sel.max;
+                val = item->sel.data;
+                val_wrap = item->sel.wrap_cfg;
+                val_min = item->sel.min;
+                val_max = item->sel.max;
                 *val = (*val < val_max) ? (*val+1) : (val_wrap ? val_min : val_max);
                 break;
             case OPT_FUNC_CALL:
-                retval = navi[navlvl].m->items[navi[navlvl].mp].fun.f();
-                osd->osd_sec_enable[1].mask |= (1<<navi[navlvl].mp);
+                retval = item->fun.f();
                 func_called = 1;
                 break;
             default:
@@ -195,28 +191,11 @@ void display_menu(menucode_id code)
     }
 
     // Generate menu text
-    type = navi[navlvl].m->items[navi[navlvl].mp].type;
-    strncpy(menu_row1, navi[navlvl].m->items[navi[navlvl].mp].name, OSD_CHAR_COLS+1);
-    switch (navi[navlvl].m->items[navi[navlvl].mp].type) {
-        case OPT_AVCONFIG_SELECTION:
-            strncpy(menu_row2, navi[navlvl].m->items[navi[navlvl].mp].sel.setting_str[*(navi[navlvl].m->items[navi[navlvl].mp].sel.data)], OSD_CHAR_COLS+1);
-            break;
-        case OPT_AVCONFIG_NUMVALUE:
-            navi[navlvl].m->items[navi[navlvl].mp].num.df(*(navi[navlvl].m->items[navi[navlvl].mp].num.data));
-            break;
-        case OPT_FUNC_CALL:
-            if (func_called) {
-                if (retval <= 0)
-                    strncpy(menu_row2, ((retval==0) ? "Done" : "Failed"), OSD_CHAR_COLS);
-            } else if (navi[navlvl].m->items[navi[navlvl].mp].fun.arg_info) {
-                navi[navlvl].m->items[navi[navlvl].mp].fun.arg_info->df(*navi[navlvl].m->items[navi[navlvl].mp].fun.arg_info->data);
-            } else {
-                menu_row2[0] = 0;
-            }
-            break;
-        default:
-            break;
-    }
+    item = &navi[navlvl].m->items[navi[navlvl].mp];
+    strncpy(menu_row1, item->name, OSD_CHAR_COLS+1);
+    write_option_value(item, func_called, retval);
     strncpy((char*)osd->osd_array.data[navi[navlvl].mp][1], menu_row2, OSD_CHAR_COLS);
     osd->osd_row_color.mask = (1<<navi[navlvl].mp);
+    if (func_called || ((item->type == OPT_FUNC_CALL) && item->fun.arg_info != NULL))
+        osd->osd_sec_enable[1].mask |= (1<<navi[navlvl].mp);
 }
