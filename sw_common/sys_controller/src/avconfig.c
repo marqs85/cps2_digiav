@@ -31,7 +31,7 @@ avconfig_t cc, tc;
 // Default configuration
 const avconfig_t tc_default = {
     .sl_str = 4,
-    .l5x_1080p_y_offset = 4,
+    .l5x_1080p_y_offset = (L5X_1080P_YOFF_MAX/2),
     .ad_mode_id = ADMODE_1080p_5X,
 };
 

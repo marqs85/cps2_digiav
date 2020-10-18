@@ -25,7 +25,12 @@
 #include "video_modes.h"
 
 #define SCANLINESTR_MAX     15
+
+#ifdef TOAPLAN2
+#define L5X_1080P_YOFF_MAX  24
+#else
 #define L5X_1080P_YOFF_MAX  8
+#endif
 
 // In reverse order of importance
 typedef enum {

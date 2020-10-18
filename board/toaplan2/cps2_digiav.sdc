@@ -5,7 +5,7 @@ create_clock -period 24.576MHz -name mclk [get_ports MCLK_SI]
 create_clock -period 13.5MHz -name pclk [get_ports VCLK_in]
 create_clock -period 1.79MHz -name bck [get_ports YM_o1]
 create_clock -period 55kHz -name clk_sh [get_ports YM_SH1]
-create_clock -period 40MHz -name clk40 clk_osc_div
+create_clock -period 20MHz -name clk20 clk_osc_div[1]
 
 #derive_pll_clocks
 #create_generated_clock -source {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 5 -multiply_by 4 -duty_cycle 50.00 -name i2s_bck {upsampler0|pll_i2s_inst|altpll_component|auto_generated|pll1|clk[0]}
@@ -33,14 +33,20 @@ set_input_delay -clock pclk 0 [get_ports {sda HDMI_TX_INT_N BTN*}]
 #set_output_delay -reference_pin HDMI_TX_I2S_BCK -clock i2s_bck 0 $i2soutputs_hdmi
 #set_false_path -to [remove_from_collection [all_outputs] "$critoutputs_hdmi $i2soutputs_hdmi"]
 
-# ADV7513
-set hdmitx_dmin -0.7
-set hdmitx_dmax 1
+# ADV7513 (0ns video clock delay adjustment)
+set hdmitx_dmin -1.9
+set hdmitx_dmax -0.2
 set hdmitx_data_outputs [get_ports {HDMI_TX_RD* HDMI_TX_GD* HDMI_TX_BD* HDMI_TX_DE HDMI_TX_HS HDMI_TX_VS}]
 set_output_delay -clock pclk_si_out -min $hdmitx_dmin $hdmitx_data_outputs -add_delay
 set_output_delay -clock pclk_si_out -max $hdmitx_dmax $hdmitx_data_outputs -add_delay
 set_output_delay -clock i2s_bck_out -min $hdmitx_dmin [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
 set_output_delay -clock i2s_bck_out -max $hdmitx_dmax [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
+
+# EPCQ controller (delays from N25Q128A datasheet)
+create_generated_clock -name epcq_clk -master_clock clk20 -source clk_osc_div[1] -multiply_by 1 [get_ports *ALTERA_DCLK]
+set_input_delay -clock epcq_clk -clock_fall 5 [get_ports *ALTERA_DATA0]
+set_output_delay -clock epcq_clk 4 [get_ports *ALTERA_SCE]
+set_output_delay -clock epcq_clk 2 [get_ports **ALTERA_SDO]
 
 
 ### CPU/scanconverter clock relations ###
@@ -49,7 +55,7 @@ set_clock_groups -exclusive \
 -group {bck i2s_bck i2s_bck_out} \
 -group {pclk} \
 -group {pclk_si pclk_si_out} \
--group {clk40} \
+-group {clk20 epcq_clk} \
 -group {clk_sh} \
 -group {mclk}
 

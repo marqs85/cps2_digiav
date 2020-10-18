@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Apr 18, 2020 9:27:51 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1587234471599</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Oct 17, 2020 6:10:52 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1602947452957</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>./</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../sys.sopcinfo</SopcDesignFile>
@@ -899,32 +899,50 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
+                <slaveDescriptor>epcq_controller_0_avl_mem</slaveDescriptor>
+                <addressRange>0x00000000 - 0x001FFFFF</addressRange>
+                <addressSpan>2097152</addressSpan>
+                <attributes>flash, memory, non-volatile</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>onchip_memory2_0</slaveDescriptor>
+                <addressRange>0x00208000 - 0x0020C7FF</addressRange>
+                <addressSpan>18432</addressSpan>
+                <attributes>memory</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>osd_generator_0</slaveDescriptor>
+                <addressRange>0x00211000 - 0x002113FF</addressRange>
+                <addressSpan>1024</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>sc_config_0</slaveDescriptor>
-                <addressRange>0x00000000 - 0x0000003F</addressRange>
+                <addressRange>0x00211400 - 0x0021143F</addressRange>
                 <addressSpan>64</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>onchip_memory2_0</slaveDescriptor>
-                <addressRange>0x00004000 - 0x00007FFF</addressRange>
-                <addressSpan>16384</addressSpan>
-                <attributes>memory</attributes>
+                <slaveDescriptor>epcq_controller_0_avl_csr</slaveDescriptor>
+                <addressRange>0x00211440 - 0x0021145F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>i2c_opencores_0</slaveDescriptor>
-                <addressRange>0x00009000 - 0x0000901F</addressRange>
+                <addressRange>0x00211460 - 0x0021147F</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>pio_0</slaveDescriptor>
-                <addressRange>0x00009050 - 0x0000905F</addressRange>
+                <addressRange>0x00211480 - 0x0021148F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>jtag_uart_0</slaveDescriptor>
-                <addressRange>0x00009060 - 0x00009067</addressRange>
+                <addressRange>0x00211490 - 0x00211497</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>

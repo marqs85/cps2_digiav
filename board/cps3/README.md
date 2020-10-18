@@ -16,12 +16,6 @@ Features (current)
 * 24bit/48kHz audio output
 * supports CPS3 standard and widescreen modes
 
-TODO
---------------------------
-* OSD/UI
-* scanline options
-* settings store / profiles
-
 Installation
 --------------------------
 The add-on board can be installed on top of CPS3 board, preferably close to JAMMA connector. The following additional parts are required:
@@ -34,6 +28,12 @@ Signal hookup points are listed in doc/cps3_hookup_points.txt and instructions a
 
 Usage
 --------------------------
-Board is controlled via TL2243 (or via 2 external buttons depending on installation):
-* Upper button (VOL-): select lower output resolution
-* Lower button (VOL+): select higher output resolution
+Board is controlled via TL2243 (or via 2 external buttons depending on installation).
+
+Bindings outside OSD:
+* VOL- (hold 1.5s): enable OSD
+* VOL+ (hold 1.5s): toggle scanline mode
+
+Bindings inside OSD:
+* VOL-: next option
+* VOL+: next value / select function

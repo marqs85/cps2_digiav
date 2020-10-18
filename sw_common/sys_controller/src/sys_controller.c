@@ -61,6 +61,13 @@ input_mode_t input_mode;
 extern uint8_t menu_active;;
 
 
+void update_osd_size(mode_data_t *vm_out) {
+    uint8_t osd_size = vm_out->timings.v_active / 700;
+
+    osd->osd_config.x_size = osd_size;
+    osd->osd_config.y_size = osd_size;
+}
+
 void update_sc_config(mode_data_t *vm_in, mode_data_t *vm_out, vm_mult_config_t *vm_conf, avconfig_t *avc)
 {
     int i;
@@ -131,8 +138,6 @@ int init_hw()
     init_menu();
 
     // Init OSD
-    osd->osd_config.x_size = 1;
-    osd->osd_config.y_size = 1;
     osd->osd_config.x_offset = 3;
     osd->osd_config.y_offset = 3;
     osd->osd_config.enable = 1;
@@ -224,6 +229,7 @@ int main()
                 // configure audio MCLK
                 si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
 
+                update_osd_size(&vmode_out);
                 update_sc_config(&vmode_in, &vmode_out, &vm_conf, cur_avconfig);
                 adv7513_set_pixelrep_vic(&advtx_dev, vmode_out.tx_pixelrep, vmode_out.hdmitx_pixr_ifr, vmode_out.vic);
             }

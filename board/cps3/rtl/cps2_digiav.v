@@ -34,12 +34,12 @@ module cps2_digiav(
     inout sda,
     output scl,
     //output HDMI_TX_RST_N,
-    output [7:0] HDMI_TX_RD,
-    output [7:0] HDMI_TX_GD,
-    output [7:0] HDMI_TX_BD,
-    output HDMI_TX_DE,
-    output HDMI_TX_HS,
-    output HDMI_TX_VS,
+    output reg [7:0] HDMI_TX_RD,
+    output reg [7:0] HDMI_TX_GD,
+    output reg [7:0] HDMI_TX_BD,
+    output reg HDMI_TX_DE,
+    output reg HDMI_TX_HS,
+    output reg HDMI_TX_VS,
     output HDMI_TX_PCLK,
     input HDMI_TX_INT_N,
     output HDMI_TX_I2S_DATA,
@@ -51,22 +51,26 @@ module cps2_digiav(
 reg reset_n = 1'b0;
 reg [3:0] reset_n_ctr;
 
-reg clk_osc_div;
-wire clk40 = clk_osc_div;
+reg [1:0] clk_osc_div;
+wire clk20 = clk_osc_div[1];
 wire clk_osc;
 
 reg [4:0] R_in_L, G_in_L, B_in_L;
 reg HSYNC_in_L, VSYNC_in_L;
 
-wire [7:0] R_out, G_out, B_out;
-wire HSYNC_out;
-wire VSYNC_out;
-wire PCLK_out;
-wire DE_out;
+reg [7:0] R_out, G_out, B_out;
+reg HSYNC_out, VSYNC_out, DE_out;
+wire PCLK_sc;
+wire [7:0] R_sc, G_sc, B_sc;
+wire HSYNC_sc, VSYNC_sc, DE_sc;
 
 wire I2S_BCK_o, I2S_DATA_o, I2S_WS_o; 
 
 wire [31:0] misc_config, sl_config, sl_config2, hv_out_config, hv_out_config2, hv_out_config3, xy_out_config, xy_out_config2, fe_status, fe_status2;
+
+wire [10:0] xpos, ypos;
+wire osd_enable;
+wire [1:0] osd_color;
 
 wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
@@ -116,26 +120,49 @@ cps3_frontend u_cps3_frontend (
 );
 
 //assign HDMI_TX_RST_N = reset_n;
-assign HDMI_TX_DE = DE_out;
-assign HDMI_TX_PCLK = PCLK_out;
-assign HDMI_TX_HS = HSYNC_out;
-assign HDMI_TX_VS = VSYNC_out;
+assign HDMI_TX_PCLK = PCLK_sc;
 assign HDMI_TX_I2S_DATA = I2S_DATA_o;
 assign HDMI_TX_I2S_BCK = I2S_BCK_o;
 assign HDMI_TX_I2S_WS = I2S_WS_o;
 //assign HDMI_TX_I2S_MCLK = 0;
-assign HDMI_TX_RD = R_out;
-assign HDMI_TX_GD = G_out;
-assign HDMI_TX_BD = B_out;
 
-// ~40MHz clock from internal oscillator
+always @(posedge PCLK_sc) begin
+    if (osd_enable) begin
+        if (osd_color == 2'h0) begin
+            {R_out, G_out, B_out} <= 24'h000000;
+        end else if (osd_color == 2'h1) begin
+            {R_out, G_out, B_out} <= 24'h0000ff;
+        end else if (osd_color == 2'h2) begin
+            {R_out, G_out, B_out} <= 24'hffff00;
+        end else begin
+            {R_out, G_out, B_out} <= 24'hffffff;
+        end
+    end else begin
+        {R_out, G_out, B_out} <= {R_sc, G_sc, B_sc};
+    end
+
+    HSYNC_out <= HSYNC_sc;
+    VSYNC_out <= VSYNC_sc;
+    DE_out <= DE_sc;
+end
+
+always @(negedge PCLK_sc) begin
+    HDMI_TX_RD <= R_out;
+    HDMI_TX_GD <= G_out;
+    HDMI_TX_BD <= B_out;
+    HDMI_TX_HS <= HSYNC_out;
+    HDMI_TX_VS <= VSYNC_out;
+    HDMI_TX_DE <= DE_out;
+end
+
+// ~20MHz clock from internal oscillator
 always @(posedge clk_osc)
 begin
     clk_osc_div <= clk_osc_div + 1'b1;
 end
 
 sys sys_inst(
-    .clk_clk                            (clk40),
+    .clk_clk                            (clk20),
     .int_osc_0_clkout_clk               (clk_osc),
     .int_osc_0_oscena_oscena            (1'b1),
     .reset_reset_n                      (reset_n),
@@ -151,7 +178,12 @@ sys sys_inst(
     .sc_config_0_sc_if_hv_out_config2_o     (hv_out_config2),
     .sc_config_0_sc_if_hv_out_config3_o     (hv_out_config3),
     .sc_config_0_sc_if_xy_out_config_o      (xy_out_config),
-    .sc_config_0_sc_if_xy_out_config2_o     (xy_out_config2)
+    .sc_config_0_sc_if_xy_out_config2_o     (xy_out_config2),
+    .osd_generator_0_osd_if_vclk           (PCLK_SI),
+    .osd_generator_0_osd_if_xpos           (xpos),
+    .osd_generator_0_osd_if_ypos           (ypos),
+    .osd_generator_0_osd_if_osd_enable     (osd_enable),
+    .osd_generator_0_osd_if_osd_color      (osd_color)
 );
 
 scanconverter #(
@@ -177,15 +209,15 @@ scanconverter #(
     .sl_config(sl_config),
     .sl_config2(sl_config2),
     .testpattern_enable(1'b0),
-    .PCLK_o(PCLK_out),
-    .R_o(R_out),
-    .G_o(G_out),
-    .B_o(B_out),
-    .HSYNC_o(HSYNC_out),
-    .VSYNC_o(VSYNC_out),
-    .DE_o(DE_out),
-    .xpos_o(),
-    .ypos_o(),
+    .PCLK_o(PCLK_sc),
+    .R_o(R_sc),
+    .G_o(G_sc),
+    .B_o(B_sc),
+    .HSYNC_o(HSYNC_sc),
+    .VSYNC_o(VSYNC_sc),
+    .DE_o(DE_sc),
+    .xpos_o(xpos),
+    .ypos_o(ypos),
     .resync_strobe()
 );
 

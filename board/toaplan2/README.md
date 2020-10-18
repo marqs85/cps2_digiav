@@ -15,12 +15,6 @@ Features (current)
   * 1920x1440 (CVT-RB)
 * 24bit/48kHz audio output
 
-TODO
---------------------------
-* OSD/UI
-* scanline options
-* settings store / profiles
-
 Installation
 --------------------------
 The add-on board can be installed on top of Toaplan V2 boards. The following additional parts are required:
@@ -34,6 +28,12 @@ Installation instructions are found in doc/install.md .
 
 Usage
 --------------------------
-Board is controlled via TL2243 (or via 2 external buttons depending on installation):
-* Upper button (VOL-): select lower output resolution
-* Lower button (VOL+): select higher output resolution
+Board is controlled via TL2243 (or via 2 external buttons depending on installation).
+
+Bindings outside OSD:
+* VOL- (hold 1.5s): enable OSD
+* VOL+ (hold 1.5s): toggle scanline mode
+
+Bindings inside OSD:
+* VOL-: next option
+* VOL+: next value / select function
