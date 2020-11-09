@@ -4,7 +4,7 @@ create_clock -period 183MHz -name pclk_si [get_ports PCLK_SI]
 create_clock -period 24.576MHz -name mclk [get_ports MCLK_SI]
 create_clock -period 10.74MHz -name pclk [get_ports PCLK_in]
 create_clock -period 1.2MHz -name bck [get_ports I2S_BCK]
-create_clock -period 20MHz -name clk20 clk_osc_div[1]
+create_clock -period 40MHz -name clk40 clk_osc_div
 
 #derive_pll_clocks
 #create_generated_clock -source {pll_pclk_inst|altpll_component|auto_generated|pll1|inclk[0]} -multiply_by 3 -duty_cycle 50.00 -name clk25 {pll_pclk_inst|altpll_component|auto_generated|pll1|clk[0]}
@@ -44,7 +44,7 @@ set_output_delay -clock i2s_bck_out -min $hdmitx_dmin [get_ports {HDMI_TX_I2S_DA
 set_output_delay -clock i2s_bck_out -max $hdmitx_dmax [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
 
 # EPCQ controller (delays from N25Q128A datasheet)
-create_generated_clock -name epcq_clk -master_clock clk20 -source clk_osc_div[1] -multiply_by 1 [get_ports *ALTERA_DCLK]
+create_generated_clock -name epcq_clk -master_clock clk40 -source clk_osc_div -multiply_by 1 [get_ports *ALTERA_DCLK]
 set_input_delay -clock epcq_clk -clock_fall 5 [get_ports *ALTERA_DATA0]
 set_output_delay -clock epcq_clk 4 [get_ports *ALTERA_SCE]
 set_output_delay -clock epcq_clk 2 [get_ports **ALTERA_SDO]
@@ -56,7 +56,7 @@ set_clock_groups -exclusive \
 -group {bck i2s_bck i2s_bck_out} \
 -group {pclk} \
 -group {pclk_si pclk_si_out} \
--group {clk20 epcq_clk} \
+-group {clk40 epcq_clk} \
 -group {mclk}
 
 set_false_path -from [get_clocks i2s_bck] -to [get_clocks bck]

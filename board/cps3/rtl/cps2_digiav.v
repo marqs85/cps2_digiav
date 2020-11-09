@@ -51,8 +51,8 @@ module cps2_digiav(
 reg reset_n = 1'b0;
 reg [3:0] reset_n_ctr;
 
-reg [1:0] clk_osc_div;
-wire clk20 = clk_osc_div[1];
+reg clk_osc_div;
+wire clk40 = clk_osc_div;
 wire clk_osc;
 
 reg [4:0] R_in_L, G_in_L, B_in_L;
@@ -162,7 +162,7 @@ begin
 end
 
 sys sys_inst(
-    .clk_clk                            (clk20),
+    .clk_clk                            (clk40),
     .int_osc_0_clkout_clk               (clk_osc),
     .int_osc_0_oscena_oscena            (1'b1),
     .reset_reset_n                      (reset_n),
@@ -233,13 +233,13 @@ i2s_upsampler_asrc upsampler0 (
 );
 
 btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb0 (
-    .i_clk          (PCLK_in),
+    .i_clk          (clk40),
     .i_btn          (BTN_volminus),
     .o_btn          (BTN_volminus_debounced)
 );
 
 btn_debounce #(.MIN_PULSE_WIDTH(25000)) deb1 (
-    .i_clk          (PCLK_in),
+    .i_clk          (clk40),
     .i_btn          (BTN_volplus),
     .o_btn          (BTN_volplus_debounced)
 );

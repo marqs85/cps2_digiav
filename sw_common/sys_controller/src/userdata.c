@@ -22,7 +22,7 @@
 #include "system.h"
 #include "sysconfig.h"
 #include "userdata.h"
-#include "altera_epcq_controller.h"
+#include "altera_epcq_controller2.h"
 
 #define PROFILE_VER_MAJOR   0
 #define PROFILE_VER_MINOR   91
@@ -38,7 +38,7 @@ int init_flash()
     extern alt_llist alt_flash_dev_list;
     epcq_dev = (alt_flash_dev*)alt_flash_dev_list.next;
 #else
-    epcq_dev = alt_flash_open_dev(EPCQ_CONTROLLER_0_AVL_MEM_NAME);
+    epcq_dev = alt_flash_open_dev(EPCQ_CONTROLLER2_0_AVL_MEM_NAME);
 #endif
 
     return (epcq_dev != NULL);
@@ -62,7 +62,7 @@ int write_userdata(uint8_t entry)
     // assume that sizeof(avconfig_t) << PAGESIZE
     memcpy(&p.avc, get_current_avconfig(), sizeof(avconfig_t));
 
-    retval = alt_epcq_controller_write(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
+    retval = alt_epcq_controller2_write(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
 
     return retval;
 }
@@ -77,7 +77,7 @@ int read_userdata(uint8_t entry)
         return -1;
     }
 
-    retval = alt_epcq_controller_read(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
+    retval = alt_epcq_controller2_read(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
     if (retval != 0) {
         printf("Flash read error\n");
         return retval;
