@@ -64,7 +64,7 @@ typedef struct {
 } __attribute__((packed)) sync_timings_t;
 
 typedef struct {
-    uint32_t vclk_hz;
+    uint32_t c1_hz;
     uint32_t vclks_per_frame;
     sync_timings_t timings;
     si5351_ms_config_t vclk_to_mclk_conf;

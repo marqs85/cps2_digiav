@@ -31,7 +31,7 @@ void parse_control(uint8_t btn_vec)
     btn_vec_t b = (btn_vec_t)btn_vec;
 
     if (btn_vec) {
-        printf("BTN_CODE: 0x%.2lx\n", btn_vec);
+        printf("BTN_CODE: 0x%.2x\n", btn_vec);
 
         if (!is_menu_active()) {
             if (b == PB_BTN1)

@@ -32,9 +32,11 @@ ifeq ($(findstring Microsoft,$(UNAME)),Microsoft)
 	WINDOWS_EXE = .exe
 endif
 
+eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
+
 ifdef WINDOWS_EXE 
 	adjust-path = $(if $1,$(shell wslpath "$1"),)
-	adjust-path-mixed = $(if $1,$(shell wslpath -m "$1"),)
+	adjust-path-mixed = $(if $(call eq,$(shell echo $1 | head -c 5),/mnt/),$(shell echo $1 | sed 's/\/mnt\///g;s/\//:\//1'),$1)
 else # !WINDOWS_EXE
 	adjust-path = $1
 	adjust-path-mixed = $1
@@ -91,12 +93,12 @@ OBJ_DIR := ./obj
 
 # This following VERSION comment indicates the version of the tool used to 
 # generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 19.1
-ACDS_VERSION := 19.1
+# ACDS_VERSION: 20.1
+ACDS_VERSION := 20.1
 
 # This following BUILD_NUMBER comment indicates the build number of the tool 
 # used to generate this makefile. 
-# BUILD_NUMBER: 670
+# BUILD_NUMBER: 720
 
 SETTINGS_FILE := settings.bsp
 SOPC_FILE := ../../sys.sopcinfo

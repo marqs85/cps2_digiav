@@ -68,6 +68,9 @@ const source_params_t cps3_params_wide =    { 42954500UL,  720720UL,  { 496,  22
 const source_params_t tp2_kbash_params =    { 13500000UL,  227300UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
 const source_params_t tp2_params =          { 13500000UL,  227232UL,  { 320,  240,   432, 0,  263,   54, 18,   32, 3},  {7876, 76, 125, 36, 0, 0, 0, 0, 0} };
 
+// Neo Geo
+const source_params_t neogeo_params =       { 12000000UL,  101376UL,  { 320,  224,   384, 0,  264,   28, 21,   29, 3},  {8925,    23,   125,  36, 0, 0,  0, 0, 0} };
+
 
 const ad_mode_data_t adaptive_modes[] = {
 #ifdef CPS1_CPS2
@@ -126,6 +129,19 @@ const ad_mode_data_t adaptive_modes[] = {
     { ADMODE_1600x1200, &tp2_params,  4, 4,  0, 0,  { 5571,   171,   263,     0, 0, 1,  0, 0, 3} },
     { ADMODE_1920x1200, &tp2_params,  4, 4,  0, 0,  { 5276,   212,  7101,     0, 0, 1,  0, 0, 3} },
     { ADMODE_1920x1440, &tp2_params,  5, 5,  0, 0,  { 6428,  6740,  7101,     0, 0, 1,  0, 0, 3} },
+#endif
+
+#ifdef NEOGEO
+    /* Neo Geo modes */
+    { ADMODE_240p_CRT,  &neogeo_params,  0, 0,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },
+    { ADMODE_480p_CRT,  &neogeo_params,  1, 1,  0, 0,  {    0,     0,     0,     0, 0, 0,  0, 1, 0} },
+    { ADMODE_720p,      &neogeo_params,  2, 2,  0, 0,  { 8863,     0,   128,  1024, 0, 1,  0, 0, 0} },
+    { ADMODE_1280x1024, &neogeo_params,  3, 3,  0, 0,  { 8859,  1408,  1536,   544, 0, 4,  0, 0, 0} },
+    { ADMODE_1080p_4X,  &neogeo_params,  3, 3,  0, 0,  { 8863,     0,   128,   256, 0, 1,  0, 0, 0} },
+    { ADMODE_1080p_5X,  &neogeo_params,  4, 4,  0, 0,  { 8863,     0,   128,   256, 0, 1,  0, 0, 0} },
+    { ADMODE_1600x1200, &neogeo_params,  4, 4,  0, 0,  { 6306,    32,   176,     0, 0, 1,  0, 0, 3} },
+    { ADMODE_1920x1200, &neogeo_params,  4, 4,  0, 0,  { 5974,  1376,  1584,     0, 0, 1,  0, 0, 3} },
+    { ADMODE_1920x1440, &neogeo_params,  5, 5,  0, 0,  { 7266,  1568,  1584,     0, 0, 1,  0, 0, 3} },
 #endif
 };
 

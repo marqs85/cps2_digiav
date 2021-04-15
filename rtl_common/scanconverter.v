@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016-2020  Markus Hiienkari <mhiienka@niksula.hut.fi>
+// Copyright (C) 2016-2021  Markus Hiienkari <mhiienka@niksula.hut.fi>
 //
 // This file is part of CPS2 Digital AV Interface project.
 //
@@ -18,7 +18,8 @@
 //
 
 module scanconverter #(
-    parameter CPS_FADE = 1
+    parameter CPS_FADE = 1,
+    parameter NEOGEO_DARKBIT = 0
   ) (
     input PCLK_CAP_i,
     input PCLK_OUT_i,
@@ -158,6 +159,10 @@ wire [7:0] R_sl_mult, G_sl_mult, B_sl_mult;
 generate
 if (CPS_FADE == 1) begin
     reg [7:0] R_start, G_start, B_start;
+end else if (NEOGEO_DARKBIT == 1) begin
+    wire [7:0] R_start = {DATA_linebuf[14:10], ~DATA_linebuf[15], DATA_linebuf[14:13]};
+    wire [7:0] G_start = {DATA_linebuf[9:5], ~DATA_linebuf[15], DATA_linebuf[9:8]};
+    wire [7:0] B_start = {DATA_linebuf[4:0], ~DATA_linebuf[15], DATA_linebuf[4:3]};
 end else begin
     wire [7:0] R_start = {DATA_linebuf[14:10], DATA_linebuf[14:12]};
     wire [7:0] G_start = {DATA_linebuf[9:5], DATA_linebuf[9:7]};

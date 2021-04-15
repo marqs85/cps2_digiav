@@ -58,7 +58,7 @@ volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
 volatile osd_regs *osd = (volatile osd_regs*)OSD_GENERATOR_0_BASE;
 
 input_mode_t input_mode;
-extern uint8_t menu_active;;
+extern uint8_t menu_active;
 
 
 void update_osd_size(mode_data_t *vm_out) {
@@ -222,7 +222,7 @@ int main()
 
                 // configure output pixel clock
                 if (vmode_out.si_pclk_mult != 0)
-                    si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, output_mode->src_params->vclk_hz, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
+                    si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, output_mode->src_params->c1_hz, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
                 else
                     si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
 
