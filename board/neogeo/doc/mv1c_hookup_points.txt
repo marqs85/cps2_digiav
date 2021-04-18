@@ -1,0 +1,36 @@
+power (near TDA7240AV heatsink):
+TP2 : 5V
+C6 : GND
+
+clocks:
+R47: C1 (12MHz)
+PC23 (pin 11): C2 (6MHz)
+
+sync (underside):
+R51: CSYNC (HS on cps2_digiav)
+
+audio (near IC4):
+R90: I2S_WS
+R91: I2S_DAT
+R92: I2S_BCK
+
+R2R DAC resistors:
+R53: R0
+R54: B0
+R55: R1
+R56: B1
+R57: R2
+R58: B2
+R59: R3
+R60: B3
+R61: R4
+R62: B4
+R69: G0
+R70: G1
+R72: G2
+R74: G3
+R75: G4
+
+extra video signals:
+PC22 (pin 1): DARK
+PC22 (pin 9): SHADOW (VS on cps2_digiav)
