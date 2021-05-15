@@ -148,7 +148,7 @@ set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_VS
 
 
 set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE PERFORMANCE"
-set_global_assignment -name SEED 1
+set_global_assignment -name SEED 2
 
 set_global_assignment -name SEARCH_PATH ../../rtl_common
 set_global_assignment -name SEARCH_PATH rtl

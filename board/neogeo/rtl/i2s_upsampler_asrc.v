@@ -65,8 +65,8 @@ i2s_rx_asrc #(
     .I2S_BCK(ASCLK_i),
     .I2S_DATA(ASDATA_i),
     .I2S_WS(ALRCLK_i),
-    .APDATA_LEFT_o(APDATA[1]),
-    .APDATA_RIGHT_o(APDATA[0]),
+    .APDATA_LEFT_o(APDATA[0]),
+    .APDATA_RIGHT_o(APDATA[1]),
     .APDATA_VALID_o(APDATA_VALID)
 );
 

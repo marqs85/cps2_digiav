@@ -60,7 +60,7 @@ localparam PP_LINEBUF_START     = PP_PL_START + 1;
 localparam PP_LINEBUF_LENGTH    = 1;
 localparam PP_LINEBUF_END       = PP_LINEBUF_START + PP_LINEBUF_LENGTH;
 localparam PP_FADE_START        = PP_LINEBUF_END;
-localparam PP_FADE_LENGTH       = (CPS_FADE == 1) ? 2 : 0;
+localparam PP_FADE_LENGTH       = ((CPS_FADE == 1) || (NEOGEO_DARKBIT == 1)) ? 2 : 0;
 localparam PP_FADE_END          = PP_FADE_START + PP_FADE_LENGTH;
 localparam PP_SLGEN_START       = PP_FADE_END - 1;
 localparam PP_SLGEN_LENGTH      = 4;
@@ -157,12 +157,8 @@ wire [15:0] DATA_linebuf;
 wire [7:0] R_sl_mult, G_sl_mult, B_sl_mult;
 
 generate
-if (CPS_FADE == 1) begin
+if ((CPS_FADE == 1) || (NEOGEO_DARKBIT == 1)) begin
     reg [7:0] R_start, G_start, B_start;
-end else if (NEOGEO_DARKBIT == 1) begin
-    wire [7:0] R_start = {DATA_linebuf[14:10], ~DATA_linebuf[15], DATA_linebuf[14:13]};
-    wire [7:0] G_start = {DATA_linebuf[9:5], ~DATA_linebuf[15], DATA_linebuf[9:8]};
-    wire [7:0] B_start = {DATA_linebuf[4:0], ~DATA_linebuf[15], DATA_linebuf[4:3]};
 end else begin
     wire [7:0] R_start = {DATA_linebuf[14:10], DATA_linebuf[14:12]};
     wire [7:0] G_start = {DATA_linebuf[9:5], DATA_linebuf[9:7]};
@@ -210,6 +206,17 @@ function [7:0] apply_fade;
         //apply_fade = {data, data} >> (3'h7-fade[3:1]);
         //apply_fade = {4'h0, data} * ({4'h0, fade} + 8'h2);
         apply_fade = {4'h0, data} * {3'h0, fade_m};
+    end
+endfunction
+
+// Dark bit function for Neo Geo
+function [7:0] apply_darkbit;
+    input [4:0] data;
+    input darkbit;
+    reg [7:0] data_ext;
+    begin
+        data_ext = {data, data[4:2]};
+        apply_darkbit = darkbit ? ((data_ext > 8'h04) ? (data_ext - 8'h04) : 8'h00) : data_ext;
     end
 endfunction
 
@@ -352,6 +359,12 @@ always @(posedge PCLK_OUT_i) begin
         R_start <= apply_fade(DATA_linebuf_pp4[15:12], fade_mult_pp4);
         G_start <= apply_fade(DATA_linebuf_pp4[11:8], fade_mult_pp4);
         B_start <= apply_fade(DATA_linebuf_pp4[7:4], fade_mult_pp4);
+    end else if (NEOGEO_DARKBIT == 1) begin
+        DATA_linebuf_pp4 <= DATA_linebuf;
+
+        R_start <= apply_darkbit(DATA_linebuf_pp4[14:10], DATA_linebuf_pp4[15]);
+        G_start <= apply_darkbit(DATA_linebuf_pp4[9:5], DATA_linebuf_pp4[15]);
+        B_start <= apply_darkbit(DATA_linebuf_pp4[4:0], DATA_linebuf_pp4[15]);
     end
 
     // Scanlines (4 cycles)
