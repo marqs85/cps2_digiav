@@ -7,7 +7,7 @@ cps2_digiav is an add-on for Capcom CP System II and some other arcade boards. I
 
 Supported boards
 --------------------------
-* CPS1 (88617A)
+* CPS1 (89626A)
 * CPS2
 * CPS3
 * Neo Geo (MV1C)

@@ -17,7 +17,7 @@ Features (current)
 
 Installation
 --------------------------
-The add-on board can be installed on top of CPS1 A-board (88617A revisions currently supported). The following additional parts are required:
+The add-on board can be installed on top of CPS1 A-board (89626A revisions currently supported). The following additional parts are required:
 
 * cps1_adapter PCB and related parts, see pcb_cps1_adapter folder
 * 3pcs 2x5 U-type pin headers
