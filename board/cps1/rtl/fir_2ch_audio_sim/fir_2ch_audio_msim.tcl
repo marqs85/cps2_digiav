@@ -1,5 +1,5 @@
 ## ================================================================================
-## Legal Notice: Copyright (C) 1991-2020 Altera Corporation. All rights reserved.
+## Legal Notice: Copyright (C) 1991-2022 Altera Corporation. All rights reserved.
 ## Any megafunction design, and related net list (encrypted or decrypted),
 ## support information, device programming or simulation file, and any other
 ## associated documentation or information provided by Altera or a partner
@@ -27,9 +27,9 @@ write transcript fir_2ch_audio_transcript
 # START MEGAWIZARD INSERT VARIABLES
 set top_entity fir_2ch_audio
 set timing_resolution "1ps"
-set core_version 19.1
+set core_version 21.1
 set device_family "Cyclone 10 LP"
-set quartus_rootdir /usr/local/altera_lite/19.1/quartus/
+set quartus_rootdir /usr/local/altera_lite/21.1/quartus/
 # Change to "gate_level" for gate-level sim
 set sim_type "rtl"
 # END MEGAWIZARD INSERT VARIABLES
