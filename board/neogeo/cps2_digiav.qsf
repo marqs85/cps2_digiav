@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 10CL025YE144C8G
 set_global_assignment -name TOP_LEVEL_ENTITY cps2_digiav
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:25:51  NOVEMBER 29, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "20.1.1 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -156,6 +156,13 @@ set_global_assignment -name SEARCH_PATH rtl
 
 
 
+
+
+
+
+
+
+
 set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
 set_global_assignment -name QIP_FILE rtl/fir_2ch_audio.qip
@@ -171,11 +178,4 @@ set_global_assignment -name VERILOG_FILE ../../rtl_common/i2s_rx_asrc.v
 set_global_assignment -name VERILOG_FILE rtl/i2s_upsampler_asrc.v
 set_global_assignment -name VERILOG_FILE rtl/neogeo_frontend.v
 set_global_assignment -name VERILOG_FILE rtl/cps2_digiav.v
-
-
-
-
-
-
-
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

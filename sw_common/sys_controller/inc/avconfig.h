@@ -21,6 +21,7 @@
 #define AVCONFIG_H_
 
 #include <stdint.h>
+#include "sysconfig.h"
 #include "adv7513.h"
 #include "video_modes.h"
 
@@ -46,6 +47,9 @@ typedef struct {
     uint8_t sl_method;
     uint8_t sl_str;
     uint8_t l5x_1080p_y_offset;
+#ifdef NEOGEO
+    uint8_t neogeo_freq;
+#endif
     ad_mode_id_t ad_mode_id;
     adv7513_config adv7513_cfg;
 } __attribute__((packed)) avconfig_t;

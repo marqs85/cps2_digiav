@@ -27,8 +27,8 @@ SPACE := $(empty) $(empty)
 # This will ensure paths are readable by GNU Make.
 #------------------------------------------------------------------------------
 
-UNAME = $(shell uname -r)
-ifeq ($(findstring Microsoft,$(UNAME)),Microsoft)
+UNAME = $(shell uname -r | tr A-Z a-z)
+ifeq ($(findstring microsoft,$(UNAME)),microsoft)
 	WINDOWS_EXE = .exe
 endif
 
@@ -93,12 +93,12 @@ OBJ_DIR := ./obj
 
 # This following VERSION comment indicates the version of the tool used to 
 # generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 20.1
-ACDS_VERSION := 20.1
+# ACDS_VERSION: 21.1
+ACDS_VERSION := 21.1
 
 # This following BUILD_NUMBER comment indicates the build number of the tool 
 # used to generate this makefile. 
-# BUILD_NUMBER: 720
+# BUILD_NUMBER: 842
 
 SETTINGS_FILE := settings.bsp
 SOPC_FILE := ../../sys.sopcinfo

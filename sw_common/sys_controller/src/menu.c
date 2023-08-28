@@ -55,6 +55,7 @@ static const char *tx_mode_desc[] = { "HDMI (RGB Full)", "HDMI (RGB Limited)", "
 static const char *sl_mode_desc[] = { "Off", "Horizontal", "H+V" };
 static const char *sl_method_desc[] = { "Multiplication", "Subtraction" };
 static const char *audio_sr_desc[] = { "Off", "On (4.0)", "On (5.1)", "On (7.1)" };
+static const char *neogeo_freq_desc[] = { "Normal", "DFO" };
 
 static void value_disp(uint8_t v) { if (v < 10) {menu_row2[0] = ('0'+v); menu_row2[1] = 0;} else {menu_row2[0] = '0'+(v/10); menu_row2[1] = '0'+(v%10); menu_row2[2] = 0;} }
 
@@ -66,6 +67,9 @@ MENU(menu_main, P99_PROTECT({ \
     { "Sl. method",                             OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_method,             OPT_WRAP,   SETTING_ITEM(sl_method_desc) } } },
     { LNG("Sl. strength","ｽｷｬﾝﾗｲﾝﾂﾖｻ"),          OPT_AVCONFIG_NUMVALUE,  { .num = { &tc.sl_str,                 OPT_WRAP, 0, SCANLINESTR_MAX, value_disp } } },
     { "Quad stereo",                            OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.i2s_chcfg, OPT_WRAP, SETTING_ITEM(audio_sr_desc) } } },
+#ifdef NEOGEO
+    { "XTAL freq",                             OPT_AVCONFIG_SELECTION,  { .sel = { &tc.neogeo_freq,            OPT_WRAP, SETTING_ITEM(neogeo_freq_desc) } } },
+#endif
     { LNG("TX mode","TXﾓｰﾄﾞ"),                  OPT_AVCONFIG_SELECTION, { .sel = { &tc.adv7513_cfg.tx_mode,     OPT_WRAP, SETTING_ITEM(tx_mode_desc) } } },
     { "<Save settings>",                        OPT_FUNC_CALL,          { .fun = { save_settings, NULL } } },
     { LNG("<Reset settings>","<ｾｯﾃｲｵｼｮｷｶ    >"),  OPT_FUNC_CALL,          { .fun = { reset_target_avconfig, NULL } } },

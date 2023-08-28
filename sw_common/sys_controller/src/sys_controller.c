@@ -227,7 +227,11 @@ int main()
                     si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
 
                 // configure audio MCLK
+#ifdef NEOGEO
+                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params[cur_avconfig->neogeo_freq].vclk_to_mclk_conf);
+#else
                 si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
+#endif
 
                 update_osd_size(&vmode_out);
                 update_sc_config(&vmode_in, &vmode_out, &vm_conf, cur_avconfig);

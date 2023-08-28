@@ -71,6 +71,9 @@ status_t update_avconfig(avconfig_t *avc) {
         status = (status < SC_CONFIG_CHANGE) ? SC_CONFIG_CHANGE : status;
 
     if ((tc.ad_mode_id != cc.ad_mode_id) ||
+#ifdef NEOGEO
+        (tc.neogeo_freq != cc.neogeo_freq) ||
+#endif
         (tc.l5x_1080p_y_offset != cc.l5x_1080p_y_offset))
         status = (status < MODE_CHANGE) ? MODE_CHANGE : status;
 
