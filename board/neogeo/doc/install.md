@@ -20,7 +20,7 @@ Step 2: Preparation of cps2_digiav board
 
 1. Bridge SMD jumpers J3, J5 and J6 on cps2_digiav board.
 
-2. Solder R7+R8 (2x10k 0603 SMD resistors) on bottom of cps2_digiav board. If you want to add on-board button module for operation control, solder SW1 (TL2243). For external buttons (2pcs), connect their one end to GND and other end to btn_vol+/- pad.
+2. The board is operated via 2 keys which can be implemeted either by wiring vol-/vol+ pads to existing button lines on JAMMA connector (e.g. P1 credit & D) or by using separate buttons. In the latter case, solder R7+R8 (2x10k 0603 SMD resistors) on bottom of cps2_digiav board. If you want to add on-board button module, solder SW1 (TL2243). For external buttons (2pcs), connect their one end to GND and other end to vol+/- pads.
 
 3. Cut a 10cm piece of 16 conductor ribbon cable and split in into following pieces: 5 conductor (1pcs), 4 conductor (1pcs), 3 conductor (2pcs), 1 conductor (1pcs). Strip both ends of the wires and solder them to named holes around J1/J2 footprints on cps2_digiav as shown in the picture below (solitary wire for DARK). Tin their other ends so that they can be easily soldered on SMD caps on MV1C.
 

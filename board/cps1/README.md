@@ -23,6 +23,10 @@ The add-on board can be installed on top of CPS1 A-board (89626A revisions curre
 * 3pcs 2x5 U-type pin headers
 * ribbon cable
 * coaxial cable (~40cm)
+* hookup for PCB buttons
+  * if using JAMMA buttons: 2x 15cm wires
+  * if using external buttons: wires and 2pcs 0603 10k SMD resistors
+  * if using CPS2 I/O Interface, 1pcs of XHP-2, 1pcs ASXHSXH22K305 and 2pcs 0603 10k SMD resistors
 
 Installation instructions are found in doc/install.md .
 

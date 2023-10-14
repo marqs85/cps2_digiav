@@ -19,10 +19,13 @@ Features (current)
 Installation
 --------------------------
 The add-on board can be installed on top of CPS3 board, preferably close to JAMMA connector. The following additional parts are required:
-* 2pcs 0603 10k SMD resistors and TL2243 switch (or 2 external buttons connecting "vol+" and "vol-" pads to GND when pressed)
 * ribbon cable (~15cm, at least 5x4=20 conductors)
 * coaxial cable (~50cm total)
 * kynar wire (~50cm total)
+* hookup for PCB buttons
+  * if using JAMMA buttons: 2x 25cm wires
+  * if using separate buttons: 2pcs 0603 10k SMD resistors and TL2243 switch (or 2 external buttons connecting "vol+" and "vol-" pads to GND when pressed)
+  * if using CPS2 I/O Interface, 1pcs of XHP-2, 2pcs ASXHSXH22K305 and 2pcs 0603 10k SMD resistors
 
 Signal hookup points are listed in doc/cps3_hookup_points.txt and instructions are in doc/install.md .
 

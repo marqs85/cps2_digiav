@@ -26,7 +26,14 @@ Clock is available on 74F32. It's mandatory to use a coax cable to avoid stabili
 Step 3: Audio, power and button signals
 --------------------------
 
-Audio is extracted from YM2151 and R49. Use coax cable for oCM and DAO signals. 5V/GND can be extracted from certain CCX caps, e.g. the one shown in the signal reference image. Wire two external pushbuttons to the board: one terminal to GND and another to vol-/vol+.
+Audio is extracted from YM2151 and R49. Use coax cable for oCM and DAO signals.
+
+5V/GND can be extracted from certain CCX caps, e.g. the one shown in the signal reference image.
+
+The board is operated via 2 keys which can be implemeted with one of the alternatives below:
+* Wire vol-/vol+ pads to existing button lines on JAMMA connector (e.g. P1 credit & start).
+* Wire two external pushbuttons to the board: one terminal to GND and another to vol-/vol+. Solder resistors R7 and R8 (10k 0603) to the board.
+* If using CPS2 I/O Interface, vol-/vol+ pads can be wired to its up/down keys (see parts list on main README). R7 and R8 need to be installed as well.
 
 ![](install-3.jpg)
 

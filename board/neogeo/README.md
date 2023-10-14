@@ -19,9 +19,11 @@ Installation
 --------------------------
 The add-on board can be installed on top of Neo Geo PCB (MV1C revision currently supported). The following additional parts are required:
 
-* 2pcs 0603 10k SMD resistors and TL2243 switch (or 2 external buttons connecting "vol+" and "vol-" pads to GND when pressed)
 * 2pcs 0805 10u SMD ceramic capacitors
 * ribbon cable
+* hookup for PCB buttons
+  * if using JAMMA buttons: 2x 10cm wires
+  * if using separate buttons: 2pcs 0603 10k SMD resistors and TL2243 switch (or 2 external buttons connecting "vol+" and "vol-" pads to GND when pressed)
 
 Installation instructions are found in doc/install.md .
 
