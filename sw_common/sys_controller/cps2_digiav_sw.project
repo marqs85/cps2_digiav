@@ -27,30 +27,30 @@
     </Plugin>
   </Plugins>
   <VirtualDirectory Name="src">
-    <File Name="../../../../sw_common/sys_controller/src/userdata.c"/>
-    <File Name="../../../../sw_common/sys_controller/src/controls.c"/>
-    <File Name="../../../../sw_common/sys_controller/src/menu.c"/>
-    <File Name="../../../../sw_common/sys_controller/src/sys_controller.c"/>
-    <File Name="../../../../sw_common/sys_controller/src/video_modes.c"/>
-    <File Name="../../../../sw_common/sys_controller/src/avconfig.c"/>
+    <File Name="src/userdata.c"/>
+    <File Name="src/controls.c"/>
+    <File Name="src/menu.c"/>
+    <File Name="src/sys_controller.c"/>
+    <File Name="src/video_modes.c"/>
+    <File Name="src/avconfig.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="inc">
-    <File Name="../../../../sw_common/sys_controller/inc/userdata.h"/>
-    <File Name="../../../../sw_common/sys_controller/inc/controls.h"/>
-    <File Name="../../../../sw_common/sys_controller/inc/menu.h"/>
-    <File Name="../../../../sw_common/sys_controller/inc/video_modes.h"/>
-    <File Name="../../../../sw_common/sys_controller/inc/avconfig.h"/>
+    <File Name="inc/userdata.h"/>
+    <File Name="inc/controls.h"/>
+    <File Name="inc/menu.h"/>
+    <File Name="inc/video_modes.h"/>
+    <File Name="inc/avconfig.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="ic_drivers">
     <VirtualDirectory Name="si5351">
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351_regs.h"/>
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.h"/>
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.c"/>
+      <File Name="ic_drivers/si5351/si5351_regs.h"/>
+      <File Name="ic_drivers/si5351/si5351.h"/>
+      <File Name="ic_drivers/si5351/si5351.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="adv7513">
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513_regs.h"/>
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.h"/>
-      <File Name="../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.c"/>
+      <File Name="ic_drivers/adv7513/adv7513_regs.h"/>
+      <File Name="ic_drivers/adv7513/adv7513.h"/>
+      <File Name="ic_drivers/adv7513/adv7513.c"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Reconciliation>
@@ -134,7 +134,8 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <Target Name="compile_image">make mem_init_generate</Target>
+        <Target Name="neogeo_compile">make -C $(ProjectPath)/../../../../board/neogeo/software/sys_controller mem_init_generate</Target>
+        <Target Name="cps2_compile">make mem_init_generate</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
         <BuildCommand>make; make mem_init_generate</BuildCommand>

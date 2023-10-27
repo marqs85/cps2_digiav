@@ -36,8 +36,10 @@ void parse_control(uint8_t btn_vec)
         if (!is_menu_active()) {
             if (b == PB_BTN1)
                 display_menu(SHOW_MENU);
+#ifndef NEOGEO
             else if (b == PB_BTN0)
                 tc.sl_mode = (tc.sl_mode + 1) % 3;
+#endif
         } else {
             if (b == PB_BTN1)
                 display_menu(NEXT_OPT);

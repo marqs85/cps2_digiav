@@ -55,7 +55,7 @@ static const char *tx_mode_desc[] = { "HDMI (RGB Full)", "HDMI (RGB Limited)", "
 static const char *sl_mode_desc[] = { "Off", "Horizontal", "H+V" };
 static const char *sl_method_desc[] = { "Multiplication", "Subtraction" };
 static const char *audio_sr_desc[] = { "Off", "On (4.0)", "On (5.1)", "On (7.1)" };
-static const char *neogeo_freq_desc[] = { "Normal", "DFO" };
+static const char *neogeo_freq_desc[] = { "24MHz (MVS)", "24.167MHz (AES)", "24.306MHz (DFO)" };
 
 static void value_disp(uint8_t v) { if (v < 10) {menu_row2[0] = ('0'+v); menu_row2[1] = 0;} else {menu_row2[0] = '0'+(v/10); menu_row2[1] = '0'+(v%10); menu_row2[2] = 0;} }
 

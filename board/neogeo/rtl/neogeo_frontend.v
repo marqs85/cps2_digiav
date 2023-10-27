@@ -55,7 +55,8 @@ reg h_ctr_divctr;
 reg [8:0] v_ctr;
 reg CSYNC_i_prev;
 
-reg [3:0] equ_line_ctr;
+reg [3:0] equ_line_ctr, equ_line_max;
+reg force_resync;
 
 reg [21:0] vclk_ctr;
 
@@ -87,16 +88,16 @@ always @(posedge VCLK_i) begin
 
     CSYNC_i_prev <= CSYNC_i;
 
-    if ((CSYNC_i_prev & ~CSYNC_i) & (h_ctr > (NEO_H_TOTAL/2))) begin
+    if ((CSYNC_i_prev & ~CSYNC_i) & (h_ctr > ((NEO_H_TOTAL/2)+(NEO_H_TOTAL/4)))) begin
         h_ctr <= 0;
         HSYNC <= 1'b0;
 
-        if ((v_ctr >= 16) & (equ_line_ctr >= 3)) begin
-            v_ctr <= 0;
+        if (force_resync | (v_ctr == (NEO_V_TOTAL-1))) begin
+            v_ctr <= force_resync ? 1 : 0;
             frame_change <= 1'b1;
+            force_resync <= 0;
             vclks_per_frame <= vclk_ctr;
             vclk_ctr <= 1;
-            equ_line_ctr <= 0;
             VSYNC <= 1'b0;
         end else begin
             v_ctr <= v_ctr + 1'b1;
@@ -113,10 +114,19 @@ always @(posedge VCLK_i) begin
         vclk_ctr <= vclk_ctr + 1'b1;
 
         if (h_ctr == (NEO_H_TOTAL/2)) begin
-            if (~CSYNC_i)
+            if (~CSYNC_i) begin
                 equ_line_ctr <= equ_line_ctr + 1'b1;
-            else
+                if (equ_line_max > 8) begin
+                    if (equ_line_ctr == 3)
+                        force_resync <= (v_ctr != 0);
+                end else begin
+                    if (equ_line_ctr == 0)
+                        force_resync <= (v_ctr != 0);
+                end
+            end else if (equ_line_ctr != 0) begin
                 equ_line_ctr <= 0;
+                equ_line_max <= equ_line_ctr;
+            end
         end
     end
 end
