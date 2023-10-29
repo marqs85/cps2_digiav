@@ -1,0 +1,45 @@
+power (cap between NEO-B1 and 4364):
+pin closer to PCB center : 5V
+pin closer to PCB edge   : GND
+
+power2 (cap between YM2610 and YM3016):
+pin closer to PCB center : 5V
+pin closer to PCB edge   : GND
+
+clocks:
+via east of 68k:   C1 (12MHz)
+via east of 4364s: C2 (6MHz)
+
+sync:
+CXA1145P (pin 10): CSYNC (HS on cps2_digiav)
+
+audio (near IC4):
+left leg of left 6.8K resistor north of volume slider: AINR
+right leg of right 6.8K resistor north of volume slider: AINL
+
+R2R DAC resistors from the PCB side towards center:
+R4
+R3
+R0
+R1
+R2
+x
+x
+G4
+G3
+x
+x
+G2
+G0
+G1
+B0
+B1
+B2
+B3
+B4
+x
+x
+
+extra video signals:
+left LS273 (pin 19): DARK
+LS05 (pin 1): SHADOW (VS on cps2_digiav)

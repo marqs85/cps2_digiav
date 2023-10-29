@@ -1,0 +1,637 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "cps2_digiav audio ADC adapter"
+Date "2021-08-01"
+Rev "1.0"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L custom_components:WM8782 U2
+U 1 1 6106D2E6
+P 5350 2750
+F 0 "U2" H 5350 3565 50  0000 C CNN
+F 1 "WM8782" H 5350 3474 50  0000 C CNN
+F 2 "custom_components:TSSOP-20_4.4x6.5mm_Pitch0.65mm_Handsoldering" H 5350 2700 50  0001 C CNN
+F 3 "" H 5350 2700 50  0001 C CNN
+	1    5350 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4550 2300 3750 2300
+$Comp
+L 74xGxx:74LVC1G17 U1
+U 1 1 6106E641
+P 3500 2300
+F 0 "U1" H 3475 2567 50  0000 C CNN
+F 1 "74LVC1G17" H 3475 2476 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5_HandSoldering" H 3500 2300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf" H 3500 2300 50  0001 C CNN
+	1    3500 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP4
+U 1 1 610704B7
+P 4550 2400
+F 0 "TP4" V 4745 2472 50  0001 C CNN
+F 1 "DATA" V 4550 2750 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 4750 2400 50  0001 C CNN
+F 3 "~" H 4750 2400 50  0001 C CNN
+	1    4550 2400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP5
+U 1 1 61071CE2
+P 4550 2500
+F 0 "TP5" V 4745 2572 50  0001 C CNN
+F 1 "WS" V 4550 2850 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 4750 2500 50  0001 C CNN
+F 3 "~" H 4750 2500 50  0001 C CNN
+	1    4550 2500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP6
+U 1 1 61071F3A
+P 4550 2800
+F 0 "TP6" V 4745 2872 50  0001 C CNN
+F 1 "BCK" V 4550 3150 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 4750 2800 50  0001 C CNN
+F 3 "~" H 4750 2800 50  0001 C CNN
+	1    4550 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 6107257D
+P 4550 2600
+F 0 "#PWR0101" H 4550 2350 50  0001 C CNN
+F 1 "GND" H 4555 2427 50  0001 C CNN
+F 2 "" H 4550 2600 50  0001 C CNN
+F 3 "" H 4550 2600 50  0001 C CNN
+	1    4550 2600
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP2
+U 1 1 61074FE6
+P 2500 3450
+F 0 "TP2" V 2695 3522 50  0001 C CNN
+F 1 "GND" V 2500 3750 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 2700 3450 50  0001 C CNN
+F 3 "~" H 2700 3450 50  0001 C CNN
+	1    2500 3450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP1
+U 1 1 61075253
+P 2500 3350
+F 0 "TP1" V 2695 3422 50  0001 C CNN
+F 1 "5V" V 2500 3600 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 2700 3350 50  0001 C CNN
+F 3 "~" H 2700 3350 50  0001 C CNN
+	1    2500 3350
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4550 2700 3750 2700
+$Comp
+L Device:C_Small C3
+U 1 1 61076140
+P 3750 2800
+F 0 "C3" H 3842 2846 50  0000 L CNN
+F 1 "0.1u" H 3842 2755 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 3750 2800 50  0001 C CNN
+F 3 "~" H 3750 2800 50  0001 C CNN
+	1    3750 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C1
+U 1 1 61076670
+P 3450 2800
+F 0 "C1" H 3542 2846 50  0000 L CNN
+F 1 "10u" H 3542 2755 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 3450 2800 50  0001 C CNN
+F 3 "~" H 3450 2800 50  0001 C CNN
+	1    3450 2800
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 610770D3
+P 3600 2900
+F 0 "#PWR0102" H 3600 2650 50  0001 C CNN
+F 1 "GND" H 3605 2727 50  0001 C CNN
+F 2 "" H 3600 2900 50  0001 C CNN
+F 3 "" H 3600 2900 50  0001 C CNN
+	1    3600 2900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 2900 3600 2900
+Wire Wire Line
+	3600 2900 3750 2900
+Connection ~ 3600 2900
+Wire Wire Line
+	3750 2700 3450 2700
+Connection ~ 3750 2700
+Text Label 3850 2700 0    50   ~ 0
+DVDD3v3
+$Comp
+L Connector:TestPoint TP3
+U 1 1 61078035
+P 3200 2300
+F 0 "TP3" V 3395 2372 50  0001 C CNN
+F 1 "MCLK" V 3200 2650 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 3400 2300 50  0001 C CNN
+F 3 "~" H 3400 2300 50  0001 C CNN
+	1    3200 2300
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3500 2200 4200 2200
+$Comp
+L power:GND #PWR0103
+U 1 1 61078A43
+P 3500 2400
+F 0 "#PWR0103" H 3500 2150 50  0001 C CNN
+F 1 "GND" H 3505 2227 50  0001 C CNN
+F 2 "" H 3500 2400 50  0001 C CNN
+F 3 "" H 3500 2400 50  0001 C CNN
+	1    3500 2400
+	1    0    0    -1  
+$EndComp
+Text Label 3800 2200 0    50   ~ 0
+DVDD3v3
+$Comp
+L power:GND #PWR0104
+U 1 1 61078ED7
+P 4550 2900
+F 0 "#PWR0104" H 4550 2650 50  0001 C CNN
+F 1 "GND" H 4555 2727 50  0001 C CNN
+F 2 "" H 4550 2900 50  0001 C CNN
+F 3 "" H 4550 2900 50  0001 C CNN
+	1    4550 2900
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0105
+U 1 1 61079194
+P 4550 3100
+F 0 "#PWR0105" H 4550 2850 50  0001 C CNN
+F 1 "GND" H 4555 2927 50  0001 C CNN
+F 2 "" H 4550 3100 50  0001 C CNN
+F 3 "" H 4550 3100 50  0001 C CNN
+	1    4550 3100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4550 3200 3750 3200
+$Comp
+L Device:C_Small C4
+U 1 1 6107BE43
+P 3750 3300
+F 0 "C4" H 3842 3346 50  0000 L CNN
+F 1 "0.1u" H 3842 3255 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 3750 3300 50  0001 C CNN
+F 3 "~" H 3750 3300 50  0001 C CNN
+	1    3750 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C2
+U 1 1 6107BE49
+P 3450 3300
+F 0 "C2" H 3542 3346 50  0000 L CNN
+F 1 "10u" H 3542 3255 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 3450 3300 50  0001 C CNN
+F 3 "~" H 3450 3300 50  0001 C CNN
+	1    3450 3300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 6107BE4F
+P 3600 3400
+F 0 "#PWR0106" H 3600 3150 50  0001 C CNN
+F 1 "GND" H 3605 3227 50  0001 C CNN
+F 2 "" H 3600 3400 50  0001 C CNN
+F 3 "" H 3600 3400 50  0001 C CNN
+	1    3600 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 3400 3600 3400
+Wire Wire Line
+	3600 3400 3750 3400
+Connection ~ 3600 3400
+Wire Wire Line
+	3750 3200 3450 3200
+Connection ~ 3750 3200
+Text Label 4050 3200 0    50   ~ 0
+VMID
+$Comp
+L power:GND #PWR0107
+U 1 1 6107D759
+P 4550 3000
+F 0 "#PWR0107" H 4550 2750 50  0001 C CNN
+F 1 "GND" H 4555 2827 50  0001 C CNN
+F 2 "" H 4550 3000 50  0001 C CNN
+F 3 "" H 4550 3000 50  0001 C CNN
+	1    4550 3000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6150 2300 6300 2300
+Wire Wire Line
+	6300 2100 6700 2100
+Text Label 6350 2100 0    50   ~ 0
+DVDD3v3
+$Comp
+L Device:R_Small R6
+U 1 1 6107F32C
+P 7150 2600
+F 0 "R6" V 7050 2600 50  0000 C CNN
+F 1 "3.3k" V 7200 2600 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 7150 2600 50  0001 C CNN
+F 3 "~" H 7150 2600 50  0001 C CNN
+	1    7150 2600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7250 2600 7550 2600
+Text Label 7300 2600 0    50   ~ 0
+VMID
+$Comp
+L Device:C_Small C6
+U 1 1 61080EB5
+P 6650 3200
+F 0 "C6" H 6742 3246 50  0000 L CNN
+F 1 "0.1u" H 6742 3155 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 6650 3200 50  0001 C CNN
+F 3 "~" H 6650 3200 50  0001 C CNN
+	1    6650 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C5
+U 1 1 61080EBF
+P 6350 3200
+F 0 "C5" H 6442 3246 50  0000 L CNN
+F 1 "10u" H 6442 3155 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 6350 3200 50  0001 C CNN
+F 3 "~" H 6350 3200 50  0001 C CNN
+	1    6350 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0108
+U 1 1 61080EC9
+P 6500 3300
+F 0 "#PWR0108" H 6500 3050 50  0001 C CNN
+F 1 "GND" H 6505 3127 50  0001 C CNN
+F 2 "" H 6500 3300 50  0001 C CNN
+F 3 "" H 6500 3300 50  0001 C CNN
+	1    6500 3300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6350 3300 6500 3300
+Wire Wire Line
+	6500 3300 6650 3300
+Connection ~ 6500 3300
+Wire Wire Line
+	6650 3100 6350 3100
+Wire Wire Line
+	6350 3100 6150 3100
+Connection ~ 6350 3100
+$Comp
+L power:GND #PWR0109
+U 1 1 610867F5
+P 6150 3200
+F 0 "#PWR0109" H 6150 2950 50  0001 C CNN
+F 1 "GND" H 6155 3027 50  0001 C CNN
+F 2 "" H 6150 3200 50  0001 C CNN
+F 3 "" H 6150 3200 50  0001 C CNN
+	1    6150 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C10
+U 1 1 610871D8
+P 7250 3100
+F 0 "C10" H 7342 3146 50  0000 L CNN
+F 1 "0.1u" H 7342 3055 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 7250 3100 50  0001 C CNN
+F 3 "~" H 7250 3100 50  0001 C CNN
+	1    7250 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C9
+U 1 1 61087370
+P 6950 3100
+F 0 "C9" H 7042 3146 50  0000 L CNN
+F 1 "10u" H 7042 3055 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 6950 3100 50  0001 C CNN
+F 3 "~" H 6950 3100 50  0001 C CNN
+	1    6950 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0110
+U 1 1 6108737A
+P 7100 3200
+F 0 "#PWR0110" H 7100 2950 50  0001 C CNN
+F 1 "GND" H 7105 3027 50  0001 C CNN
+F 2 "" H 7100 3200 50  0001 C CNN
+F 3 "" H 7100 3200 50  0001 C CNN
+	1    7100 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6950 3200 7100 3200
+Wire Wire Line
+	7100 3200 7250 3200
+Connection ~ 7100 3200
+Wire Wire Line
+	7250 3000 6950 3000
+Connection ~ 6950 3000
+Wire Wire Line
+	6150 3000 6950 3000
+Wire Wire Line
+	2800 3350 2500 3350
+Text Label 2550 3350 0    50   ~ 0
+DVDD5
+$Comp
+L power:GND #PWR0111
+U 1 1 6108BE38
+P 2500 3450
+F 0 "#PWR0111" H 2500 3200 50  0001 C CNN
+F 1 "GND" H 2505 3277 50  0001 C CNN
+F 2 "" H 2500 3450 50  0001 C CNN
+F 3 "" H 2500 3450 50  0001 C CNN
+	1    2500 3450
+	1    0    0    -1  
+$EndComp
+Text Label 6650 3000 0    50   ~ 0
+DVDD5
+$Comp
+L power:GND #PWR0112
+U 1 1 6108C5EF
+P 6150 2900
+F 0 "#PWR0112" H 6150 2650 50  0001 C CNN
+F 1 "GND" H 6155 2727 50  0001 C CNN
+F 2 "" H 6150 2900 50  0001 C CNN
+F 3 "" H 6150 2900 50  0001 C CNN
+	1    6150 2900
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	6150 2600 7050 2600
+$Comp
+L Device:C_Small C8
+U 1 1 610904C5
+P 6900 2700
+F 0 "C8" V 6850 2600 50  0000 C CNN
+F 1 "10u" V 7000 2700 50  0000 C CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 6900 2700 50  0001 C CNN
+F 3 "~" H 6900 2700 50  0001 C CNN
+	1    6900 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R5
+U 1 1 61094C2C
+P 6600 2700
+F 0 "R5" V 6550 2700 50  0000 C CNN
+F 1 "5k" V 6700 2700 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 6600 2700 50  0001 C CNN
+F 3 "~" H 6600 2700 50  0001 C CNN
+	1    6600 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R3
+U 1 1 610992FA
+P 6350 2800
+F 0 "R3" V 6300 2800 50  0000 C CNN
+F 1 "5k" V 6450 2800 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 6350 2800 50  0001 C CNN
+F 3 "~" H 6350 2800 50  0001 C CNN
+	1    6350 2800
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6150 2700 6500 2700
+Wire Wire Line
+	6150 2800 6250 2800
+Wire Wire Line
+	6450 2800 6500 2800
+Wire Wire Line
+	6500 2800 6500 2700
+Connection ~ 6500 2700
+Wire Wire Line
+	6700 2700 6800 2700
+$Comp
+L Device:C_Small C7
+U 1 1 6109DA73
+P 6900 2400
+F 0 "C7" V 6850 2300 50  0000 C CNN
+F 1 "10u" V 7000 2400 50  0000 C CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 6900 2400 50  0001 C CNN
+F 3 "~" H 6900 2400 50  0001 C CNN
+	1    6900 2400
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R4
+U 1 1 6109DC41
+P 6600 2400
+F 0 "R4" V 6550 2400 50  0000 C CNN
+F 1 "5k" V 6700 2400 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 6600 2400 50  0001 C CNN
+F 3 "~" H 6600 2400 50  0001 C CNN
+	1    6600 2400
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_Small R2
+U 1 1 6109DC4B
+P 6350 2500
+F 0 "R2" V 6300 2500 50  0000 C CNN
+F 1 "5k" V 6450 2500 50  0000 C CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 6350 2500 50  0001 C CNN
+F 3 "~" H 6350 2500 50  0001 C CNN
+	1    6350 2500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6150 2400 6500 2400
+Wire Wire Line
+	6450 2500 6500 2500
+Wire Wire Line
+	6500 2500 6500 2400
+Connection ~ 6500 2400
+Wire Wire Line
+	6700 2400 6800 2400
+Wire Wire Line
+	6250 2500 6150 2500
+Wire Wire Line
+	7000 2700 7300 2700
+Wire Wire Line
+	7000 2400 7300 2400
+$Comp
+L Connector:TestPoint TP8
+U 1 1 610A496C
+P 7300 2400
+F 0 "TP8" V 7495 2472 50  0001 C CNN
+F 1 "AINL" V 7300 2650 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 7500 2400 50  0001 C CNN
+F 3 "~" H 7500 2400 50  0001 C CNN
+	1    7300 2400
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP9
+U 1 1 610A6162
+P 7300 2700
+F 0 "TP9" V 7495 2772 50  0001 C CNN
+F 1 "AINR" V 7300 2950 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 7500 2700 50  0001 C CNN
+F 3 "~" H 7500 2700 50  0001 C CNN
+	1    7300 2700
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP7
+U 1 1 610AB600
+P 7300 2300
+F 0 "TP7" V 7495 2372 50  0001 C CNN
+F 1 "GND" V 7300 2550 50  0000 C CNN
+F 2 "custom_components:SMD_PAD" H 7500 2300 50  0001 C CNN
+F 3 "~" H 7500 2300 50  0001 C CNN
+	1    7300 2300
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:GND #PWR0114
+U 1 1 610AB7B2
+P 7300 2300
+F 0 "#PWR0114" H 7300 2050 50  0001 C CNN
+F 1 "GND" H 7305 2127 50  0001 C CNN
+F 2 "" H 7300 2300 50  0001 C CNN
+F 3 "" H 7300 2300 50  0001 C CNN
+	1    7300 2300
+	0    1    -1   0   
+$EndComp
+$Comp
+L Regulator_Linear:TLV70033_SOT23-5 U3
+U 1 1 610D433E
+P 4300 4100
+F 0 "U3" H 4300 4442 50  0000 C CNN
+F 1 "TLV70033_SOT23-5" H 4300 4351 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23-5_HandSoldering" H 4300 4425 50  0001 C CIN
+F 3 "http://www.ti.com/lit/ds/symlink/tlv700.pdf" H 4300 4150 50  0001 C CNN
+	1    4300 4100
+	1    0    0    -1  
+$EndComp
+Text Label 3600 4000 0    50   ~ 0
+DVDD5
+$Comp
+L Device:C_Small C11
+U 1 1 610DBC9F
+P 3650 4100
+F 0 "C11" H 3742 4146 50  0000 L CNN
+F 1 "1u" H 3742 4055 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 3650 4100 50  0001 C CNN
+F 3 "~" H 3650 4100 50  0001 C CNN
+	1    3650 4100
+	1    0    0    -1  
+$EndComp
+Connection ~ 3650 4000
+Wire Wire Line
+	3650 4000 3550 4000
+$Comp
+L power:GND #PWR0115
+U 1 1 610E1F4A
+P 3650 4200
+F 0 "#PWR0115" H 3650 3950 50  0001 C CNN
+F 1 "GND" H 3655 4027 50  0001 C CNN
+F 2 "" H 3650 4200 50  0001 C CNN
+F 3 "" H 3650 4200 50  0001 C CNN
+	1    3650 4200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3650 4000 3950 4000
+Wire Wire Line
+	4000 4100 3950 4100
+Wire Wire Line
+	3950 4100 3950 4000
+Connection ~ 3950 4000
+Wire Wire Line
+	3950 4000 4000 4000
+Wire Wire Line
+	4950 4000 4750 4000
+$Comp
+L power:GND #PWR0116
+U 1 1 610E86A1
+P 4300 4400
+F 0 "#PWR0116" H 4300 4150 50  0001 C CNN
+F 1 "GND" H 4305 4227 50  0001 C CNN
+F 2 "" H 4300 4400 50  0001 C CNN
+F 3 "" H 4300 4400 50  0001 C CNN
+	1    4300 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C_Small C12
+U 1 1 610E9B5B
+P 4750 4100
+F 0 "C12" H 4842 4146 50  0000 L CNN
+F 1 "1u" H 4842 4055 50  0000 L CNN
+F 2 "custom_components:SM0603_Capa_libcms" H 4750 4100 50  0001 C CNN
+F 3 "~" H 4750 4100 50  0001 C CNN
+	1    4750 4100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0117
+U 1 1 610E9E41
+P 4750 4200
+F 0 "#PWR0117" H 4750 3950 50  0001 C CNN
+F 1 "GND" H 4755 4027 50  0001 C CNN
+F 2 "" H 4750 4200 50  0001 C CNN
+F 3 "" H 4750 4200 50  0001 C CNN
+	1    4750 4200
+	1    0    0    -1  
+$EndComp
+Connection ~ 4750 4000
+Wire Wire Line
+	4750 4000 4600 4000
+Text Label 4650 4000 0    50   ~ 0
+DVDD3v3
+$Comp
+L Device:R_Small R1
+U 1 1 6107DEB3
+P 6300 2200
+F 0 "R1" H 6359 2246 50  0000 L CNN
+F 1 "10k" H 6359 2155 50  0000 L CNN
+F 2 "custom_components:SM0603_Resistor_libcms" H 6300 2200 50  0001 C CNN
+F 3 "~" H 6300 2200 50  0001 C CNN
+	1    6300 2200
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

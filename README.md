@@ -10,7 +10,7 @@ Supported boards
 * CPS1 (89626A)
 * CPS2
 * CPS3
-* Neo Geo (MV1C)
+* Neo Geo (MV1C and AES3-3, possibly others as well)
 * Toaplan V2
 
 Hardware
