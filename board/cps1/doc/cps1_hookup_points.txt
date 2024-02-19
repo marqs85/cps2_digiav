@@ -9,11 +9,11 @@ note 2: add a jumper wire between C1 and C2 pads on cps2_digiav board
 
 11F - YM2151:
 pin 1: GND
-pin 20: WS
-pin 21: DAT
-pin 23: BCK
-pin 24: oCM (cps1_adapter)
-note 1: use coax cable for oCM/GND
+pin 20: YM_SH1 (cps1_adapter)
+pin 21: YM_SO (cps1_adapter)
+pin 23: YM_oC1 (cps1_adapter)
+pin 24: YM_oCM (cps1_adapter)
+note 1: use coax cable for YM_oCM/GND
 
 R49:
 M6295 side: DAO (cps1_adapter)
@@ -26,8 +26,9 @@ various places, e.g. some CCX caps:
 : 5V
 : GND
 
-cps1_adapter:
-oC1: J3
-SH1: J5
+cps1_adapter -> cps2_digiav:
+I2S_BCK_o: BCK
+I2S_WS_o: WS
+I2S_DATA_o: DAT
 SO: VS
 3v3: U7 leg closest to PCB hole

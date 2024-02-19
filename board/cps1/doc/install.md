@@ -28,6 +28,8 @@ Step 3: Audio, power and button signals
 
 Audio is extracted from YM2151 and R49. Use coax cable for oCM and DAO signals.
 
+The adapter board (since v1.3) has 4 QS_* pads reserved for CPS1 Multi installations (QSound support). On normal CPS1 installations these pads can be left unconnected. Firmware support for QSound is work in progress.
+
 5V/GND can be extracted from certain CCX caps, e.g. the one shown in the signal reference image.
 
 The board is operated via 2 keys which can be implemeted with one of the alternatives below:
@@ -41,7 +43,7 @@ The board is operated via 2 keys which can be implemeted with one of the alterna
 Step 4: Signals between cps1_adapter and cps2_digiav
 --------------------------
 
-Bridge SMD jumpers J3, J5 and J6 on cps2_digiav board. Connect oC1, SH1, SO and 3v3 from cps1_adapter to cps2_digiav as defined in the hookup point list. Add a jumper wire between C1 and C2 pads. (Note that cps2_digiav PCB in picture below is v2.0 which is slightly different)
+Bridge SMD jumpers J3, J5 and J6 on cps2_digiav board. Connect I2S_*_o, SO and 3v3 from cps1_adapter to cps2_digiav as defined in the hookup point list. Add a jumper wire between C1 and C2 pads.
 
 ![](install-4.jpg)
 
