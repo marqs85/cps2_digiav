@@ -17,7 +17,7 @@ Features (current)
 
 Installation
 --------------------------
-The add-on board can be installed on top of MVS PCB or AES home console. Installation instructions are provided for MV1C and NEO-AES3-3 models, but the mod should be compatible with others too. The following additional parts are required:
+The add-on board can be installed on top of MVS PCB or AES home console. Installation instructions are provided for MV1C, NEO-AES3-3 and NEO-AES3-6 models, but the mod should be compatible with others too. The following additional parts are required:
 
 * 2pcs 0805 10u SMD ceramic capacitors (MV1C only)
 * ribbon cable

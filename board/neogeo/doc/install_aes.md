@@ -1,11 +1,15 @@
-Neo Geo (NEO-AES3-3) signal reference
+Neo Geo (NEO-AES3-3 / NEO-AES3-6) signal reference
 --------------------------
 
-[List of hookup points](./aes3-3_hookup_points.txt)
+[List of hookup points (AES3-3)](./aes3-3_hookup_points.txt)
 
 ![](aes3-3_hookup_points.jpg)
 ![](aes3-3_hookup_points2.jpg)
 ![](aes3-3_hookup_points3.jpg)
+
+C1, C2, AINL, AINR are in slightly different place on AES3-6 as shown below:
+
+![](aes3-6_hookup_points.jpg)
 
 Step 1: Preparation of cps2_digiav board
 --------------------------
@@ -19,7 +23,7 @@ Step 1: Preparation of cps2_digiav board
 ![](mv1c_rdac_hookup.jpg)
 
 
-Step 2: Preparation of AES3-3
+Step 2: Preparation of AES
 --------------------------
 
 1. If you plan on installing the board on the shaded area which is selected to minimize wire distances, bend down the capacitors in the yellow rectangle and make a small cutout for HDMI connector on lower part of the case.
