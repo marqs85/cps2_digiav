@@ -36,7 +36,7 @@
 #define LNG(e, j) e
 #endif
 
-#define FW_VER      "0.92"
+#define FW_VER      "0.93"
 
 extern avconfig_t tc;
 extern volatile osd_regs *osd;

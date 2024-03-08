@@ -29,7 +29,7 @@ module i2s_upsampler_asrc (
   AMCLK_i,
   nARST,
 
-  // YM2151 Audio Input
+  // YM2151/QSound Audio Input
   ASCLK_i,
   ASDATA_i,
   ALRCLK_i,
@@ -63,8 +63,8 @@ output ALRCLK_o;
 
 // parallization
 
-wire signed [15:0] APDATA [0:1];
-wire APDATA_VALID;
+wire signed [15:0] APDATA_YM [0:1];
+wire APDATA_YM_VALID;
 
 ym_rx_asrc ym_rx_u(
     .AMCLK_i(AMCLK_i),
@@ -72,15 +72,29 @@ ym_rx_asrc ym_rx_u(
     .I2S_BCK(ASCLK_i),
     .I2S_DATA(ASDATA_i),
     .I2S_WS(ALRCLK_i),
-    .APDATA_LEFT_o(APDATA[1]),
-    .APDATA_RIGHT_o(APDATA[0]),
-    .APDATA_VALID_o(APDATA_VALID)
+    .APDATA_LEFT_o(APDATA_YM[1]),
+    .APDATA_RIGHT_o(APDATA_YM[0]),
+    .APDATA_VALID_o(APDATA_YM_VALID)
+);
+
+wire signed [15:0] APDATA_QS [0:1];
+wire APDATA_QS_VALID;
+
+i2s_rx_asrc i2s_rx_qs_u(
+    .AMCLK_i(AMCLK_i),
+    .reset_n(nARST),
+    .I2S_BCK(ASCLK_i),
+    .I2S_DATA(ASDATA_i),
+    .I2S_WS(ALRCLK_i),
+    .APDATA_LEFT_o(APDATA_QS[1]),
+    .APDATA_RIGHT_o(APDATA_QS[0]),
+    .APDATA_VALID_o(APDATA_QS_VALID)
 );
 
 wire signed [23:0] APDATA_WM; // WM8782 input is mono
 wire APDATA_WM_VALID;
 
-i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
+i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_wm_u(
     .AMCLK_i(AMCLK_i),
     .reset_n(nARST),
     .I2S_BCK(ASCLK_WM_i),
@@ -91,6 +105,34 @@ i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
     .APDATA_VALID_o(APDATA_WM_VALID)
 );
 
+// Detect between YM and QSound
+reg snd_src_sel;
+reg lrclk_prev;
+reg [7:0] lrclk_ctr;
+always @(posedge ASCLK_i or negedge nARST) begin
+    if (!nARST) begin
+        snd_src_sel <= 0;
+        lrclk_prev <= 0;
+        lrclk_ctr <= 0;
+    end else begin
+        if (~lrclk_prev & ALRCLK_i) begin
+            if (lrclk_ctr == 31) begin
+                snd_src_sel <= 1'b1;
+            end else if ((lrclk_ctr > 190) & (lrclk_ctr < 210)) begin
+                snd_src_sel <= 1'b0;
+            end
+            lrclk_ctr <= 0;
+        end else begin
+            if (lrclk_ctr != '1);
+                lrclk_ctr <= lrclk_ctr + 1'b1;
+        end
+
+        lrclk_prev <= ALRCLK_i;
+    end
+end
+
+// Mux between YM and QSound
+wire APDATA_VALID = snd_src_sel ? APDATA_YM_VALID : APDATA_QS_VALID;
 
 // interpolation
 
@@ -128,8 +170,15 @@ i2s_rx_asrc #(.I2S_DATA_BITS(24)) i2s_rx_u(
   always @(posedge AMCLK_i) begin
     case (tdm)
       2'b00: if (APDATA_VALID) begin
-        sink_data_buf_1 <= {APDATA[1][15], APDATA[1]} + {APDATA_WM[23], APDATA_WM[23:8]};
-        sink_data_buf_0 <= {APDATA[0][15], APDATA[0]} + {APDATA_WM[23], APDATA_WM[23:8]};
+        if (snd_src_sel == 1'b1) begin
+          // YM2151 + ADC
+          sink_data_buf_1 <= {APDATA_YM[1][15], APDATA_YM[1]} + {APDATA_WM[23], APDATA_WM[23:8]};
+          sink_data_buf_0 <= {APDATA_YM[0][15], APDATA_YM[0]} + {APDATA_WM[23], APDATA_WM[23:8]};
+        end else begin
+          // QSound
+          sink_data_buf_1 <= {APDATA_QS[1][15], APDATA_QS[1]};
+          sink_data_buf_0 <= {APDATA_QS[0][15], APDATA_QS[0]};
+        end
         tdm <= 2'b01;
       end
       2'b01: begin

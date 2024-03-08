@@ -28,7 +28,9 @@ Step 3: Audio, power and button signals
 
 Audio is extracted from YM2151 and R49. Use coax cable for oCM and DAO signals.
 
-The adapter board (since v1.3) has 4 QS_* pads reserved for CPS1 Multi installations (QSound support). On normal CPS1 installations these pads can be left unconnected. Firmware support for QSound is work in progress.
+The adapter board (since v1.3) has 4 QS_* pads reserved for CPS1 Multi installations (QSound support). On normal CPS1 installations these pads are left unconnected. With CPS1 Multi QS_SEL is connected to same endpoint as QSOUND wire and other QS_* pins to TDA1543 (it is recommended to use pin header like [this](https://www.digikey.fi/en/products/detail/sullins-connector-solutions/SWR25X-NRTC-S03-RB-BA/2769661)).
+
+![](install-cps1multi.jpg)
 
 5V/GND can be extracted from certain CCX caps, e.g. the one shown in the signal reference image.
 

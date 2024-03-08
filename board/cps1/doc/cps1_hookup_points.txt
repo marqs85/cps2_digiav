@@ -32,3 +32,14 @@ I2S_WS_o: WS
 I2S_DATA_o: DAT
 SO: VS
 3v3: U7 leg closest to PCB hole
+
+
+### For CPS1 Multi installation only ###
+
+CPS1 Multi - TDA1543:
+pin 1: QS_BCK
+pin 2: QS_WS
+pin 3: QS_DATA
+
+CPS1-A - 9K - PRG1:
+pin 18: QS_SEL (same as QSOUND pin endpoint)
