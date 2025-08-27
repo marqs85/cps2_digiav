@@ -26,6 +26,170 @@
  }]]]>
     </Plugin>
   </Plugins>
+  <VirtualDirectory Name="root">
+    <File Name="../../board/cps2/software/sys_controller_bsp/system.h"/>
+    <File Name="../../board/cps2/software/sys_controller_bsp/alt_sys_init.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="HAL">
+    <VirtualDirectory Name="src">
+      <File Name="HAL/src/alt_putstr.c"/>
+      <File Name="HAL/src/alt_dma_txchan_open.c"/>
+      <File Name="HAL/src/alt_uncached_malloc.c"/>
+      <File Name="HAL/src/alt_execve.c"/>
+      <File Name="HAL/src/alt_write.c"/>
+      <File Name="HAL/src/alt_fstat.c"/>
+      <File Name="HAL/src/alt_times.c"/>
+      <File Name="HAL/src/alt_release_fd.c"/>
+      <File Name="HAL/src/alt_errno.c"/>
+      <File Name="HAL/src/alt_sbrk.c"/>
+      <File Name="HAL/src/alt_link.c"/>
+      <File Name="HAL/src/alt_find_dev.c"/>
+      <File Name="HAL/src/alt_icache_flush.c"/>
+      <File Name="HAL/src/alt_icache_flush_all.c"/>
+      <File Name="HAL/src/alt_fs_reg.c"/>
+      <File Name="HAL/src/alt_dcache_flush_all.c"/>
+      <File Name="HAL/src/alt_irq_register.c"/>
+      <File Name="HAL/src/alt_get_fd.c"/>
+      <File Name="HAL/src/alt_remap_cached.c"/>
+      <File Name="HAL/src/alt_instruction_exception_entry.c"/>
+      <File Name="HAL/src/alt_open.c"/>
+      <File Name="HAL/src/alt_getchar.c"/>
+      <File Name="HAL/src/alt_rename.c"/>
+      <File Name="HAL/src/alt_do_dtors.c"/>
+      <File Name="HAL/src/alt_dcache_flush_no_writeback.c"/>
+      <File Name="HAL/src/alt_settod.c"/>
+      <File Name="HAL/src/alt_tick.c"/>
+      <File Name="HAL/src/alt_irq_handler.c"/>
+      <File Name="HAL/src/alt_flash_dev.c"/>
+      <File Name="HAL/src/alt_remap_uncached.c"/>
+      <File Name="HAL/src/alt_load.c"/>
+      <File Name="HAL/src/alt_read.c"/>
+      <File Name="HAL/src/alt_exit.c"/>
+      <File Name="HAL/src/alt_do_ctors.c"/>
+      <File Name="HAL/src/alt_wait.c"/>
+      <File Name="HAL/src/alt_fork.c"/>
+      <File Name="HAL/src/alt_uncached_free.c"/>
+      <File Name="HAL/src/alt_find_file.c"/>
+      <File Name="HAL/src/alt_lseek.c"/>
+      <File Name="HAL/src/alt_fcntl.c"/>
+      <File Name="HAL/src/alt_dev_llist_insert.c"/>
+      <File Name="HAL/src/alt_main.c"/>
+      <File Name="HAL/src/alt_dcache_flush.c"/>
+      <File Name="HAL/src/alt_alarm_start.c"/>
+      <File Name="HAL/src/alt_fd_unlock.c"/>
+      <File Name="HAL/src/altera_nios2_gen2_irq.c"/>
+      <File Name="HAL/src/alt_putchar.c"/>
+      <File Name="HAL/src/alt_putcharbuf.c"/>
+      <File Name="HAL/src/alt_ecc_fatal_exception.c"/>
+      <File Name="HAL/src/alt_fd_lock.c"/>
+      <File Name="HAL/src/alt_busy_sleep.c"/>
+      <File Name="HAL/src/alt_malloc_lock.c"/>
+      <File Name="HAL/src/alt_iic_isr_register.c"/>
+      <File Name="HAL/src/alt_gmon.c"/>
+      <File Name="HAL/src/alt_getpid.c"/>
+      <File Name="HAL/src/alt_isatty.c"/>
+      <File Name="HAL/src/alt_dma_rxchan_open.c"/>
+      <File Name="HAL/src/alt_printf.c"/>
+      <File Name="HAL/src/alt_ioctl.c"/>
+      <File Name="HAL/src/alt_gettod.c"/>
+      <File Name="HAL/src/alt_iic.c"/>
+      <File Name="HAL/src/alt_usleep.c"/>
+      <File Name="HAL/src/alt_stat.c"/>
+      <File Name="HAL/src/alt_log_printf.c"/>
+      <File Name="HAL/src/alt_irq_vars.c"/>
+      <File Name="HAL/src/alt_env_lock.c"/>
+      <File Name="HAL/src/alt_close.c"/>
+      <File Name="HAL/src/alt_kill.c"/>
+      <File Name="HAL/src/alt_io_redirect.c"/>
+      <File Name="HAL/src/alt_dev.c"/>
+      <File Name="HAL/src/alt_unlink.c"/>
+      <File Name="HAL/src/alt_environ.c"/>
+      <File Name="HAL/src/alt_instruction_exception_register.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="inc">
+      <File Name="HAL/inc/altera_nios2_gen2_irq.h"/>
+      <File Name="HAL/inc/nios2.h"/>
+      <File Name="HAL/inc/io.h"/>
+      <File Name="HAL/inc/alt_types.h"/>
+      <VirtualDirectory Name="os">
+        <File Name="HAL/inc/os/alt_flag.h"/>
+        <File Name="HAL/inc/os/alt_syscall.h"/>
+        <File Name="HAL/inc/os/alt_sem.h"/>
+        <File Name="HAL/inc/os/alt_hooks.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="priv">
+        <File Name="HAL/inc/priv/alt_irq_table.h"/>
+        <File Name="HAL/inc/priv/alt_no_error.h"/>
+        <File Name="HAL/inc/priv/alt_busy_sleep.h"/>
+        <File Name="HAL/inc/priv/alt_legacy_irq.h"/>
+        <File Name="HAL/inc/priv/alt_exception_handler_registry.h"/>
+        <File Name="HAL/inc/priv/alt_alarm.h"/>
+        <File Name="HAL/inc/priv/alt_file.h"/>
+        <File Name="HAL/inc/priv/nios2_gmon_data.h"/>
+        <File Name="HAL/inc/priv/alt_iic_isr_register.h"/>
+        <File Name="HAL/inc/priv/alt_dev_llist.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="sys">
+        <File Name="HAL/inc/sys/alt_stack.h"/>
+        <File Name="HAL/inc/sys/alt_timestamp.h"/>
+        <File Name="HAL/inc/sys/alt_errno.h"/>
+        <File Name="HAL/inc/sys/ioctl.h"/>
+        <File Name="HAL/inc/sys/alt_exceptions.h"/>
+        <File Name="HAL/inc/sys/alt_sys_wrappers.h"/>
+        <File Name="HAL/inc/sys/alt_dma.h"/>
+        <File Name="HAL/inc/sys/alt_set_args.h"/>
+        <File Name="HAL/inc/sys/alt_irq.h"/>
+        <File Name="HAL/inc/sys/alt_debug.h"/>
+        <File Name="HAL/inc/sys/alt_dev.h"/>
+        <File Name="HAL/inc/sys/alt_cache.h"/>
+        <File Name="HAL/inc/sys/alt_load.h"/>
+        <File Name="HAL/inc/sys/alt_flash.h"/>
+        <File Name="HAL/inc/sys/alt_log_printf.h"/>
+        <File Name="HAL/inc/sys/alt_alarm.h"/>
+        <File Name="HAL/inc/sys/alt_dma_dev.h"/>
+        <File Name="HAL/inc/sys/alt_stdio.h"/>
+        <File Name="HAL/inc/sys/alt_warning.h"/>
+        <File Name="HAL/inc/sys/alt_llist.h"/>
+        <File Name="HAL/inc/sys/alt_flash_types.h"/>
+        <File Name="HAL/inc/sys/termios.h"/>
+        <File Name="HAL/inc/sys/alt_sim.h"/>
+        <File Name="HAL/inc/sys/alt_irq_entry.h"/>
+        <File Name="HAL/inc/sys/alt_driver.h"/>
+        <File Name="HAL/inc/sys/alt_sys_init.h"/>
+        <File Name="HAL/inc/sys/alt_flash_dev.h"/>
+        <File Name="HAL/inc/sys/alt_license_reminder_ucosii.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="drivers">
+    <VirtualDirectory Name="src">
+      <File Name="drivers/src/altera_avalon_jtag_uart_fd.c"/>
+      <File Name="drivers/src/altera_avalon_jtag_uart_write.c"/>
+      <File Name="drivers/src/altera_avalon_jtag_uart_init.c"/>
+      <File Name="drivers/src/i2c_opencores.c"/>
+      <File Name="drivers/src/altera_avalon_jtag_uart_ioctl.c"/>
+      <File Name="drivers/src/altera_avalon_jtag_uart_read.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="inc">
+      <File Name="drivers/inc/osd_generator_regs.h"/>
+      <File Name="drivers/inc/altera_avalon_pio_regs.h"/>
+      <File Name="drivers/inc/i2c_opencores.h"/>
+      <File Name="drivers/inc/i2c_opencores_regs.h"/>
+      <File Name="drivers/inc/altera_avalon_jtag_uart_fd.h"/>
+      <File Name="drivers/inc/altera_avalon_jtag_uart_regs.h"/>
+      <File Name="drivers/inc/altera_avalon_jtag_uart.h"/>
+      <File Name="drivers/inc/sc_config_regs.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[*.cpp;*.c;*.h;*.hpp;*.xrc;*.wxcp;*.fbp]]>
+    </Extensions>
+    <Topleveldir>./</Topleveldir>
+  </Reconciliation>
   <Description/>
   <Dependencies/>
   <Dependencies Name="Debug"/>
@@ -59,10 +223,9 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <Target Name="bsp editor">nios2-bsp-editor</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>nios2-bsp-generate-files --bsp-dir ./ --settings settings.bsp</BuildCommand>
+        <BuildCommand>make</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
@@ -99,10 +262,9 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <Target Name="bsp-editor">nios2-bsp-editor</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>nios2-bsp-generate-files --bsp-dir ./ --settings settings.bsp</BuildCommand>
+        <BuildCommand>make</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

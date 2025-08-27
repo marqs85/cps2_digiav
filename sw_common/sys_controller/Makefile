@@ -17,7 +17,7 @@ ALT_LIBRARY_NAMES :=
 # List of library names for -msys-lib linker option (-msys-lib added when used).
 # These are libraries that might be located in the BSP and depend on the BSP
 # library, or vice versa
-ALT_BSP_DEP_LIBRARY_NAMES :=
+ALT_BSP_DEP_LIBRARY_NAMES := libhal_bsp.a
 
 # List of dependencies for the linker.  This is usually the full pathname
 # of each library (*.a) file.
@@ -38,13 +38,13 @@ ALT_LDFLAGS :=
 
 #------------------------------------------------------------------------------
 #                         The adjust-path macro
-# 
+#
 # If COMSPEC/ComSpec is defined, Make is launched from Windows through
 # Cygwin.  The adjust-path macro converts absolute windows paths into
 # unix style paths (Example: c:/dir -> /c/dir). This will ensture
 # paths are readable by GNU Make.
 #
-# If COMSPEC/ComSpec is not defined, Make is launched from linux, and no 
+# If COMSPEC/ComSpec is not defined, Make is launched from linux, and no
 # adjustment is necessary
 #
 #------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ endif # COMSPEC
 
 ifdef COMSPEC # if Windows OS
 
-ifeq ($(MAKE_VERSION),3.81) 
+ifeq ($(MAKE_VERSION),3.81)
 #
 # adjust-path/adjust-path-mixed for Mingw Gnu Make on Windows
 #
@@ -69,10 +69,10 @@ ifeq ($(MAKE_VERSION),3.81)
 
 #
 # adjust-path
-#  - converts back slash characters into forward slashes 
+#  - converts back slash characters into forward slashes
 #  - if input arg ($1) is an empty string then return the empty string
 #  - if input arg ($1) does not contain the string ":/", then return input arg
-#  - using sed, convert mixed path [c:/...] into mingw path [/c/...] 
+#  - using sed, convert mixed path [c:/...] into mingw path [/c/...]
 define adjust-path
 $(strip \
 $(if $1,\
@@ -83,13 +83,13 @@ endef
 
 #
 # adjust-path-mixed
-#  - converts back slash characters into forward slashes 
+#  - converts back slash characters into forward slashes
 #  - if input arg ($1) is an empty string then return the empty string
-#  - if input arg ($1) does not begin with a forward slash '/' char, then 
+#  - if input arg ($1) does not begin with a forward slash '/' char, then
 #    return input arg
-#  - using sed, convert mingw path [/c/...] or cygwin path [/c/cygdrive/...] 
-#    into a mixed path [c:/...] 
-define adjust-path-mixed 
+#  - using sed, convert mingw path [/c/...] or cygwin path [/c/cygdrive/...]
+#    into a mixed path [c:/...]
+define adjust-path-mixed
 $(strip \
 $(if $1,\
 $(if $(findstring $(subst \,/,$1),$(patsubst /%,%,$(subst \,/,$1))),\
@@ -97,7 +97,7 @@ $(subst \,/,$1),\
 $(shell echo $(subst \,/,$1) | sed -e 's,^/cygdrive/\([a-zA-Z]\)/,\1:/,' -e 's,^/\([a-zA-Z]\)/,\1:/,'))))
 endef
 
-else # MAKE_VERSION != 3.81 (MAKE_VERSION == 3.80 or MAKE_VERSION == 3.79) 
+else # MAKE_VERSION != 3.81 (MAKE_VERSION == 3.80 or MAKE_VERSION == 3.79)
 #
 #  adjust-path for Cygwin Gnu Make
 # $(call adjust-path,c:/aaa/bbb) = /cygdrive/c/aaa/bbb
@@ -123,22 +123,22 @@ endif # COMSPEC
 ACTIVE_BUILD_CONFIG := default
 BUILD_CONFIGS := default
 
-# The following TYPE comment allows tools to identify the 'type' of target this 
-# makefile is associated with. 
+# The following TYPE comment allows tools to identify the 'type' of target this
+# makefile is associated with.
 # TYPE: APP_MAKEFILE
 
-# This following VERSION comment indicates the version of the tool used to 
-# generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 16.1
-ACDS_VERSION := 16.1
+# This following VERSION comment indicates the version of the tool used to
+# generate this makefile. A makefile variable is provided for VERSION as well.
+# ACDS_VERSION: 14.1
+ACDS_VERSION := 14.1
 
-# This following BUILD_NUMBER comment indicates the build number of the tool 
-# used to generate this makefile. 
-# BUILD_NUMBER: 196
+# This following BUILD_NUMBER comment indicates the build number of the tool
+# used to generate this makefile.
+# BUILD_NUMBER: 190
 
-# Define path to the application ELF. 
-# It may be used by the makefile fragments so is defined before including them. 
-# 
+# Define path to the application ELF.
+# It may be used by the makefile fragments so is defined before including them.
+#
 ELF := sys_controller.elf
 
 # Paths to C, C++, and assembly source files.
@@ -148,21 +148,18 @@ C_SRCS += ../../../../sw_common/sys_controller/src/avconfig.c
 C_SRCS += ../../../../sw_common/sys_controller/src/menu.c
 C_SRCS += ../../../../sw_common/sys_controller/src/controls.c
 C_SRCS += ../../../../sw_common/sys_controller/src/userdata.c
+C_SRCS += ../../../../sw_common/sys_controller/src/utils.c
 C_SRCS += ../../../../sw_common/sys_controller/ic_drivers/adv7513/adv7513.c
 C_SRCS += ../../../../sw_common/sys_controller/ic_drivers/si5351/si5351.c
 CXX_SRCS :=
-ASM_SRCS :=
-
-SDIR_C_SRCS :=
-SDIR_CXX_SRCS :=
-SDIR_ASM_SRCS :=
+ASM_SRCS := crt0.boot_E.S
 
 # Path to root of object file tree.
 OBJ_ROOT_DIR := obj
 
 # Options to control objdump.
 CREATE_OBJDUMP := 1
-OBJDUMP_INCLUDE_SOURCE := 0
+OBJDUMP_INCLUDE_SOURCE := 1
 OBJDUMP_FULL_CONTENTS := 0
 
 # Options to enable/disable optional files.
@@ -170,12 +167,12 @@ CREATE_ELF_DERIVED_FILES := 0
 CREATE_LINKER_MAP := 1
 
 # Common arguments for ALT_CFLAGSs
-APP_CFLAGS_DEFINED_SYMBOLS :=
+APP_CFLAGS_DEFINED_SYMBOLS := -DPICOLIBC_INTEGER_PRINTF_SCANF
 APP_CFLAGS_UNDEFINED_SYMBOLS :=
 APP_CFLAGS_OPTIMIZATION := -Os
 APP_CFLAGS_DEBUG_LEVEL :=
-APP_CFLAGS_WARNINGS := -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-function -Wno-packed-bitfield-compat
-APP_CFLAGS_USER_FLAGS := -fdata-sections -ffunction-sections -fshort-enums -fgnu89-inline
+APP_CFLAGS_WARNINGS := -Wall -Wpointer-arith -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-function -Wno-packed-bitfield-compat
+APP_CFLAGS_USER_FLAGS := -fdata-sections -ffunction-sections -fshort-enums -fgnu89-inline -flto -msmall-data-limit=0
 
 APP_ASFLAGS_USER :=
 APP_LDFLAGS_USER := -Wl,--gc-sections
@@ -190,9 +187,11 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../sys_controller_bsp/
 
 # List of application specific include directories, library directories and library names
+APP_INCLUDE_DIRS += /usr/lib/picolibc/riscv64-unknown-elf/include
 APP_INCLUDE_DIRS += ./
 APP_INCLUDE_DIRS += inc
 APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/inc
+APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/ic_drivers/common
 APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/ic_drivers/si5351
 APP_INCLUDE_DIRS += ../../../../sw_common/sys_controller/ic_drivers/adv7513
 APP_LIBRARY_DIRS :=
@@ -202,6 +201,7 @@ APP_LIBRARY_NAMES :=
 BUILD_PRE_PROCESS :=
 BUILD_POST_PROCESS :=
 
+QUARTUS_PROJECT_DIR := ../../
 
 
 #END GENERATED
@@ -227,7 +227,7 @@ endif
 all:
 	@$(ECHO) [$(APP_NAME) build complete]
 
-all : build_pre_process libs app build_post_process 
+all : build_pre_process libs app mem_init_generate_new build_post_process
 
 
 #------------------------------------------------------------------------------
@@ -253,25 +253,25 @@ ABS_BSP_ROOT_DIR := $(call adjust-path-mixed,$(shell cd "$(BSP_ROOT_DIR)"; pwd))
 BSP_INCLUDE_FILE := $(BSP_ROOT_DIR)/public.mk
 ALT_LIBRARY_ROOT_DIR := $(BSP_ROOT_DIR)
 include $(BSP_INCLUDE_FILE)
-# C2H will need this to touch the BSP public.mk and avoid the sopc file 
+# C2H will need this to touch the BSP public.mk and avoid the sopc file
 # out-of-date error during a BSP make
 ABS_BSP_INCLUDE_FILE := $(ABS_BSP_ROOT_DIR)/public.mk
 
 
 ifneq ($(WARNING.SMALL_STACK_SIZE),)
 # This WARNING is here to protect you from unknowingly using a very small stack
-# If the warning is set, increase your stack size or enable the BSP small stack 
+# If the warning is set, increase your stack size or enable the BSP small stack
 # setting to eliminate the warning
 $(warning WARNING: $(WARNING.SMALL_STACK_SIZE))
 endif
 
-# If the BSP public.mk indicates that ALT_SIM_OPTIMIZE is set, rename the ELF 
-# by prefixing it with RUN_ON_HDL_SIMULATOR_ONLY_.  
+# If the BSP public.mk indicates that ALT_SIM_OPTIMIZE is set, rename the ELF
+# by prefixing it with RUN_ON_HDL_SIMULATOR_ONLY_.
 ifneq ($(filter -DALT_SIM_OPTIMIZE,$(ALT_CPPFLAGS)),)
 ELF := RUN_ON_HDL_SIMULATOR_ONLY_$(ELF)
 endif
 
-# If the BSP public.mk indicates that ALT_PROVIDE_GMON is set, add option to 
+# If the BSP public.mk indicates that ALT_PROVIDE_GMON is set, add option to
 # download_elf target
 ifneq ($(filter -DALT_PROVIDE_GMON,$(ALT_CPPFLAGS)),)
 GMON_OUT_FILENAME := gmon.out
@@ -320,23 +320,23 @@ ifneq ($(AVOID_NIOS2_GCC3_OPTIONS),)
 # Detect if small newlib C library is requested.
 # If yes, remove the -msmallc option because it is
 # now handled by other means.
-ifneq ($(filter -msmallc,$(ALT_LDFLAGS)),)
-	ALT_LDFLAGS := $(filter-out -msmallc,$(ALT_LDFLAGS))
-	ALT_C_LIBRARY := smallc
-else
-	ALT_C_LIBRARY := c
-endif
+#ifneq ($(filter -msmallc,$(ALT_LDFLAGS)),)
+	#ALT_LDFLAGS := $(filter-out -msmallc,$(ALT_LDFLAGS))
+	#ALT_C_LIBRARY := smallc
+#else
+	#ALT_C_LIBRARY := c
+#endif
 
 # Put each BSP dependent library in a group to avoid circular dependencies.
-APP_BSP_DEP_LIBS := $(foreach l,$(ALT_BSP_DEP_LIBRARY_NAMES),-Wl,--start-group -l$(ALT_C_LIBRARY) -lgcc -lm -l$(l) -Wl,--end-group)
+APP_BSP_DEP_LIBS := $(foreach l,$(ALT_BSP_DEP_LIBRARY_NAMES),-Wl,--start-group -l$(ALT_C_LIBRARY) -lgcc -l$(l) -Wl,--end-group)
 
 else # !AVOID_NIOS2_GCC3_OPTIONS
 
 #
 # Use Nios II GCC 3.X options.
 #
-ALT_BSP_DEP_LIBRARY_NAMES += $(ALT_BSP_DEP_LIBRARY_NAMES) m
-APP_BSP_DEP_LIBS := $(addprefix -msys-lib=, $(ALT_BSP_DEP_LIBRARY_NAMES))
+#APP_BSP_DEP_LIBS := $(addprefix -msys-lib=, $(ALT_BSP_DEP_LIBRARY_NAMES))
+APP_BSP_DEP_LIBS := $(addprefix -l:, $(ALT_BSP_DEP_LIBRARY_NAMES))
 
 endif # !AVOID_NIOS2_GCC3_OPTIONS
 
@@ -366,7 +366,7 @@ APP_ASFLAGS := $(APP_ASM_INC_DIRS) \
                $(ASFLAGS)
 
 # Arguments only for the linker.
-APP_LDFLAGS := $(APP_LDFLAGS_USER)
+APP_LDFLAGS := $(APP_LDFLAGS_USER) --specs=picolibc.specs -nostartfiles
 
 ifneq ($(LINKER_SCRIPT),)
 APP_LDFLAGS += -T'$(LINKER_SCRIPT)'
@@ -387,17 +387,16 @@ else # !AVOID_NIOS2_GCC3_OPTIONS
 
 # Use Nios II GCC 3.x options.
 ifneq ($(CRT0),)
-APP_LDFLAGS += -msys-crt0='$(CRT0)'
+#APP_LDFLAGS += -msys-crt0='$(CRT0)'
 endif
 ifneq ($(SYS_LIB),)
-APP_LDFLAGS += -msys-lib=$(SYS_LIB)
+#APP_LDFLAGS += -msys-lib=$(SYS_LIB)
 endif
 
 endif # !AVOID_NIOS2_GCC3_OPTIONS
 
 APP_LDFLAGS += \
            $(APP_LIB_DIRS) \
-           $(ALT_LDFLAGS) \
            $(LDFLAGS)
 
 LINKER_MAP_NAME := $(APP_NAME).map
@@ -405,22 +404,22 @@ ifeq ($(CREATE_LINKER_MAP), 1)
 APP_LDFLAGS += -Wl,-Map=$(LINKER_MAP_NAME)
 endif
 
-# QUARTUS_PROJECT_DIR and SOPC_NAME need to be defined if you want the 
-# mem_init_install target of the mem_init.mk (located in the associated BSP) 
-# to know how to copy memory initialization files (e.g. .dat, .hex) into 
+# QUARTUS_PROJECT_DIR and SOPC_NAME need to be defined if you want the
+# mem_init_install target of the mem_init.mk (located in the associated BSP)
+# to know how to copy memory initialization files (e.g. .dat, .hex) into
 # directories required for Quartus compilation or RTL simulation.
 
-# Defining QUARTUS_PROJECT_DIR causes mem_init_install to copy memory 
-# initialization files into your Quartus project directory. This is required 
-# to provide the initial memory contents of FPGA memories that can be 
-# initialized by the programming file (.sof) or Hardcopy ROMs. It is also used 
+# Defining QUARTUS_PROJECT_DIR causes mem_init_install to copy memory
+# initialization files into your Quartus project directory. This is required
+# to provide the initial memory contents of FPGA memories that can be
+# initialized by the programming file (.sof) or Hardcopy ROMs. It is also used
 # for VHDL simulation of on-chip memories.
 
-# Defining SOPC_NAME causes the mem_init_install target to copy memory 
-# initialization files into your RTL simulation directory.  This is required 
-# to provide the initial memory contents of all memories that can be 
-# initialized by RTL simulation. This variable should be set to the same name 
-# as your SOPC Builder system name. For example, if you have a system called 
+# Defining SOPC_NAME causes the mem_init_install target to copy memory
+# initialization files into your RTL simulation directory.  This is required
+# to provide the initial memory contents of all memories that can be
+# initialized by RTL simulation. This variable should be set to the same name
+# as your SOPC Builder system name. For example, if you have a system called
 # "foo.sopc", this variable should be set to "foo".
 
 # If SOPC_NAME is not set and QUARTUS_PROJECT_DIR is set, then derive SOPC_NAME.
@@ -430,23 +429,23 @@ SOPC_NAME := $(basename $(notdir $(wildcard $(QUARTUS_PROJECT_DIR)/*.sopcinfo)))
 endif
 endif
 
-# Defining JDI_FILE is required to specify the JTAG Debug Information File 
-# path. This file is generated by Quartus, and is needed along with the 
-# .sopcinfo file to resolve processor instance ID's from names in a multi-CPU 
-# systems. For multi-CPU systems, the processor instance ID is used to select 
+# Defining JDI_FILE is required to specify the JTAG Debug Information File
+# path. This file is generated by Quartus, and is needed along with the
+# .sopcinfo file to resolve processor instance ID's from names in a multi-CPU
+# systems. For multi-CPU systems, the processor instance ID is used to select
 # from multiple CPU's during ELF download.
 
-# Both JDI_FILE and SOPCINFO_FILE are provided by the BSP if they found during 
-# BSP creation. If JDI_FILE is not set and QUARTUS_PROJECT_DIR is set, then 
-# derive JDI_FILE. We do not attempt to derive SOPCINFO_FILE since there may be 
-# multiple .sopcinfo files in a Quartus project. 
+# Both JDI_FILE and SOPCINFO_FILE are provided by the BSP if they found during
+# BSP creation. If JDI_FILE is not set and QUARTUS_PROJECT_DIR is set, then
+# derive JDI_FILE. We do not attempt to derive SOPCINFO_FILE since there may be
+# multiple .sopcinfo files in a Quartus project.
 ifeq ($(JDI_FILE),)
 ifneq ($(QUARTUS_PROJECT_DIR),)
 JDI_FILE := $(firstword $(wildcard $(QUARTUS_PROJECT_DIR)/output_files/*.jdi) $(wildcard $(QUARTUS_PROJECT_DIR)/*.jdi))
 endif
 endif
 
-# Path to root runtime directory used for hdl simulation 
+# Path to root runtime directory used for hdl simulation
 RUNTIME_ROOT_DIR := $(CONFIG_OBJ_DIR)/runtime
 
 
@@ -494,7 +493,7 @@ SDIR_OBJ_LIST := $(sort $(SDIR_OBJ_LIST_C) $(SDIR_OBJ_LIST_CPP) \
 
 # Relative-pathed objects that being with "../" are handled differently.
 #
-# Regular objects are created as 
+# Regular objects are created as
 #   $(CONFIG_OBJ_DIR)/<path>/<filename>.o
 # where the path structure is maintained under the obj directory.  This
 # applies for both absolute and relative paths; in the absolute path
@@ -502,16 +501,16 @@ SDIR_OBJ_LIST := $(sort $(SDIR_OBJ_LIST_C) $(SDIR_OBJ_LIST_CPP) \
 # directory.  This is done to allow two source files with the same name
 # to be included as part of the project.
 #
-# Note: On Cygwin, the path recreated under the obj directory will be 
+# Note: On Cygwin, the path recreated under the obj directory will be
 # the cygpath -u output path.
 #
-# Relative-path objects that begin with "../" cause problems under this 
+# Relative-path objects that begin with "../" cause problems under this
 # scheme, as $(CONFIG_OBJ_DIR)/../<rest of path>/ can potentially put the object
 # files anywhere in the system, creating clutter and polluting the source tree.
-# As such, their paths are flattened - the object file created will be 
-# $(CONFIG_OBJ_DIR)/<filename>.o.  Due to this, two files specified with 
-# "../" in the beginning cannot have the same name in the project.  VPATH 
-# will be set for these sources to allow make to relocate the source file 
+# As such, their paths are flattened - the object file created will be
+# $(CONFIG_OBJ_DIR)/<filename>.o.  Due to this, two files specified with
+# "../" in the beginning cannot have the same name in the project.  VPATH
+# will be set for these sources to allow make to relocate the source file
 # via %.o rules.
 #
 # The following lines separate the object list into the flatten and regular
@@ -599,7 +598,7 @@ ifneq ($(wildcard $(SOPCINFO_FILE)),)
 ELF_PATCH_FLAG += --sopcinfo $(SOPCINFO_FILE)
 endif
 
-# Use the DOWNLOAD_CABLE variable to specify which JTAG cable to use. 
+# Use the DOWNLOAD_CABLE variable to specify which JTAG cable to use.
 # This is not needed if you only have one cable.
 ifneq ($(DOWNLOAD_CABLE),)
 DOWNLOAD_CABLE_FLAG := --cable '$(DOWNLOAD_CABLE)'
@@ -628,23 +627,24 @@ build_post_process :
 # included makefile fragment.
 #
 ifeq ($(DEFAULT_CROSS_COMPILE),)
-DEFAULT_CROSS_COMPILE := nios2-elf-
+DEFAULT_CROSS_COMPILE := riscv64-unknown-elf-
 endif
 
 ifeq ($(DEFAULT_STACKREPORT),)
-DEFAULT_STACKREPORT := nios2-stackreport
+DEFAULT_STACKREPORT := riscv64-unknown-elf-size
 endif
 
 ifeq ($(DEFAULT_DOWNLOAD),)
-DEFAULT_DOWNLOAD := nios2-download
+DEFAULT_DOWNLOAD := anios2-download
 endif
 
 ifeq ($(DEFAULT_FLASHPROG),)
-DEFAULT_FLASHPROG := nios2-flash-programmer
+DEFAULT_FLASHPROG := anios2-flash-programmer
 endif
 
+DISABLE_ELFPATCH 		:= 1
 ifeq ($(DEFAULT_ELFPATCH),)
-DEFAULT_ELFPATCH := nios2-elf-insert
+DEFAULT_ELFPATCH := anios2-elf-insert
 endif
 
 ifeq ($(DEFAULT_RM),)
@@ -685,7 +685,7 @@ AR := $(CROSS_COMPILE)ar
 endif
 
 ifeq ($(origin LD),default)
-LD := $(CROSS_COMPILE)g++
+LD := $(CROSS_COMPILE)gcc
 endif
 
 ifeq ($(origin RM),default)
@@ -709,7 +709,7 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 endif
 
 ifeq ($(STACKREPORT),)
-STACKREPORT := $(DEFAULT_STACKREPORT) --prefix $(CROSS_COMPILE)
+STACKREPORT := $(DEFAULT_STACKREPORT)
 else
 DISABLE_STACKREPORT := 1
 endif
@@ -729,6 +729,8 @@ endif
 ifeq ($(MKDIR),)
 MKDIR := $(DEFAULT_MKDIR)
 endif
+
+RV_OBJCOPY = riscv64-unknown-elf-objcopy
 
 #------------------------------------------------------------------------------
 #                     PATTERN RULES TO BUILD OBJECTS
@@ -761,7 +763,7 @@ $(AS) -MP -MMD -c $(APP_CPPFLAGS) $(APP_CFLAGS) $(APP_ASFLAGS) -o $@ $<
 $(AS_POST_PROCESS)
 endef
 
-ifeq ($(MAKE_VERSION),3.81) 
+ifeq ($(MAKE_VERSION),3.81)
 .SECONDEXPANSION:
 
 $(APP_OBJS_C): $(CONFIG_OBJ_DIR)/%.o: $$(call adjust-path-mixed,%.c)
@@ -861,6 +863,14 @@ help :
 	@$(ECHO) "    libs              - All libraries (including BSP)"
 	@$(ECHO) "    flash             - All flash files"
 	@$(ECHO) "    mem_init_generate - All memory initialization files"
+ifeq ($(QSYS),1)
+	@$(ECHO) "    mem_init_install  - This target is deprecated for QSys Systems"
+	@$(ECHO) "                         --> Use the mem_init_generate target and then"
+	@$(ECHO) "                             add the generated meminit.qip file to your"
+	@$(ECHO) "                             Quartus II Project."
+else # if QSYS != 1
+	@$(ECHO) "    mem_init_install  - Copy memory initialization files to Quartus II project"
+endif # QSYS == 1
 	@$(ECHO)
 	@$(ECHO) "  Clean targets:"
 	@$(ECHO) "    clean_all         - Application and all libraries (including BSP)"
@@ -1012,8 +1022,7 @@ $(PROGRAM_FLASH_TARGET) : flash
 
 # Rules for simulating with an HDL Simulator [QSYS only]
 ifeq ($(QSYS),1)
-#Create a top level modelsim script load_sim.tcl to source generate msim_setup.tcl and copy mem initialization files
-CREATE_TOP_SIM_SCRIPT := alt-create-top-sim-script
+IP_MAKE_SIMSCRIPT := ip-make-simscript
 
 ifeq ($(VSIM),)
 VSIM_EXE := "$(if $(VSIM_DIR),$(VSIM_DIR)/,)vsim"
@@ -1034,11 +1043,10 @@ endif # SOPC_NAME set
 endif # ABS_QUARTUS_PROJECT_DIR set
 endif # SPD == empty string
 
-
-ifeq ($(LOAD_SIM_SCRIPT),)
+ifeq ($(MSIM_SCRIPT),)
 SIM_SCRIPT_DIR := $(RUNTIME_ROOT_DIR)/sim
-LOAD_SIM_SCRIPT := $(SIM_SCRIPT_DIR)/mentor/load_sim.tcl
-endif # LOAD_SIM_SCRIPT == empty string
+MSIM_SCRIPT := $(SIM_SCRIPT_DIR)/mentor/msim_setup.tcl
+endif # MSIM_SCRIPT == empty string
 
 ifeq ($(MAKE_VERSION),3.81)
 ABS_MEM_INIT_DESCRIPTOR_FILE := $(abspath $(MEM_INIT_DESCRIPTOR_FILE))
@@ -1046,27 +1054,25 @@ else
 ABS_MEM_INIT_DESCRIPTOR_FILE := $(call adjust-path-mixed,$(shell pwd))/$(MEM_INIT_DESCRIPTOR_FILE)
 endif
 
-$(LOAD_SIM_SCRIPT): $(SPD) $(MEM_INIT_DESCRIPTOR_FILE)
+$(MSIM_SCRIPT): $(SPD) $(MEM_INIT_DESCRIPTOR_FILE)
 ifeq ($(SPD),)
 	$(error No SPD file specified. Ensure QUARTUS_PROJECT_DIR variable is set)
 endif
 	@$(MKDIR) $(SIM_SCRIPT_DIR)
-	$(CREATE_TOP_SIM_SCRIPT) --spd=$(SPD) --mem-init-spd=$(abspath $(MEM_INIT_DESCRIPTOR_FILE)) --output-directory=$(SIM_SCRIPT_DIR)
+	$(IP_MAKE_SIMSCRIPT) --spd=$(SPD) --spd=$(MEM_INIT_DESCRIPTOR_FILE) --output-directory=$(SIM_SCRIPT_DIR)
 
 VSIM_COMMAND = \
-	cd $(dir $(LOAD_SIM_SCRIPT)) && \
-	$(VSIM) -do "do $(notdir $(LOAD_SIM_SCRIPT)); ld; $(if $(VSIM_RUN_TIME),run ${VSIM_RUN_TIME};quit;)"
+	cd $(dir $(MSIM_SCRIPT)) && \
+	$(VSIM) -do "do $(notdir $(MSIM_SCRIPT)); ld; $(if $(VSIM_RUN_TIME),run ${VSIM_RUN_TIME};quit;)"
 
 .PHONY: sim
-sim: $(LOAD_SIM_SCRIPT) mem_init_generate
-ifeq ($(LOAD_SIM_SCRIPT),)
-	$(error LOAD_SIM_SCRIPT not set)
+sim: $(MSIM_SCRIPT) mem_init_generate
+ifeq ($(MSIM_SCRIPT),)
+	$(error MSIM_SCRIPT not set)
 endif
 	$(VSIM_COMMAND)
 
 endif # QSYS == 1
-
-
 
 
 #------------------------------------------------------------------------------
@@ -1093,3 +1099,27 @@ print-elf-name:
 	@$(ECHO) $(ELF)
 
 
+#------------------------------------------------------------------------------
+#                         CUSTOM TARGETS
+#------------------------------------------------------------------------------
+mem_init/flash.hex: sys_controller.elf
+	$(RV_OBJCOPY) --change-addresses -0x02A00000 -O binary --gap-fill 0 $< mem_init/flash.bin
+	$(RV_OBJCOPY) --change-addresses -0x02A00000 -O ihex --gap-fill 0 $< mem_init/flash.hex
+	mkdir -p mem_init/chunks
+	rm -f mem_init/chunks/*
+	split -d -b 64 -a 4 mem_init/flash.bin mem_init/chunks/flash.
+
+.PHONY: mem_init_generate_new
+mem_init_generate_new: mem_init/flash.hex
+
+.PHONY: regenerate_hex
+regenerate_hex: clean mem_init_generate_new
+
+.PHONY: rv-reprogram
+rv-reprogram: mem_init_generate_new
+	jtagconfig
+	system-console -cli --script ../../../../scripts_common/rv-reprogram.tcl
+
+rv-bt:
+	jtagconfig
+	system-console -cli --script ../../scripts_common/rv-bt.tcl

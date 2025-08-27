@@ -20,26 +20,26 @@ SPACE := $(empty) $(empty)
 #------------------------------------------------------------------------------
 #                         The adjust-path macro
 #
-# If Make is launched from Windows through
-# Windows Subsystem for Linux (WSL).  The adjust-path macro converts absolute windows 
-# paths into unix style paths (Example: c:/dir -> /c/dir). 
-# The adjust_path_mixed function converts WSL path to Windows path.
-# This will ensure paths are readable by GNU Make.
+# If COMSPEC is defined, Make is launched from Windows through
+# Cygwin.  This adjust-path macro will call 'cygpath -u' on all
+# paths to ensure they are readable by Make.
+#
+# If COMSPEC is not defined, Make is launched from *nix, and no adjustment
+# is necessary
 #------------------------------------------------------------------------------
 
-UNAME = $(shell uname -r | tr A-Z a-z)
-ifeq ($(findstring microsoft,$(UNAME)),microsoft)
-	WINDOWS_EXE = .exe
-endif
+ifndef COMSPEC
+ifdef ComSpec
+COMSPEC = $(ComSpec)
+endif # ComSpec
+endif # !COMSPEC
 
-eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
-
-ifdef WINDOWS_EXE 
-	adjust-path = $(if $1,$(shell wslpath "$1"),)
-	adjust-path-mixed = $(if $(call eq,$(shell echo $1 | head -c 5),/mnt/),$(shell echo $1 | sed 's/\/mnt\///g;s/\//:\//1'),$1)
-else # !WINDOWS_EXE
-	adjust-path = $1
-	adjust-path-mixed = $1
+ifdef COMSPEC
+	adjust-path = $(subst $(SPACE),\$(SPACE),$(shell cygpath -u "$1"))
+	adjust-path-mixed = $(subst $(SPACE),\$(SPACE),$(shell cygpath -m "$1"))
+else
+	adjust-path = $(subst $(SPACE),\$(SPACE),$1)
+	adjust-path-mixed = $(subst $(SPACE),\$(SPACE),$1)
 endif
 
 #------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ all:
 BSP_ROOT_DIR := .
 
 # Define absolute path to the root of the BSP.
-ABS_BSP_ROOT := $(shell pwd)
+ABS_BSP_ROOT := $(call adjust-path-mixed,$(shell pwd))
 
 # Stash all BSP object files here
 OBJ_DIR := ./obj
@@ -78,85 +78,82 @@ OBJ_DIR := ./obj
 # utilize the BSP settings mechanism to do so.
 #
 # Note that most variable assignments in this section have a corresponding BSP
-# setting that can be changed by using the nios2-bsp-create-settings or  
-# nios2-bsp-update-settings command before nios2-bsp-generate-files; if you 
-# want any variable set to a specific value when this Makefile is re-generated 
-# (to prevent hand-edits from being over-written), use the BSP settings 
+# setting that can be changed by using the nios2-bsp-create-settings or
+# nios2-bsp-update-settings command before nios2-bsp-generate-files; if you
+# want any variable set to a specific value when this Makefile is re-generated
+# (to prevent hand-edits from being over-written), use the BSP settings
 # facilities above.
 #------------------------------------------------------------------------------
 
 #START MANAGED
 
-# The following TYPE comment allows tools to identify the 'type' of target this 
-# makefile is associated with. 
+# The following TYPE comment allows tools to identify the 'type' of target this
+# makefile is associated with.
 # TYPE: BSP_PRIVATE_MAKEFILE
 
-# This following VERSION comment indicates the version of the tool used to 
-# generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 21.1
-ACDS_VERSION := 21.1
+# This following VERSION comment indicates the version of the tool used to
+# generate this makefile. A makefile variable is provided for VERSION as well.
+# ACDS_VERSION: 17.1
+ACDS_VERSION := 17.1
 
-# This following BUILD_NUMBER comment indicates the build number of the tool 
-# used to generate this makefile. 
-# BUILD_NUMBER: 842
+# This following BUILD_NUMBER comment indicates the build number of the tool
+# used to generate this makefile.
+# BUILD_NUMBER: 590
 
 SETTINGS_FILE := settings.bsp
 SOPC_FILE := ../../sys.sopcinfo
 
 #-------------------------------------------------------------------------------
 #                             TOOL & COMMAND DEFINITIONS
-# 
+#
 # The base command for each build operation are expressed here. Additional
-# switches may be expressed here. They will run for all instances of the 
+# switches may be expressed here. They will run for all instances of the
 # utility.
 #-------------------------------------------------------------------------------
 
-# Archiver command. Creates library files. 
-AR = nios2-elf-ar$(WINDOWS_EXE)
+# Archiver command. Creates library files.
+AR = riscv64-unknown-elf-ar
 
-# Assembler command. Note that CC is used for .S files. 
-AS = nios2-elf-gcc$(WINDOWS_EXE)
+# Assembler command. Note that CC is used for .S files.
+AS = riscv64-unknown-elf-gcc
 
-# Custom flags only passed to the archiver. This content of this variable is 
-# directly passed to the archiver rather than the more standard "ARFLAGS". The 
-# reason for this is that GNU Make assumes some default content in ARFLAGS. 
-# This setting defines the value of BSP_ARFLAGS in Makefile. 
+# Custom flags only passed to the archiver. This content of this variable is
+# directly passed to the archiver rather than the more standard "ARFLAGS". The
+# reason for this is that GNU Make assumes some default content in ARFLAGS.
+# This setting defines the value of BSP_ARFLAGS in Makefile.
 BSP_ARFLAGS = -src
 
-# Custom flags only passed to the assembler. This setting defines the value of 
-# BSP_ASFLAGS in Makefile. 
+# Custom flags only passed to the assembler. This setting defines the value of
+# BSP_ASFLAGS in Makefile.
 BSP_ASFLAGS = -Wa,-gdwarf2
 
-# C/C++ compiler debug level. '-g' provides the default set of debug symbols 
-# typically required to debug a typical application. Omitting '-g' removes 
-# debug symbols from the ELF. This setting defines the value of 
-# BSP_CFLAGS_DEBUG in Makefile. 
-BSP_CFLAGS_DEBUG = -g
-
-# C/C++ compiler optimization level. "-O0" = no optimization,"-O2" = "normal" 
-# optimization, etc. "-O0" is recommended for code that you want to debug since 
-# compiler optimization can remove variables and produce non-sequential 
-# execution of code while debugging. This setting defines the value of 
-# BSP_CFLAGS_OPTIMIZATION in Makefile. 
+# C/C++ compiler optimization level. "-O0" = no optimization,"-O2" = "normal"
+# optimization, etc. "-O0" is recommended for code that you want to debug since
+# compiler optimization can remove variables and produce non-sequential
+# execution of code while debugging. This setting defines the value of
+# BSP_CFLAGS_OPTIMIZATION in Makefile.
 BSP_CFLAGS_OPTIMIZATION = -Os
 
-# C/C++ compiler warning level. "-Wall" is commonly used.This setting defines 
-# the value of BSP_CFLAGS_WARNINGS in Makefile. 
-BSP_CFLAGS_WARNINGS = -Wall
+# C/C++ compiler warning level. "-Wall" is commonly used.This setting defines
+# the value of BSP_CFLAGS_WARNINGS in Makefile.
+BSP_CFLAGS_WARNINGS = -Wall -Wno-unused-but-set-variable -Wno-unused-variable -Wno-unused-function
 
-# C compiler command. 
-CC = nios2-elf-gcc$(WINDOWS_EXE) -xc
+# Match APP flags
+BSP_CFLAGS_USER_FLAGS := -fdata-sections -ffunction-sections -fshort-enums -fgnu89-inline -flto -msmall-data-limit=0
 
-# C++ compiler command. 
-CXX = nios2-elf-gcc$(WINDOWS_EXE) -xc++
+# C compiler command.
+CC = riscv64-unknown-elf-gcc -xc
 
-# Command used to remove files during 'clean' target. 
+# C++ compiler command.
+CXX = riscv64-unknown-elf-gcc -xc++
+
+# Command used to remove files during 'clean' target.
 RM = rm -f
 
 
 #-------------------------------------------------------------------------------
 #                         BUILD PRE & POST PROCESS COMMANDS
-# 
+#
 # The following variables are treated as shell commands in the rule
 # definitions for each file-type associated with the BSP build, as well as
 # commands run at the beginning and end of the entire BSP build operation.
@@ -164,7 +161,7 @@ RM = rm -f
 # a command defined in the "CC_PRE_PROCESS" variable executes before the C
 # compiler for building .c files), while post-process commands are executed
 # immediately afterwards.
-# 
+#
 # You can view each pre/post-process command in the "Build Rules: All &
 # Clean", "Pattern Rules to Build Objects", and "Library Rules" sections of
 # this Makefile.
@@ -173,33 +170,33 @@ RM = rm -f
 
 #-------------------------------------------------------------------------------
 #                     BSP SOURCE BUILD SETTINGS (FLAG GENERATION)
-# 
+#
 # Software build settings such as compiler optimization, debug level, warning
 # flags, etc., may be defined in the following variables. The variables below
 # are concatenated together in the 'Flags' section of this Makefile to form
 # final variables of flags passed to the build tools.
-# 
+#
 # These settings are considered private to the BSP and apply to all library &
 # driver files in it; they do NOT automatically propagate to, for example, the
 # build settings for an application.
 # # For additional detail and syntax requirements, please refer to GCC help
 # (example: "nios2-elf-gcc --help --verbose").
-# 
+#
 # Unless indicated otherwise, multiple entries in each variable should be
 # space-separated.
 #-------------------------------------------------------------------------------
 
-# Altera HAL alt_sys_init.c generated source file 
+# Altera HAL alt_sys_init.c generated source file
 GENERATED_C_FILES := $(ABS_BSP_ROOT)/alt_sys_init.c
 GENERATED_C_LIB_SRCS += alt_sys_init.c
 
 
 #-------------------------------------------------------------------------------
 #                            BSP SOURCE FILE LISTING
-# 
-# All source files that comprise the BSP are listed here, along with path 
-# information to each file expressed relative to the BSP root. The precise 
-# list and location of each file is derived from the driver, operating system, 
+#
+# All source files that comprise the BSP are listed here, along with path
+# information to each file expressed relative to the BSP root. The precise
+# list and location of each file is derived from the driver, operating system,
 # or software package source file declarations.
 #
 # Following specification of the source files for each component, driver, etc.,
@@ -208,10 +205,10 @@ GENERATED_C_LIB_SRCS += alt_sys_init.c
 # used to build each file.
 #-------------------------------------------------------------------------------
 
-# altera_avalon_jtag_uart_driver sources root 
+# altera_avalon_jtag_uart_driver sources root
 altera_avalon_jtag_uart_driver_SRCS_ROOT := drivers
 
-# altera_avalon_jtag_uart_driver sources 
+# altera_avalon_jtag_uart_driver sources
 altera_avalon_jtag_uart_driver_C_LIB_SRCS := \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_init.c \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_read.c \
@@ -219,142 +216,66 @@ altera_avalon_jtag_uart_driver_C_LIB_SRCS := \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_ioctl.c \
 	$(altera_avalon_jtag_uart_driver_SRCS_ROOT)/src/altera_avalon_jtag_uart_fd.c
 
-# altera_avalon_pio_driver sources root 
+# altera_avalon_pio_driver sources root
 altera_avalon_pio_driver_SRCS_ROOT := drivers
 
-# altera_avalon_pio_driver sources 
-# altera_epcq_controller2_driver sources root 
-altera_epcq_controller2_driver_SRCS_ROOT := drivers
+# altera_avalon_pio_driver sources
+# altera_avalon_timer_driver sources root
+altera_avalon_timer_driver_SRCS_ROOT := drivers
 
-# altera_epcq_controller2_driver sources 
-altera_epcq_controller2_driver_C_LIB_SRCS := \
-	$(altera_epcq_controller2_driver_SRCS_ROOT)/src/altera_epcq_controller2.c
-
-# altera_nios2_gen2_hal_driver sources root 
+# altera_nios2_gen2_hal_driver sources root
 altera_nios2_gen2_hal_driver_SRCS_ROOT := HAL
 
-# altera_nios2_gen2_hal_driver sources 
+# altera_nios2_gen2_hal_driver sources
 altera_nios2_gen2_hal_driver_C_LIB_SRCS := \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/altera_nios2_gen2_irq.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_usleep.c \
+	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_printf.c \
+	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_putchar.c \
+	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_putstr.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_busy_sleep.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_irq_vars.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_icache_flush.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_icache_flush_all.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_dcache_flush.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_dcache_flush_all.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_dcache_flush_no_writeback.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_ecc_fatal_exception.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_instruction_exception_entry.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_irq_register.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_iic.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_remap_cached.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_remap_uncached.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_uncached_free.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_uncached_malloc.c \
 	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_do_ctors.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_do_dtors.c \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_gmon.c
+	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_do_dtors.c
 
-altera_nios2_gen2_hal_driver_ASM_LIB_SRCS := \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_ecc_fatal_entry.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_exception_entry.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_exception_trap.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_exception_muldiv.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_irq_entry.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_software_exception.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_mcount.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/alt_log_macro.S \
-	$(altera_nios2_gen2_hal_driver_SRCS_ROOT)/src/crt0.S
-
-# hal sources root 
+# hal sources root
 hal_SRCS_ROOT := HAL
 
-# hal sources 
+# hal sources
 hal_C_LIB_SRCS := \
-	$(hal_SRCS_ROOT)/src/alt_alarm_start.c \
-	$(hal_SRCS_ROOT)/src/alt_close.c \
-	$(hal_SRCS_ROOT)/src/alt_dev.c \
 	$(hal_SRCS_ROOT)/src/alt_dev_llist_insert.c \
-	$(hal_SRCS_ROOT)/src/alt_dma_rxchan_open.c \
-	$(hal_SRCS_ROOT)/src/alt_dma_txchan_open.c \
-	$(hal_SRCS_ROOT)/src/alt_environ.c \
-	$(hal_SRCS_ROOT)/src/alt_env_lock.c \
 	$(hal_SRCS_ROOT)/src/alt_errno.c \
-	$(hal_SRCS_ROOT)/src/alt_execve.c \
-	$(hal_SRCS_ROOT)/src/alt_exit.c \
-	$(hal_SRCS_ROOT)/src/alt_fcntl.c \
-	$(hal_SRCS_ROOT)/src/alt_fd_lock.c \
-	$(hal_SRCS_ROOT)/src/alt_fd_unlock.c \
-	$(hal_SRCS_ROOT)/src/alt_find_dev.c \
-	$(hal_SRCS_ROOT)/src/alt_find_file.c \
 	$(hal_SRCS_ROOT)/src/alt_flash_dev.c \
-	$(hal_SRCS_ROOT)/src/alt_fork.c \
-	$(hal_SRCS_ROOT)/src/alt_fs_reg.c \
-	$(hal_SRCS_ROOT)/src/alt_fstat.c \
-	$(hal_SRCS_ROOT)/src/alt_get_fd.c \
-	$(hal_SRCS_ROOT)/src/alt_getchar.c \
-	$(hal_SRCS_ROOT)/src/alt_getpid.c \
-	$(hal_SRCS_ROOT)/src/alt_gettod.c \
-	$(hal_SRCS_ROOT)/src/alt_iic_isr_register.c \
-	$(hal_SRCS_ROOT)/src/alt_instruction_exception_register.c \
-	$(hal_SRCS_ROOT)/src/alt_ioctl.c \
-	$(hal_SRCS_ROOT)/src/alt_io_redirect.c \
-	$(hal_SRCS_ROOT)/src/alt_irq_handler.c \
-	$(hal_SRCS_ROOT)/src/alt_isatty.c \
-	$(hal_SRCS_ROOT)/src/alt_kill.c \
-	$(hal_SRCS_ROOT)/src/alt_link.c \
 	$(hal_SRCS_ROOT)/src/alt_load.c \
-	$(hal_SRCS_ROOT)/src/alt_log_printf.c \
-	$(hal_SRCS_ROOT)/src/alt_lseek.c \
-	$(hal_SRCS_ROOT)/src/alt_main.c \
-	$(hal_SRCS_ROOT)/src/alt_malloc_lock.c \
-	$(hal_SRCS_ROOT)/src/alt_open.c \
-	$(hal_SRCS_ROOT)/src/alt_printf.c \
-	$(hal_SRCS_ROOT)/src/alt_putchar.c \
-	$(hal_SRCS_ROOT)/src/alt_putcharbuf.c \
-	$(hal_SRCS_ROOT)/src/alt_putstr.c \
-	$(hal_SRCS_ROOT)/src/alt_read.c \
-	$(hal_SRCS_ROOT)/src/alt_release_fd.c \
-	$(hal_SRCS_ROOT)/src/alt_rename.c \
-	$(hal_SRCS_ROOT)/src/alt_sbrk.c \
-	$(hal_SRCS_ROOT)/src/alt_settod.c \
-	$(hal_SRCS_ROOT)/src/alt_stat.c \
-	$(hal_SRCS_ROOT)/src/alt_tick.c \
-	$(hal_SRCS_ROOT)/src/alt_times.c \
-	$(hal_SRCS_ROOT)/src/alt_unlink.c \
-	$(hal_SRCS_ROOT)/src/alt_wait.c \
-	$(hal_SRCS_ROOT)/src/alt_write.c
+	$(hal_SRCS_ROOT)/src/alt_main.c
 
-# i2c_opencores_driver sources root 
+# i2c_opencores_driver sources root
 i2c_opencores_driver_SRCS_ROOT := drivers
 
-# i2c_opencores_driver sources 
+# nios2_hw_crc32_driver sources root
+nios2_hw_crc32_driver_SRCS_ROOT := drivers
+
+# i2c_opencores_driver sources
 i2c_opencores_driver_C_LIB_SRCS := \
 	$(i2c_opencores_driver_SRCS_ROOT)/src/i2c_opencores.c
 
-# osd_generator_driver sources root 
-osd_generator_driver_SRCS_ROOT := drivers
-
-# osd_generator_driver sources 
-# sc_config_driver sources root 
-sc_config_driver_SRCS_ROOT := drivers
-
-# sc_config_driver sources 
-
-# Assemble all component C source files 
+# Assemble all component C source files
 COMPONENT_C_LIB_SRCS += \
 	$(altera_avalon_jtag_uart_driver_C_LIB_SRCS) \
-	$(altera_epcq_controller2_driver_C_LIB_SRCS) \
 	$(altera_nios2_gen2_hal_driver_C_LIB_SRCS) \
 	$(hal_C_LIB_SRCS) \
 	$(i2c_opencores_driver_C_LIB_SRCS) \
+	$(nios2_hw_crc32_driver_C_LIB_SRCS)
 
-# Assemble all component assembly source files 
+# Assemble all component assembly source files
 COMPONENT_ASM_LIB_SRCS += \
 	$(altera_nios2_gen2_hal_driver_ASM_LIB_SRCS)
 
-# Assemble all component C++ source files 
+# Assemble all component C++ source files
 COMPONENT_CPP_LIB_SRCS += \
 
 #END MANAGED
@@ -374,7 +295,7 @@ COMPONENT_CPP_LIB_SRCS += \
 # purpose of this variable is to allow an external Makefile to append on
 # path information to precisely locate paths expressed in public.mk
 # Since this is the BSP Makefile, we set ALT_LIBRARY_ROOT_DIR to point right
-# here ("."), at the BSP root. 
+# here ("."), at the BSP root.
 #
 # ALT_LIBRARY_ROOT_DIR must always be set before public.mk is included.
 #------------------------------------------------------------------------------
@@ -400,13 +321,14 @@ BSP_CFLAGS += \
   $(BSP_CFLAGS_WARNINGS) \
   $(BSP_CFLAGS_USER_FLAGS) \
   $(ALT_CFLAGS) \
-  $(CFLAGS) 
+  $(CFLAGS)
 
 # Make ready the final list of include directories and other C pre-processor
 # flags. Each include path is made ready by prefixing it with "-I".
 BSP_CPPFLAGS += \
   $(addprefix -I, $(BSP_INC_DIRS)) \
   $(addprefix -I, $(ALT_INCLUDE_DIRS)) \
+  $(addprefix -I, /usr/lib/picolibc/riscv64-unknown-elf/include) \
   $(ALT_CPPFLAGS) \
   $(CPPFLAGS)
 
@@ -439,8 +361,7 @@ GENERATED_H_FILES := $(ABS_BSP_ROOT)/system.h
 
 GENERATED_LINKER_SCRIPT := $(ABS_BSP_ROOT)/linker.x
 
-GENERATED_FILES += $(GENERATED_H_FILES) \
-                   $(GENERATED_LINKER_SCRIPT)
+GENERATED_FILES += $(GENERATED_H_FILES)
 
 
 #------------------------------------------------------------------------------
@@ -477,7 +398,7 @@ DEPS = $(OBJS:.o=.d)
 
 
 # Rules to force your project to rebuild or relink
-# .force_relink file will cause any application that depends on this project to relink 
+# .force_relink file will cause any application that depends on this project to relink
 # .force_rebuild file will cause this project to rebuild object files
 # .force_rebuild_all file will cause this project and any project that depends on this project to rebuild object files
 
@@ -498,7 +419,7 @@ $(OBJS): $(wildcard $(FORCE_REBUILD_DEP)) $(wildcard $(FORCE_REBUILD_ALL_DEP))
 
 .PHONY: all
 all: build_pre_process
-all: Makefile $(GENERATED_FILES) $(BSP_LIB) $(NEWLIB_DIR)
+all: Makefile bsp_timestamp $(GENERATED_FILES) $(BSP_LIB) $(NEWLIB_DIR)
 all: build_post_process
 
 
@@ -510,7 +431,6 @@ ifneq ($(wildcard $(NEWLIB_DIR)),)
 	@$(RM) -r $(NEWLIB_DIR)
 endif
 	@$(ECHO) [BSP clean complete]
-
 
 #------------------------------------------------------------------------------
 #                           BUILD PRE/POST PROCESS
@@ -534,41 +454,43 @@ build_post_process :
 # Skip this check when clean is the only target
 ifneq ($(MAKECMDGOALS),clean)
 
-ifneq ($(wildcard $(call adjust-path,$(SETTINGS_FILE))),$(call adjust-path,$(SETTINGS_FILE)))
+ifneq ($(wildcard $(SETTINGS_FILE)),$(SETTINGS_FILE))
 $(warning Warning: BSP Settings File $(SETTINGS_FILE) could not be found.)
 endif
 
-Makefile: $(wildcard $(call adjust-path,$(SETTINGS_FILE)))
-	@$(ECHO) Makefile not up to date.
-	@$(ECHO) $(call adjust-path,$(SETTINGS_FILE)) has been modified since the BSP Makefile was generated.
-	@$(ECHO)
-	@$(ECHO) Generate the BSP to update the Makefile, and then build again.
-	@$(ECHO)
-	@$(ECHO) To generate from Eclipse:
-	@$(ECHO) " 1. Right-click the BSP project."
-	@$(ECHO) " 2. In the Nios II Menu, click Generate BSP."
-	@$(ECHO)
-	@$(ECHO) To generate from the command line:
-	@$(ECHO) " nios2-bsp-generate-files --settings=<settings file> --bsp-dir=<target bsp files directory>"
-	@$(ECHO)
-	@exit 1
+#Makefile: $(wildcard $(SETTINGS_FILE))
+#	@$(ECHO) Makefile not up to date.
+#	@$(ECHO) $(SETTINGS_FILE) has been modified since the BSP Makefile was generated.
+#	@$(ECHO)
+#	@$(ECHO) Update system.h etc. BSP files manually, then run \"touch public.mk Makefile\" on BSP dir.
+#	@$(ECHO)
+#	@exit 1
 
-ifneq ($(wildcard $(call adjust-path,$(SOPC_FILE))),$(call adjust-path,$(SOPC_FILE)))
+ifneq ($(wildcard $(SOPC_FILE)),$(SOPC_FILE))
 $(warning Warning: SOPC File $(SOPC_FILE) could not be found.)
 endif
 
-public.mk: $(wildcard $(call adjust-path,$(SOPC_FILE)))
-	@$(ECHO) Makefile not up to date.
-	@$(ECHO) $(call adjust-path,$(SOPC_FILE)) has been modified since the BSP was generated.
+#public.mk: $(wildcard $(SOPC_FILE))
+#	@$(ECHO) Makefile not up to date.
+#	@$(ECHO) $(SOPC_FILE) has been modified since the BSP was generated.
+#	@$(ECHO)
+#	@$(ECHO) Update system.h etc. BSP files manually, then run \"touch public.mk Makefile\" on BSP dir.
+#	@$(ECHO)
+#	@exit 1
+
+bsp_timestamp: $(wildcard $(SOPC_FILE))
+	@$(ECHO) BSP not up to date.
+	@$(ECHO) $(SOPC_FILE) has been modified since the BSP was last updated.
 	@$(ECHO)
-	@$(ECHO) Generate the BSP to update the Makefile, and then build again.
+	@$(ECHO) "If you have not customized QSYS platform:"
+	@$(ECHO) " 1. Open sys.qsys in Quartus Platform Designer, generate platform"
+	@$(ECHO) "    files (Generate -> Generate HDL, Generate) and run compilation"
+	@$(ECHO) " 2. Run \"touch bsp_timestamp\" in BSP dir"
 	@$(ECHO)
-	@$(ECHO) To generate from Eclipse:
-	@$(ECHO) " 1. Right-click the BSP project."
-	@$(ECHO) " 2. In the Nios II Menu, click Generate BSP."
-	@$(ECHO)
-	@$(ECHO) To generate from the command line:
-	@$(ECHO) " nios2-bsp-generate-files --settings=<settings file> --bsp-dir=<target bsp files directory>"
+	@$(ECHO) "If you have customized and regenerated QSYS platform:"
+	@$(ECHO) " 1. Update system.h, public.mk, Makefile etc. BSP files manually"
+	@$(ECHO) "    to match your updates"
+	@$(ECHO) " 2. Run \"touch bsp_timestamp\" in BSP dir"
 	@$(ECHO)
 	@exit 1
 
@@ -759,7 +681,7 @@ endif
 ifneq ($(NEWLIB_DIR),)
 $(NEWLIB_DIR):
 	@$(ECHO) Creating $(NEWLIB_DIR)...
-	nios2-newlib-gen --no-multilib $(NEWLIB_DIR)-build-tmp $(NEWLIB_DIR) --custom "$(NEWLIB_FLAGS)"		
+	nios2-newlib-gen --no-multilib $(NEWLIB_DIR)-build-tmp $(NEWLIB_DIR) --custom "$(NEWLIB_FLAGS)"
 	@$(ECHO) Removing $(NEWLIB_DIR)-build-tmp...
 	@$(RM) -rf $(NEWLIB_DIR)-build-tmp
 endif
