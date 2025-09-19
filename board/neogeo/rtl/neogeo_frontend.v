@@ -56,7 +56,7 @@ reg [8:0] v_ctr;
 reg CSYNC_i_prev;
 
 reg [3:0] equ_line_ctr, equ_line_max;
-reg force_resync;
+reg equ_line_det, force_resync;
 
 reg [21:0] vclk_ctr;
 
@@ -91,6 +91,7 @@ always @(posedge VCLK_i) begin
     if ((CSYNC_i_prev & ~CSYNC_i) & (h_ctr > ((NEO_H_TOTAL/2)+(NEO_H_TOTAL/4)))) begin
         h_ctr <= 0;
         HSYNC <= 1'b0;
+        equ_line_det <= 1'b0;
 
         if (force_resync | (v_ctr == (NEO_V_TOTAL-1))) begin
             v_ctr <= force_resync ? 1 : 0;
@@ -106,6 +107,12 @@ always @(posedge VCLK_i) begin
             if (v_ctr == V_SYNCLEN-1)
                 VSYNC <= 1'b1;
         end
+
+        // Store the number of detected equ pulses
+        if ((equ_line_ctr != 0) & !equ_line_det) begin
+            equ_line_ctr <= 0;
+            equ_line_max <= equ_line_ctr;
+        end
     end else begin
         h_ctr <= h_ctr + 1'b1;
         if (h_ctr == H_SYNCLEN-1)
@@ -113,19 +120,16 @@ always @(posedge VCLK_i) begin
 
         vclk_ctr <= vclk_ctr + 1'b1;
 
-        if (h_ctr == (NEO_H_TOTAL/2)) begin
-            if (~CSYNC_i) begin
-                equ_line_ctr <= equ_line_ctr + 1'b1;
-                if (equ_line_max > 8) begin
-                    if (equ_line_ctr == 3)
-                        force_resync <= (v_ctr != 0);
-                end else begin
-                    if (equ_line_ctr == 0)
-                        force_resync <= (v_ctr != 0);
-                end
-            end else if (equ_line_ctr != 0) begin
-                equ_line_ctr <= 0;
-                equ_line_max <= equ_line_ctr;
+        // Process equalization pulses
+        if ((CSYNC_i_prev & ~CSYNC_i) & (h_ctr > (NEO_H_TOTAL/4))) begin
+            equ_line_ctr <= equ_line_ctr + 1'b1;
+            equ_line_det <= 1'b1;
+            if (equ_line_max > 8) begin // MVS has 9 equ pulses (3 pre and 3 post vsync)
+                if (equ_line_ctr == 3)
+                    force_resync <= (v_ctr != 0);
+            end else begin // AES has 3 equ pulses (only during vsync)
+                if (equ_line_ctr == 0)
+                    force_resync <= (v_ctr != 0);
             end
         end
     end

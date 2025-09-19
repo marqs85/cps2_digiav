@@ -27,9 +27,9 @@ write transcript fir_2ch_audio_transcript
 # START MEGAWIZARD INSERT VARIABLES
 set top_entity fir_2ch_audio
 set timing_resolution "1ps"
-set core_version 23.1
+set core_version 24.1
 set device_family "Cyclone 10 LP"
-set quartus_rootdir /usr/local/altera_lite/23.1std/quartus/
+set quartus_rootdir /usr/local/altera_lite/24.1std/quartus/
 # Change to "gate_level" for gate-level sim
 set sim_type "rtl"
 # END MEGAWIZARD INSERT VARIABLES
@@ -99,16 +99,17 @@ foreach {lib} $libs {
             vlib $lib
             vmap $lib $lib
         }
-		foreach file_item $file_vhdl_list {
-		  catch {vcom -quiet -explicit -93 -work $lib [file join $src_files_loc ${file_item}.vhd]} err_msg
-		  if {![string match "" $err_msg]} {return $err_msg}
-		}
 		foreach file_item $file_verilog_list {
 		  catch {vlog -work $lib [file join $src_files_loc ${file_item}.v]} err_msg
 		  if {![string match "" $err_msg]} {return $err_msg}
 		}
 		foreach file_item $file_sysverilog_list {
 		  catch {vlog -work $lib [file join $src_files_loc ${file_item}.sv]} err_msg
+		  if {![string match "" $err_msg]} {return $err_msg}
+		}
+		# It's important that we do the VHDL compile after Verilog. Otherwise, there could be errors related to unused ports
+		foreach file_item $file_vhdl_list {
+		  catch {vcom -quiet -explicit -93 -work $lib [file join $src_files_loc ${file_item}.vhd]} err_msg
 		  if {![string match "" $err_msg]} {return $err_msg}
 		}
 	}

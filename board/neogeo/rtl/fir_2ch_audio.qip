@@ -1,5 +1,5 @@
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_TOOL_NAME "altera_fir_compiler_ii"
-set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_TOOL_VERSION "21.1"
+set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_TOOL_VERSION "24.1"
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_TOOL_ENV "mwpim"
 set_global_assignment -library "fir_2ch_audio" -name MISC_FILE [file join $::quartus(qip_path) "fir_2ch_audio.cmp"]
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_TARGETED_DEVICE_FAMILY "Cyclone 10 LP"
@@ -11,14 +11,14 @@ set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_REPORT_HIERARCHY "Off"
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_INTERNAL "Off"
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_AUTHOR "SW50ZWwgQ29ycG9yYXRpb24="
-set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_VERSION "MjEuMQ=="
+set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_VERSION "MjQuMQ=="
 set_global_assignment -entity "fir_2ch_audio" -library "fir_2ch_audio" -name IP_COMPONENT_DESCRIPTION "RklSIElJIEludGVsIEZQR0EgSVA="
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_NAME "ZmlyXzJjaF9hdWRpb18wMDAy"
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_DISPLAY_NAME "RklSIElJ"
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_REPORT_HIERARCHY "Off"
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_INTERNAL "Off"
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_AUTHOR "SW50ZWwgQ29ycG9yYXRpb24="
-set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_VERSION "MjEuMQ=="
+set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_VERSION "MjQuMQ=="
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_DESCRIPTION "RklSIElJIEludGVsIEZQR0EgSVA="
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_PARAMETER "ZmlsdGVyVHlwZQ==::ZGVjaW0=::RmlsdGVyIFR5cGU="
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_COMPONENT_PARAMETER "aW50ZXJwRmFjdG9y::MQ==::SW50ZXJwb2xhdGlvbiBGYWN0b3I="
@@ -97,5 +97,5 @@ set_global_assignment -library "fir_2ch_audio" -name VHDL_FILE [file join $::qua
 set_global_assignment -library "fir_2ch_audio" -name VHDL_FILE [file join $::quartus(qip_path) "fir_2ch_audio/fir_2ch_audio_0002.vhd"]
 
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_TOOL_NAME "altera_fir_compiler_ii"
-set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_TOOL_VERSION "21.1"
+set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_TOOL_VERSION "24.1"
 set_global_assignment -entity "fir_2ch_audio_0002" -library "fir_2ch_audio" -name IP_TOOL_ENV "mwpim"

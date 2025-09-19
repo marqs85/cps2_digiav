@@ -11,8 +11,12 @@ create_clock -period 40MHz -name clk40 clk_osc_div
 #create_generated_clock -source {pll_pclk_inst|altpll_component|auto_generated|pll1|inclk[0]} -divide_by 16 -multiply_by 25 -duty_cycle 50.00 -name clk25 {pll_pclk_inst|altpll_component|auto_generated|pll1|clk[0]}
 
 create_generated_clock -source [get_ports MCLK_SI] -divide_by 8 -multiply_by 1 -duty_cycle 50.00 -name i2s_bck {i2s_upsampler_asrc:upsampler0|i2s_tx_asrc:i2s_tx|mclk_div_ctr[1]}
+create_generated_clock -name flash_clk -divide_by 2 -source clk_osc_div [get_pins sys:sys_inst|sys_intel_generic_serial_flash_interface_top_0:intel_generic_serial_flash_interface_top_0|sys_intel_generic_serial_flash_interface_top_0_qspi_inf_inst:qspi_inf_inst|flash_clk_reg|q]
+
 create_generated_clock -name i2s_bck_out -master_clock i2s_bck -source {i2s_upsampler_asrc:upsampler0|i2s_tx_asrc:i2s_tx|mclk_div_ctr[1]} -multiply_by 1 [get_ports HDMI_TX_I2S_BCK]
 create_generated_clock -name pclk_si_out -master_clock pclk_si -source [get_ports PCLK_SI] -multiply_by 1 [get_ports HDMI_TX_PCLK]
+create_generated_clock -name flash_clk_out -master_clock flash_clk -source [get_pins sys:sys_inst|sys_intel_generic_serial_flash_interface_top_0:intel_generic_serial_flash_interface_top_0|sys_intel_generic_serial_flash_interface_top_0_qspi_inf_inst:qspi_inf_inst|flash_clk_reg|q] -multiply_by 1 [get_ports *ALTERA_DCLK]
+
 derive_clock_uncertainty
 
 
@@ -43,11 +47,10 @@ set_output_delay -clock pclk_si_out -max $hdmitx_dmax $hdmitx_data_outputs -add_
 set_output_delay -clock i2s_bck_out -min $hdmitx_dmin [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
 set_output_delay -clock i2s_bck_out -max $hdmitx_dmax [get_ports {HDMI_TX_I2S_DATA HDMI_TX_I2S_WS}] -add_delay
 
-# EPCQ controller (delays from N25Q128A datasheet)
-create_generated_clock -name epcq_clk -master_clock clk40 -source clk_osc_div -multiply_by 1 [get_ports *ALTERA_DCLK]
-set_input_delay -clock epcq_clk -clock_fall 5 [get_ports *ALTERA_DATA0]
-set_output_delay -clock epcq_clk 4 [get_ports *ALTERA_SCE]
-set_output_delay -clock epcq_clk 2 [get_ports **ALTERA_SDO]
+# Flash controller (delays from N25Q128A datasheet)
+set_input_delay -clock flash_clk_out -clock_fall 5 [get_ports *ALTERA_DATA0]
+set_output_delay -clock flash_clk_out 4 [get_ports *ALTERA_SCE]
+set_output_delay -clock flash_clk_out 2 [get_ports *ALTERA_SDO]
 
 
 ### CPU/scanconverter clock relations ###
@@ -56,7 +59,7 @@ set_clock_groups -exclusive \
 -group {bck i2s_bck i2s_bck_out} \
 -group {pclk} \
 -group {pclk_si pclk_si_out} \
--group {clk40 epcq_clk} \
+-group {clk40 flash_clk flash_clk_out} \
 -group {mclk}
 
 set_false_path -from [get_clocks i2s_bck] -to [get_clocks bck]

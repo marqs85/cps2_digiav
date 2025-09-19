@@ -6,11 +6,18 @@
 	<n_pages>1</n_pages>
 	<width>1</width>
 	<mode>7</mode>
+	<hex_block>
+		<hex_filename>software/sys_controller/mem_init/flash.hex</hex_filename>
+		<hex_addressing>relative</hex_addressing>
+		<hex_offset>524288</hex_offset>
+		<hex_little_endian>0</hex_little_endian>
+	</hex_block>
 	<sof_data>
+		<start_address>00000000</start_address>
 		<user_name>Page_0</user_name>
 		<page_flags>1</page_flags>
 		<bit0>
-			<sof_filename>output_files/cps2_digiav.sof<compress_bitstream>1</compress_bitstream></sof_filename> 
+			<sof_filename>output_files/cps2_digiav.sof<compress_bitstream>1</compress_bitstream></sof_filename>
 		</bit0>
 	</sof_data>
 	<version>10</version>
@@ -19,10 +26,10 @@
 	<auto_create_rpd>0</auto_create_rpd>
 	<rpd_little_endian>1</rpd_little_endian>
 	<options>
-		<map_file>1</map_file>
+		<map_file>0</map_file>
 	</options>
 	<advanced_options>
-		<ignore_epcs_id_check>0</ignore_epcs_id_check>
+		<ignore_epcs_id_check>1</ignore_epcs_id_check>
 		<ignore_condone_check>2</ignore_condone_check>
 		<plc_adjustment>0</plc_adjustment>
 		<post_chain_bitstream_pad_bytes>-1</post_chain_bitstream_pad_bytes>

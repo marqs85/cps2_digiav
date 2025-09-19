@@ -17,6 +17,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+`define PO_RESET_WIDTH 1000
+
 module cps2_digiav(
     input [4:0] R_in,
     input [4:0] G_in,
@@ -49,8 +51,11 @@ module cps2_digiav(
     //output HDMI_TX_I2S_MCLK
 );
 
-reg reset_n = 1'b0;
-reg [3:0] reset_n_ctr;
+reg [15:0] po_reset_ctr = 0;
+reg po_reset_n = 1'b0;
+wire jtagm_reset_req, ndmreset_req;
+reg ndmreset_ack, ndmreset_pulse;
+wire sys_reset_n = (po_reset_n & ~jtagm_reset_req & ~ndmreset_pulse);
 
 reg clk_osc_div;
 wire clk40 = clk_osc_div;
@@ -77,6 +82,22 @@ wire BTN_volminus_debounced;
 wire BTN_volplus_debounced;
 
 
+// Power-on reset pulse generation (seems to be needed for serial flash controller)
+always @(posedge VCLK_in)
+begin
+    if (po_reset_ctr == `PO_RESET_WIDTH)
+        po_reset_n <= 1'b1;
+    else
+        po_reset_ctr <= po_reset_ctr + 1'b1;
+end
+
+// ndmreset pulse & ack for RISC-V DM
+always @(posedge VCLK_in)
+begin
+    ndmreset_pulse <= !ndmreset_ack & ndmreset_req;
+    ndmreset_ack <= ndmreset_req;
+end
+
 // Latch inputs syncronized to pixel clock
 always @(posedge VCLK_in) begin
     R_in_L <= R_in;
@@ -85,17 +106,6 @@ always @(posedge VCLK_in) begin
     DARK_in_L <= DARK_in;
     SHADOW_in_L <= SHADOW_in;
     CSYNC_in_L <= CSYNC_in;
-end
-
-always @(negedge VCLK_in) begin
-
-end
-
-always @(posedge VCLK_in) begin
-    if (reset_n_ctr == 4'hf)
-        reset_n <= 1'b1;
-    else
-        reset_n_ctr <= reset_n_ctr + 1'b1;
 end
 
 // Neogeo frontend
@@ -127,7 +137,7 @@ neogeo_frontend u_neogeo_frontend (
     .vclks_per_frame(fe_status2[21:0])
 );
 
-//assign HDMI_TX_RST_N = reset_n;
+//assign HDMI_TX_RST_N = sys_reset_n;
 assign HDMI_TX_PCLK = PCLK_sc;
 assign HDMI_TX_I2S_DATA = I2S_DATA_o;
 assign HDMI_TX_I2S_BCK = I2S_BCK_o;
@@ -170,13 +180,19 @@ begin
 end
 
 sys sys_inst(
-    .clk_clk                            (clk40),
-    .int_osc_0_clkout_clk               (clk_osc),
-    .int_osc_0_oscena_oscena            (1'b1),
-    .reset_reset_n                      (reset_n),
-    .pio_0_ctrl_in_export               ({BTN_volminus_debounced, BTN_volplus_debounced, 30'h0}),
-    .i2c_opencores_0_export_scl_pad_io  (scl),
-    .i2c_opencores_0_export_sda_pad_io  (sda),
+    .clk_clk                                (clk40),
+    .int_osc_0_clkout_clk                   (clk_osc),
+    .int_osc_0_oscena_oscena                (1'b1),
+    .reset_reset_n                          (sys_reset_n),
+    .reset_po_reset_n                       (po_reset_n),
+    .ibex_0_ndm_ndmreset_o                  (ndmreset_req),
+    .ibex_0_ndm_ndmreset_ack_i              (ndmreset_ack),
+    .ibex_0_config_boot_addr_i              (32'h02080000),
+    .ibex_0_config_core_sleep_o             (),
+    .master_0_master_reset_reset            (jtagm_reset_req),
+    .pio_0_ctrl_in_export                   ({BTN_volminus_debounced, BTN_volplus_debounced, 30'h0}),
+    .i2c_opencores_0_export_scl_pad_io      (scl),
+    .i2c_opencores_0_export_sda_pad_io      (sda),
     .sc_config_0_sc_if_fe_status_i          (fe_status),
     .sc_config_0_sc_if_fe_status2_i         (fe_status2),
     .sc_config_0_sc_if_misc_config_o        (misc_config),
@@ -187,11 +203,11 @@ sys sys_inst(
     .sc_config_0_sc_if_hv_out_config3_o     (hv_out_config3),
     .sc_config_0_sc_if_xy_out_config_o      (xy_out_config),
     .sc_config_0_sc_if_xy_out_config2_o     (xy_out_config2),
-    .osd_generator_0_osd_if_vclk           (PCLK_SI),
-    .osd_generator_0_osd_if_xpos           (xpos),
-    .osd_generator_0_osd_if_ypos           (ypos),
-    .osd_generator_0_osd_if_osd_enable     (osd_enable),
-    .osd_generator_0_osd_if_osd_color      (osd_color)
+    .osd_generator_0_osd_if_vclk            (PCLK_SI),
+    .osd_generator_0_osd_if_xpos            (xpos),
+    .osd_generator_0_osd_if_ypos            (ypos),
+    .osd_generator_0_osd_if_osd_enable      (osd_enable),
+    .osd_generator_0_osd_if_osd_color       (osd_color)
 );
 
 scanconverter #(
@@ -200,7 +216,7 @@ scanconverter #(
 ) scanconverter_inst (
     .PCLK_CAP_i(VCLK_in),
     .PCLK_OUT_i(PCLK_SI),
-    .reset_n(reset_n),
+    .reset_n(sys_reset_n),
     .DATA_i({NEO_DARK_post, NEO_R_post, NEO_G_post, NEO_B_post}),
     .HSYNC_i(NEO_HSYNC_post),
     .VSYNC_i(NEO_VSYNC_post),
@@ -232,7 +248,7 @@ scanconverter #(
 
 i2s_upsampler_asrc upsampler0 (
     .AMCLK_i        (MCLK_SI),
-    .nARST          (reset_n),
+    .nARST          (sys_reset_n),
     .ASCLK_i        (I2S_BCK),
     .ASDATA_i       (I2S_DATA),
     .ALRCLK_i       (I2S_WS),

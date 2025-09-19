@@ -1,5 +1,5 @@
 ## ================================================================================
-## Legal Notice: Copyright (C) 2023 Intel Corporation. All rights reserved.
+## Legal Notice: Copyright (C) 2025 Intel Corporation. All rights reserved.
 ## Any megafunction design, and related net list (encrypted or decrypted),
 ## support information, device programming or simulation file, and any other
 ## associated documentation or information provided by Intel or a partner

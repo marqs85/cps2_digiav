@@ -1,18 +1,18 @@
 # -------------------------------------------------------------------------- #
 #
 # Copyright (C) 2016  Intel Corporation. All rights reserved.
-# Your use of Intel Corporation's design tools, logic functions 
-# and other software and tools, and its AMPP partner logic 
-# functions, and any output files from any of the foregoing 
-# (including device programming or simulation files), and any 
-# associated documentation or information are expressly subject 
-# to the terms and conditions of the Intel Program License 
+# Your use of Intel Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Intel Program License
 # Subscription Agreement, the Intel Quartus Prime License Agreement,
-# the Intel MegaCore Function License Agreement, or other 
-# applicable license agreement, including, without limitation, 
-# that your use is for the sole purpose of programming logic 
-# devices manufactured by Intel and sold by Intel or its 
-# authorized distributors.  Please refer to the applicable 
+# the Intel MegaCore Function License Agreement, or other
+# applicable license agreement, including, without limitation,
+# that your use is for the sole purpose of programming logic
+# devices manufactured by Intel and sold by Intel or its
+# authorized distributors.  Please refer to the applicable
 # agreement for further details.
 #
 # -------------------------------------------------------------------------- #
@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 10CL025YE144C8G
 set_global_assignment -name TOP_LEVEL_ENTITY cps2_digiav
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 16.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "23:25:51  NOVEMBER 29, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "19.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "24.1std.0 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -137,6 +137,7 @@ set_global_assignment -name ENABLE_SIGNALTAP OFF
 set_global_assignment -name USE_SIGNALTAP_FILE output_files/cps2.stp
 set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 8
 set_global_assignment -name ENABLE_LOGIC_ANALYZER_INTERFACE OFF
+set_global_assignment -name INI_VARS "FIOMGR_ENABLE_SPI_TIMING=ON"
 set_location_assignment PIN_23 -to MCLK_SI
 set_location_assignment PIN_24 -to PCLK_SI
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_RD
@@ -152,9 +153,8 @@ set_global_assignment -name SEED 2
 
 set_global_assignment -name SEARCH_PATH ../../rtl_common
 set_global_assignment -name SEARCH_PATH rtl
-
-
-
+set_global_assignment -name SEARCH_PATH ip/ibex_qsys/rtl_extra
+set_global_assignment -name VERILOG_MACRO "SYNTHESIS=<None>"
 set_global_assignment -name QIP_FILE sys/synthesis/sys.qip
 set_global_assignment -name QIP_FILE software/sys_controller/mem_init/meminit.qip
 set_global_assignment -name QIP_FILE rtl/pll_pclk.qip

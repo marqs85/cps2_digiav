@@ -1,8 +1,8 @@
 -- ------------------------------------------------------------------------- 
--- High Level Design Compiler for Intel(R) FPGAs Version 23.1std (Release Build #993)
+-- High Level Design Compiler for Intel(R) FPGAs Version 24.1std (Release Build #1077)
 -- Quartus Prime development tool and MATLAB/Simulink Interface
 -- 
--- Legal Notice: Copyright 2024 Intel Corporation.  All rights reserved.
+-- Legal Notice: Copyright 2025 Intel Corporation.  All rights reserved.
 -- Your use of  Intel Corporation's design tools,  logic functions and other
 -- software and  tools, and its AMPP partner logic functions, and any output
 -- files any  of the foregoing (including  device programming  or simulation
@@ -16,7 +16,7 @@
 -- ---------------------------------------------------------------------------
 
 -- VHDL created from fir_2ch_audio_rtl_core
--- VHDL created on Thu Feb 27 19:28:48 2025
+-- VHDL created on Thu Aug 28 23:59:50 2025
 
 
 library IEEE;
