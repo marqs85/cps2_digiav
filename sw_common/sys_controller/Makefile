@@ -146,6 +146,7 @@ C_SRCS += ../../../../sw_common/sys_controller/src/sys_controller.c
 C_SRCS += ../../../../sw_common/sys_controller/src/video_modes.c
 C_SRCS += ../../../../sw_common/sys_controller/src/avconfig.c
 C_SRCS += ../../../../sw_common/sys_controller/src/menu.c
+C_SRCS += ../../../../sw_common/sys_controller/src/flash.c
 C_SRCS += ../../../../sw_common/sys_controller/src/controls.c
 C_SRCS += ../../../../sw_common/sys_controller/src/userdata.c
 C_SRCS += ../../../../sw_common/sys_controller/src/utils.c
@@ -1103,8 +1104,8 @@ print-elf-name:
 #                         CUSTOM TARGETS
 #------------------------------------------------------------------------------
 mem_init/flash.hex: sys_controller.elf
-	$(RV_OBJCOPY) --change-addresses -0x02A00000 -O binary --gap-fill 0 $< mem_init/flash.bin
-	$(RV_OBJCOPY) --change-addresses -0x02A00000 -O ihex --gap-fill 0 $< mem_init/flash.hex
+	$(RV_OBJCOPY) --change-addresses -0x02080000 -O binary --gap-fill 0 $< mem_init/flash.bin
+	$(RV_OBJCOPY) --change-addresses -0x02080000 -O ihex --gap-fill 0 $< mem_init/flash.hex
 	mkdir -p mem_init/chunks
 	rm -f mem_init/chunks/*
 	split -d -b 64 -a 4 mem_init/flash.bin mem_init/chunks/flash.
@@ -1122,4 +1123,8 @@ rv-reprogram: mem_init_generate_new
 
 rv-bt:
 	jtagconfig
-	system-console -cli --script ../../scripts_common/rv-bt.tcl
+	system-console -cli --script ../../../../scripts_common/rv-bt.tcl
+
+rv-ndmreset:
+	jtagconfig
+	system-console -cli --script ../../../../scripts_common/rv-ndmreset.tcl

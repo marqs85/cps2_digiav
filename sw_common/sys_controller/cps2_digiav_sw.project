@@ -30,6 +30,7 @@
     <File Name="src/utils.c"/>
     <File Name="src/userdata.c"/>
     <File Name="src/controls.c"/>
+    <File Name="src/flash.c"/>
     <File Name="src/menu.c"/>
     <File Name="src/sys_controller.c"/>
     <File Name="src/video_modes.c"/>
@@ -41,6 +42,7 @@
     <File Name="inc/pulpino.h"/>
     <File Name="inc/userdata.h"/>
     <File Name="inc/controls.h"/>
+    <File Name="inc/flash.h"/>
     <File Name="inc/menu.h"/>
     <File Name="inc/video_modes.h"/>
     <File Name="inc/avconfig.h"/>

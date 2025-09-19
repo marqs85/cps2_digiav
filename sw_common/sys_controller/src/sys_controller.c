@@ -31,6 +31,7 @@
 #include "video_modes.h"
 #include "avconfig.h"
 #include "menu.h"
+#include "flash.h"
 #include "userdata.h"
 #include "controls.h"
 
@@ -53,6 +54,9 @@ adv7513_dev advtx_dev = {.i2cm_base = I2C_OPENCORES_0_BASE,
                          .edid_base = ADV7513_EDID_BASE,
                          .pktmem_base = ADV7513_PKTMEM_BASE,
                          .cec_base = ADV7513_CEC_BASE};
+
+flash_ctrl_dev flashctrl_dev = {.regs = (volatile gen_flash_if_regs*)INTEL_GENERIC_SERIAL_FLASH_INTERFACE_TOP_0_AVL_CSR_BASE,
+                                .flash_size = 0x0200000};
 
 volatile sc_regs *sc = (volatile sc_regs*)SC_CONFIG_0_BASE;
 volatile osd_regs *osd = (volatile osd_regs*)OSD_GENERATOR_0_BASE;
@@ -131,8 +135,6 @@ int init_hw()
     // Init Si5351C
     si5351_init(&si_dev);
 
-    init_flash();
-
     set_default_avconfig(1);
     read_userdata(0);
     init_menu();
@@ -177,6 +179,9 @@ int main()
 
     uint32_t btn_vec, btn_vec_prev=0;
     uint8_t btn_rpt=0;
+
+    // Write-protect flash
+    flash_write_protect(&flashctrl_dev, 1);
 
     ret = init_hw();
 
@@ -224,13 +229,13 @@ int main()
                 if (vmode_out.si_pclk_mult != 0)
                     si5351_set_integer_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, output_mode->src_params->c1_hz, vmode_out.si_pclk_mult, vmode_out.si_ms_conf.outdiv);
                 else
-                    si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, &vmode_out.si_ms_conf);
+                    si5351_set_frac_mult(&si_dev, SI_PLLA, SI_CLK1, SI_CLKIN, 0, 0, 0, &vmode_out.si_ms_conf);
 
                 // configure audio MCLK
 #ifdef NEOGEO
-                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params[cur_avconfig->neogeo_freq].vclk_to_mclk_conf);
+                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, 0, 0, 0, (si5351_ms_config_t*)&output_mode->src_params[cur_avconfig->neogeo_freq].vclk_to_mclk_conf);
 #else
-                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
+                si5351_set_frac_mult(&si_dev, SI_PLLB, SI_CLK6, SI_CLKIN, 0, 0, 0, (si5351_ms_config_t*)&output_mode->src_params->vclk_to_mclk_conf);
 #endif
 
                 update_osd_size(&vmode_out);

@@ -72,7 +72,7 @@ typedef struct {
 
 typedef struct {
     char name[10];
-    HDMI_Video_Type vic:8;
+    HDMI_vic_t vic:8;
     sync_timings_t timings;
     HDMI_pixelrep_t tx_pixelrep:2;
     HDMI_pixelrep_t hdmitx_pixr_ifr:2;

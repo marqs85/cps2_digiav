@@ -3,12 +3,12 @@ __DYNAMIC  =  0;
 
 MEMORY
 {
-    flash_imem : ORIGIN = 0x02100000, LENGTH = 983040
+    flash_imem : ORIGIN = 0x02080000, LENGTH = 524288
     dataram    : ORIGIN = 0x00208000, LENGTH = 0x1000
 }
 
 /* Stack information variables */
-_min_stack     = 0x800;   /* 2KB - minimum stack space to reserve */
+_min_stack     = 0x400;   /* 1KB - minimum stack space to reserve */
 _stack_start   = ORIGIN(dataram) + LENGTH(dataram);
 
 /* We have to align each sector to word boundaries as our current s19->slm
@@ -49,6 +49,7 @@ SECTIONS
         *(.rodata.*)
         *(.srodata);
         *(.srodata.*)
+        . = ALIGN(4);
     } > flash_imem
 
     /*--------------------------------------------------------------------*/
@@ -79,18 +80,18 @@ SECTIONS
     } > dataram
 
     .text_bram : AT ( LOADADDR (.rodata) + SIZEOF (.rodata) ) {
-        PROVIDE (__ram_text_start = ABSOLUTE(.));
         . = ALIGN(4);
+        PROVIDE (__ram_text_start = ABSOLUTE(.));
         *(.text_bram);
-        LONG(0)
+        . = ALIGN(4);
         PROVIDE (__ram_text_end = ABSOLUTE(.));
     } > dataram
 
     PROVIDE (__flash_text_bram_start = LOADADDR(.text_bram));
 
     .data : AT ( LOADADDR (.text_bram) + SIZEOF (.text_bram) ) {
-        PROVIDE (__ram_rwdata_start = ABSOLUTE(.));
         . = ALIGN(4);
+        PROVIDE (__ram_rwdata_start = ABSOLUTE(.));
         sdata  =  .;
         _sdata  =  .;
         *(.data);
@@ -101,6 +102,7 @@ SECTIONS
         *(.sdata2.*)
         edata  =  .;
         _edata  =  .;
+        . = ALIGN(4);
         PROVIDE (__ram_rwdata_end = ABSOLUTE(.));
     } > dataram
 

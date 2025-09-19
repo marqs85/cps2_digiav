@@ -36,7 +36,7 @@
 #define LNG(e, j) e
 #endif
 
-#define FW_VER      "0.93"
+#define FW_VER      "0.94"
 
 extern avconfig_t tc;
 extern volatile osd_regs *osd;
@@ -66,7 +66,9 @@ MENU(menu_main, P99_PROTECT({ \
     { LNG("Scanlines","ｽｷｬﾝﾗｲﾝ"),                OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_mode,                OPT_WRAP,   SETTING_ITEM(sl_mode_desc) } } },
     { "Sl. method",                             OPT_AVCONFIG_SELECTION, { .sel = { &tc.sl_method,             OPT_WRAP,   SETTING_ITEM(sl_method_desc) } } },
     { LNG("Sl. strength","ｽｷｬﾝﾗｲﾝﾂﾖｻ"),          OPT_AVCONFIG_NUMVALUE,  { .num = { &tc.sl_str,                 OPT_WRAP, 0, SCANLINESTR_MAX, value_disp } } },
-    { "Quad stereo",                            OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.i2s_chcfg, OPT_WRAP, SETTING_ITEM(audio_sr_desc) } } },
+    { "HDR flag",                               OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.hdr,      OPT_WRAP, SETTING_ITEM(off_on_desc) } } },
+    { "VRR flag",                               OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.vrr,      OPT_WRAP, SETTING_ITEM(off_on_desc) } } },
+    { "Quad stereo",                            OPT_AVCONFIG_SELECTION,  { .sel = { &tc.adv7513_cfg.i2s_stereo_cfg, OPT_WRAP, SETTING_ITEM(audio_sr_desc) } } },
 #ifdef NEOGEO
     { "XTAL freq",                             OPT_AVCONFIG_SELECTION,  { .sel = { &tc.neogeo_freq,            OPT_WRAP, SETTING_ITEM(neogeo_freq_desc) } } },
 #endif

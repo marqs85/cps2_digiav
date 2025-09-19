@@ -22,32 +22,17 @@
 #include "system.h"
 #include "sysconfig.h"
 #include "userdata.h"
-#include "altera_epcq_controller2.h"
+#include "flash.h"
 
 #define PROFILE_VER_MAJOR   0
-#define PROFILE_VER_MINOR   92
+#define PROFILE_VER_MINOR   94
 
-// save some code space
-#define SINGLE_FLASH_INSTANCE
-
-alt_flash_dev *epcq_dev;
-
-int init_flash()
-{
-#ifdef SINGLE_FLASH_INSTANCE
-    extern alt_llist alt_flash_dev_list;
-    epcq_dev = (alt_flash_dev*)alt_flash_dev_list.next;
-#else
-    epcq_dev = alt_flash_open_dev(EPCQ_CONTROLLER2_0_AVL_MEM_NAME);
-#endif
-
-    return (epcq_dev != NULL);
-}
+extern flash_ctrl_dev flashctrl_dev;
 
 int write_userdata(uint8_t entry)
 {
     ude_profile p;
-    int retval;
+    uint32_t flash_addr, bytes_written;
 
     if (entry > MAX_USERDATA_ENTRY) {
         printf("invalid entry\n");
@@ -62,26 +47,33 @@ int write_userdata(uint8_t entry)
     // assume that sizeof(avconfig_t) << PAGESIZE
     memcpy(&p.avc, get_current_avconfig(), sizeof(avconfig_t));
 
-    retval = alt_epcq_controller2_write(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
+    flash_addr = flashctrl_dev.flash_size - (16-entry)*FLASH_SECTOR_SIZE;
 
-    return retval;
+    // Disable flash write protect and erase sector
+    flash_write_protect(&flashctrl_dev, 0);
+    flash_sector_erase(&flashctrl_dev, flash_addr);
+
+    // Write data into erased sector
+    memcpy((uint32_t*)(INTEL_GENERIC_SERIAL_FLASH_INTERFACE_TOP_0_AVL_MEM_BASE + flash_addr), &p, sizeof(ude_profile));
+
+    // Re-enable write protection
+    flash_write_protect(&flashctrl_dev, 1);
+
+    return 0;
 }
 
 int read_userdata(uint8_t entry)
 {
     ude_profile p;
-    int retval;
+    uint32_t flash_addr;
 
     if (entry > MAX_USERDATA_ENTRY) {
         printf("invalid entry\n");
         return -1;
     }
 
-    retval = alt_epcq_controller2_read(epcq_dev, (USERDATA_OFFSET+entry*SECTORSIZE), &p, sizeof(ude_profile));
-    if (retval != 0) {
-        printf("Flash read error\n");
-        return retval;
-    }
+    flash_addr = flashctrl_dev.flash_size - (16-entry)*FLASH_SECTOR_SIZE;
+    memcpy(&p, (uint32_t*)(INTEL_GENERIC_SERIAL_FLASH_INTERFACE_TOP_0_AVL_MEM_BASE + flash_addr), sizeof(ude_profile));
 
     if (strncmp(p.hdr.userdata_key, "USRDATA", 8)) {
         printf("No userdata found on entry %u\n", entry);

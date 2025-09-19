@@ -1,8 +1,11 @@
 *_bb.v
 *_inst.v
 *.ppf
+*.qdf
 *.qws
-.qsys_edit
+*.rpt
+*.qsys_edit
+*.sopcinfo
 greybox_tmp
 board/*/*.xml
 board/*/*db/*
