@@ -1,0 +1,1 @@
+../../../../sw_common/sys_controller_bsp/alt_sys_init.c

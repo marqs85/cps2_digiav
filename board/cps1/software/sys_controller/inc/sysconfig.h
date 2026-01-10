@@ -21,16 +21,21 @@
 #define SYSCONFIG_H_
 
 #ifndef DEBUG
+#include <stdio.h>
 #define OS_PRINTF(...)
 #define ErrorF(...)
 #define printf(...)
 #else
 #include <stdio.h>
+#include "utils.h"
 #define OS_PRINTF printf
 #define ErrorF printf
 // use reduced printf
 //#define printf alt_printf
+#define printf dd_printf
 #endif
+
+#define sniprintf snprintf
 
 #define CPS1_CPS2
 

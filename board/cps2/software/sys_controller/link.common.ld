@@ -1,0 +1,1 @@
+../../../../sw_common/sys_controller/link.common.ld

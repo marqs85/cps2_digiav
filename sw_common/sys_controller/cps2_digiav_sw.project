@@ -141,12 +141,13 @@
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="yes">
-        <Target Name="neogeo_compile">make -C $(ProjectPath)/../../board/neogeo/software/sys_controller</Target>
-        <Target Name="cps3_compile">make -C $(ProjectPath)/../../../../board/cps3/software/sys_controller</Target>
-        <Target Name="Ack BSP update">touch ../sys_controller_bsp/bsp_timestamp</Target>
+        <Target Name="toaplan2_compile">touch ../../../toaplan2/software/sys_controller_bsp/bsp_timestamp &amp;&amp; make -C $(ProjectPath)/../../board/toaplan2/software/sys_controller</Target>
+        <Target Name="neogeo_compile">touch ../../../neogeo/software/sys_controller_bsp/bsp_timestamp &amp;&amp; make -C $(ProjectPath)/../../board/neogeo/software/sys_controller</Target>
+        <Target Name="cps3_compile">touch ../../../cps3/software/sys_controller_bsp/bsp_timestamp &amp;&amp; make -C $(ProjectPath)/../../board/cps3/software/sys_controller</Target>
+        <Target Name="cps1_compile">touch ../../../cps1/software/sys_controller_bsp/bsp_timestamp &amp;&amp; make -C $(ProjectPath)/../../board/cps1/software/sys_controller</Target>
         <RebuildCommand/>
         <CleanCommand>make clean</CleanCommand>
-        <BuildCommand>make</BuildCommand>
+        <BuildCommand>touch ../sys_controller_bsp/bsp_timestamp &amp;&amp; make</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

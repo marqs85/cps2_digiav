@@ -153,7 +153,7 @@
          type = "String";
       }
    }
-   element reset_bridge_0
+   element po_reset_bridge_0
    {
       datum _sortIndex
       {
@@ -238,7 +238,7 @@
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
  <interface
    name="reset_po"
-   internal="reset_bridge_0.in_reset"
+   internal="po_reset_bridge_0.in_reset"
    type="reset"
    dir="end" />
  <interface
@@ -261,7 +261,7 @@
  </module>
  <module name="ibex_0" kind="ibex" version="1.0" enabled="1">
   <parameter name="AUTO_EXTERNAL_IRQ_INTERRUPTS_USED" value="0" />
-  <parameter name="AUTO_FAST_IRQ_INTERRUPTS_USED" value="0" />
+  <parameter name="AUTO_FAST_IRQ_INTERRUPTS_USED" value="3" />
   <parameter name="AUTO_NOT_MASKABLE_IRQ_INTERRUPTS_USED" value="0" />
   <parameter name="AUTO_SOFTWARE_IRQ_INTERRUPTS_USED" value="0" />
   <parameter name="AUTO_TIMER_IRQ_INTERRUPTS_USED" value="0" />
@@ -388,7 +388,7 @@
   <parameter name="width" value="32" />
  </module>
  <module
-   name="reset_bridge_0"
+   name="po_reset_bridge_0"
    kind="altera_reset_bridge"
    version="24.1"
    enabled="1">
@@ -549,7 +549,7 @@
    kind="clock"
    version="24.1"
    start="clk_0.clk"
-   end="reset_bridge_0.clk" />
+   end="po_reset_bridge_0.clk" />
  <connection kind="clock" version="24.1" start="clk_0.clk" end="master_0.clk" />
  <connection
    kind="clock"
@@ -577,6 +577,13 @@
    version="24.1"
    start="clk_0.clk"
    end="osd_generator_0.clock_sink" />
+ <connection
+   kind="interrupt"
+   version="24.1"
+   start="ibex_0.fast_irq"
+   end="i2c_opencores_0.interrupt_sender">
+  <parameter name="irqNumber" value="1" />
+ </connection>
  <connection
    kind="interrupt"
    version="24.1"
@@ -623,12 +630,12 @@
  <connection
    kind="reset"
    version="24.1"
-   start="reset_bridge_0.out_reset"
+   start="po_reset_bridge_0.out_reset"
    end="master_0.clk_reset" />
  <connection
    kind="reset"
    version="24.1"
-   start="reset_bridge_0.out_reset"
+   start="po_reset_bridge_0.out_reset"
    end="ibex_0.po_reset_sink" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
