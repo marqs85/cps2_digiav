@@ -1,0 +1,41 @@
+power (AC1):
++ : 5V
+- : GND
+
+clocks:
+B29 (bottom side, left pad):  C1 (12MHz)
+U7 pin 11: C2 (6MHz)
+
+sync:
+CXA1645P (pin 10): CSYNC (HS on cps2_digiav)
+
+audio (CDM AV board):
+R39 west side: AINR
+R38 north side: AINL
+
+R[4:0]:
+U7 pin 9
+U7 pin 6
+U7 pin 5
+U7 pin 2
+U7 pin 16
+
+G[4:0]:
+U6 pin 19
+U6 pin 16
+U6 pin 15
+U6 pin 12
+U7 pin 15
+
+B[4:0]:
+U6 pin 9
+U6 pin 6
+U6 pin 5
+U6 pin 2
+U7 pin 12
+
+Dark:
+U7 pin 19
+
+Shadow:
+U8 pin 3

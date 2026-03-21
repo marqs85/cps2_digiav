@@ -58,6 +58,6 @@ Connect 15 RGB wires from step 1 to the marked resistors (south side) on AES and
 Step 7: Finalization
 --------------------------
 
-Power up and verify both audio and video works. Open cps2_digiav menu, select AES from XTAL freq option and save settings. Make a cutout on the upper part of AES case and put everything together.
+Power up and verify both audio and video works. Check whether the AES has 24.167829MHz or 24.0MHz crystal. In case of former (most AES boards), open cps2_digiav menu, select AES from XTAL freq option and save settings. Make a cutout on the upper part of AES case and put everything together.
 
 ![](aes3-3_install.jpg)
